@@ -1,0 +1,8 @@
+jpackage \
+--input /Users/denis/Projects/firstGame/lwjgl3/build/libs \
+--name firstGame \
+--main-jar /Users/denis/Projects/firstGame/lwjgl3/build/libs/firstGame-all-0.0.0.jar \
+--main-class com.dv.trunov.game.lwjgl3.Lwjgl3Launcher \
+--type app-image \
+--java-options "-Xmx512m -XstartOnFirstThread" \
+--dest /Users/denis/Projects/firstGame
