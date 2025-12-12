@@ -1,4 +1,4 @@
-# firstGame
+# Classic Ping Pong game in a modern minimalistic look
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
 
