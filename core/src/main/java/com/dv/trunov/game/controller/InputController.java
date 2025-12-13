@@ -21,6 +21,7 @@ public class InputController {
     public GameParameters processTitleInputs(GameParameters gameParameters) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             gameParameters.setGameState(GameState.MENU);
+            gameParameters.setActiveMenuItemId(1);
         }
         return gameParameters;
     }
@@ -35,13 +36,13 @@ public class InputController {
             newActiveMenuItemId--;
         }
         if (newActiveMenuItemId < 1) {
-            newActiveMenuItemId = 1;
-        } else if (newActiveMenuItemId > 4) {
             newActiveMenuItemId = 4;
+        } else if (newActiveMenuItemId > 4) {
+            newActiveMenuItemId = 1;
         }
         gameParameters.setActiveMenuItemId(newActiveMenuItemId);
         if (activeMenuItemId != newActiveMenuItemId) {
-            physicsEngine.setAlpha();
+            physicsEngine.resetAlpha();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             gameParameters.setGameParametersByMenuItemId(activeMenuItemId);
@@ -64,7 +65,7 @@ public class InputController {
             newActiveMenuItemId = 6;
         }
         if (activeMenuItemId != newActiveMenuItemId) {
-            physicsEngine.setAlpha();
+            physicsEngine.resetAlpha();
         }
         gameParameters.setActiveMenuItemId(newActiveMenuItemId);
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {

@@ -15,24 +15,27 @@ public class GameParameters {
     }
 
     private GameParameters() {
-        this.gameState = GameState.TITLE;
-        this.activeMenuItemId = 0;
+        gameState = GameState.TITLE;
+        activeMenuItemId = 0;
     }
 
     public void setGameParametersByMenuItemId(int menuItemId) {
         switch (menuItemId) {
             case 1 -> {
-                this.gameMode = GameMode.SINGLEPLAYER;
-                this.gameState = GameState.PLAYING;
+                gameMode = GameMode.SINGLEPLAYER;
+                gameState = GameState.PLAYING;
             }
             case 2 -> {
-                this.gameMode = GameMode.MULTIPLAYER;
-                this.gameState = GameState.PLAYING;
+                gameMode = GameMode.MULTIPLAYER;
+                gameState = GameState.PLAYING;
             }
-            case 3 -> this.gameState = GameState.SETTINGS;
-            case 4 -> this.gameState = GameState.EXIT;
-            case 5 -> this.gameState = GameState.PLAYING;
-            case 6 -> this.gameState = GameState.MENU;
+            case 3 -> gameState = GameState.SETTINGS;
+            case 4 -> gameState = GameState.EXIT;
+            case 5 -> gameState = GameState.PLAYING;
+            case 6 -> {
+                gameState = GameState.MENU;
+                activeMenuItemId = 1;
+            }
         }
     }
 

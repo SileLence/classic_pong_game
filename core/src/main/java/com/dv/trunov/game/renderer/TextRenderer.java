@@ -2,7 +2,6 @@ package com.dv.trunov.game.renderer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dv.trunov.game.ui.UITextItem;
 import com.dv.trunov.game.util.Constants;
@@ -16,6 +15,10 @@ public class TextRenderer {
 
     public static TextRenderer getInstance() {
         return INSTANCE;
+    }
+
+    public void drawUI(UITextItem[] textItems, SpriteBatch spriteBatch) {
+        drawUI(textItems, Integer.MIN_VALUE, Integer.MIN_VALUE, spriteBatch);
     }
 
     public void drawUI(UITextItem[] textItems, int activeTextItem, float alpha, SpriteBatch spriteBatch) {

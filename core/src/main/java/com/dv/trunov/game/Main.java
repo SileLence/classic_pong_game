@@ -66,9 +66,6 @@ public class Main extends ApplicationAdapter {
             spriteBatch.end();
         }
         if (gameState == GameState.MENU) {
-            if (gameParameters.getActiveMenuItemId() > 4) {
-                gameParameters.setActiveMenuItemId(1);
-            }
             gameParameters = inputController.processMenuInputs(gameParameters, physicsEngine);
 
             spriteBatch.begin();
@@ -102,6 +99,7 @@ public class Main extends ApplicationAdapter {
 
             spriteBatch.begin();
             objectRenderer.drawWorldObjects(objectController.getPlatforms(), objectController.getBall(), spriteBatch);
+            textRenderer.drawUI(objectController.getPlayingScreen(), spriteBatch);
             spriteBatch.end();
         }
         if (gameState == GameState.PAUSE) {

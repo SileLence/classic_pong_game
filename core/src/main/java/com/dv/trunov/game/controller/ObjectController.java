@@ -1,12 +1,12 @@
 package com.dv.trunov.game.controller;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.dv.trunov.game.ui.Continue;
+import com.dv.trunov.game.ui.Counter;
 import com.dv.trunov.game.ui.Exit;
 import com.dv.trunov.game.ui.ExitToMenu;
 import com.dv.trunov.game.ui.Pause;
@@ -30,11 +30,18 @@ public class ObjectController {
     private Ball ball;
     private Title title;
     private Pause pause;
-    private UITextItem[] titleScreen;
-    private UITextItem[] menuScreen;
-    private UITextItem[] pauseScreen;
+    private PressEnter pressEnter;
+    private OnePlayer onePlayer;
+    private TwoPlayers twoPlayers;
+    private Settings settings;
+    private Exit exit;
+    private Counter counterOne;
+    private Counter counterTwo;
+    private Continue continueGame;
+    private ExitToMenu exitToMenu;
     private BitmapFont titleFont;
     private BitmapFont pauseFont;
+    private BitmapFont counterFont;
     private BitmapFont regularFont;
 
     private ObjectController() {
@@ -104,6 +111,29 @@ public class ObjectController {
             Constants.Text.PAUSE,
             pauseLayout);
         pause = new Pause (pauseLabel);
+
+        titleParams.size = 72;
+        titleParams.shadowOffsetX = 1;
+        titleParams.shadowOffsetY = -1;
+        counterFont = titleTextGenerator.generateFont(titleParams);
+        GlyphLayout counterLayout = new GlyphLayout(counterFont, "00");
+        TextLabel counterLabelOne = new TextLabel(
+            Constants.Border.RIGHT - 200f,
+            Constants.Baseline.COUNTER,
+            counterFont,
+            "0",
+            counterLayout
+        );
+        TextLabel counterLabelTwo = new TextLabel(
+            Constants.Border.LEFT + 200f,
+            Constants.Baseline.COUNTER,
+            counterFont,
+            "0",
+            counterLayout
+        );
+        counterOne = new Counter(counterLabelOne);
+        counterTwo = new Counter(counterLabelTwo);
+
         titleTextGenerator.dispose();
     }
 
@@ -128,11 +158,11 @@ public class ObjectController {
         GlyphLayout pressEnterLayout = new GlyphLayout(regularFont, Constants.Text.PRESS_ENTER);
         TextLabel pressEnterLabel = new TextLabel(
             (Constants.Border.RIGHT - pressEnterLayout.width) / 2f,
-            Constants.Baseline.THIRD_MENU_ITEM,
+            Constants.Baseline.THIRD_ROW,
             regularFont,
             Constants.Text.PRESS_ENTER,
             pressEnterLayout);
-        titleScreen  = new UITextItem[]{title, new PressEnter(pressEnterLabel)};
+        pressEnter = new PressEnter(pressEnterLabel);
     }
 
     private void createMenuSelection(BitmapFont menuItemFont) {
@@ -142,63 +172,57 @@ public class ObjectController {
         GlyphLayout exitLayout = new GlyphLayout(menuItemFont, Constants.Text.EXIT);
         TextLabel onePlayerLabel = new TextLabel(
             (Constants.Border.RIGHT - settingsLayout.width) / 2f,
-            Constants.Baseline.FIRST_MENU_ITEM,
+            Constants.Baseline.FIRST_ROW,
             menuItemFont,
             Constants.Text.ONE_PLAYER,
             onePlayerLayout
         );
         TextLabel twoPlayersLabel = new TextLabel(
             (Constants.Border.RIGHT - settingsLayout.width) / 2f,
-            Constants.Baseline.SECOND_MENU_ITEM,
+            Constants.Baseline.SECOND_ROW,
             menuItemFont,
             Constants.Text.TWO_PLAYERS,
             twoPlayersLayout
         );
         TextLabel settingsLabel = new TextLabel(
             (Constants.Border.RIGHT - settingsLayout.width) / 2f,
-            Constants.Baseline.THIRD_MENU_ITEM,
+            Constants.Baseline.THIRD_ROW,
             menuItemFont,
             Constants.Text.SETTINGS,
             settingsLayout
         );
         TextLabel exitLabel = new TextLabel(
             (Constants.Border.RIGHT - settingsLayout.width) / 2f,
-            Constants.Baseline.FOURTH_MENU_ITEM,
+            Constants.Baseline.FOURTH_ROW,
             menuItemFont,
             Constants.Text.EXIT,
             exitLayout
         );
-        menuScreen = new UITextItem[]{
-            title,
-            new OnePlayer(onePlayerLabel),
-            new TwoPlayers(twoPlayersLabel),
-            new Settings(settingsLabel),
-            new Exit(exitLabel)
-        };
+        onePlayer = new OnePlayer(onePlayerLabel);
+        twoPlayers = new TwoPlayers(twoPlayersLabel);
+        settings = new Settings(settingsLabel);
+        exit = new Exit(exitLabel);
     }
 
     private void createPauseSelection(BitmapFont regularFont) {
         GlyphLayout continueLayout = new GlyphLayout(regularFont, Constants.Text.CONTINUE);
-        GlyphLayout exitToMenu = new GlyphLayout(regularFont, Constants.Text.EXIT_TO_MENU);
+        GlyphLayout exitToMenuLayout = new GlyphLayout(regularFont, Constants.Text.EXIT_TO_MENU);
         TextLabel continueLabel = new TextLabel(
-            (Constants.Border.RIGHT - exitToMenu.width) /2f,
-            Constants.Baseline.THIRD_MENU_ITEM,
+            (Constants.Border.RIGHT - exitToMenuLayout.width) /2f,
+            Constants.Baseline.THIRD_ROW,
             regularFont,
             Constants.Text.CONTINUE,
             continueLayout
         );
         TextLabel exitToMenuLabel = new TextLabel(
-            (Constants.Border.RIGHT - exitToMenu.width) / 2f,
-            Constants.Baseline.FOURTH_MENU_ITEM,
+            (Constants.Border.RIGHT - exitToMenuLayout.width) / 2f,
+            Constants.Baseline.FOURTH_ROW,
             regularFont,
             Constants.Text.EXIT_TO_MENU,
-            exitToMenu
+            exitToMenuLayout
         );
-        pauseScreen = new UITextItem[]{
-            pause,
-            new Continue(continueLabel),
-            new ExitToMenu(exitToMenuLabel)
-        };
+        continueGame = new Continue(continueLabel);
+        exitToMenu = new ExitToMenu(exitToMenuLabel);
     }
 
     public Ball getBall() {
@@ -210,15 +234,19 @@ public class ObjectController {
     }
 
     public UITextItem[] getTitleScreen() {
-        return titleScreen;
+        return new UITextItem[]{title, pressEnter};
     }
 
     public UITextItem[] getMenuScreen() {
-        return menuScreen;
+        return new UITextItem[]{title, onePlayer, twoPlayers, settings, exit};
     }
 
     public UITextItem[] getPauseScreen() {
-        return pauseScreen;
+        return new UITextItem[]{pause, counterOne, counterTwo, continueGame, exitToMenu};
+    }
+
+    public UITextItem[] getPlayingScreen() {
+        return new UITextItem[]{counterOne, counterTwo};
     }
 
     public GameParameters getGameParameters() {
@@ -235,6 +263,7 @@ public class ObjectController {
         ball.getTexture().dispose();
         titleFont.dispose();
         pauseFont.dispose();
+        counterFont.dispose();
         regularFont.dispose();
     }
 }

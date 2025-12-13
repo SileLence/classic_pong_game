@@ -8,14 +8,15 @@ public final class Constants {
     public static final class Border {
 
         public static final float BOTTOM = 0f;
-        public static final float TOP = Gdx.graphics.getHeight() - 100f;
+        public static final float TOP = Gdx.graphics.getHeight();
+        public static final float GAME_FIELD_TOP = Gdx.graphics.getHeight() - 100f;
         public static final float RIGHT = Gdx.graphics.getWidth();
         public static final float LEFT = 0f;
         public static final float BOTTOM_BALL_BOUNDARY = BOTTOM + Object.BALL_RADIUS;
-        public static final float TOP_BALL_BOUNDARY = TOP - Object.BALL_RADIUS;
+        public static final float TOP_BALL_BOUNDARY = GAME_FIELD_TOP - Object.BALL_RADIUS;
         public static final float RIGHT_BALL_BOUNDARY = RIGHT - Object.BALL_RADIUS;
         public static final float LEFT_BALL_BOUNDARY = LEFT + Object.BALL_RADIUS;
-        public static final float TOP_PLATFORM_BOUNDARY = TOP - Object.PLATFORM_HEIGHT;
+        public static final float TOP_PLATFORM_BOUNDARY = GAME_FIELD_TOP - Object.PLATFORM_HEIGHT;
         public static final float RIGHT_PLATFORM_BOUNDARY = RIGHT - Object.PLATFORM_WIDTH - 30f;
         public static final float LEFT_PLATFORM_BOUNDARY = LEFT + 30f;
     }
@@ -26,7 +27,7 @@ public final class Constants {
         public static final float PLATFORM_HEIGHT = 160f;
         public static final float BALL_RADIUS = 15f;
         public static final float BALL_START_X = Border.RIGHT / 2f;
-        public static final float BALL_START_Y = Border.TOP / 2f;
+        public static final float BALL_START_Y = Border.GAME_FIELD_TOP / 2f;
         public static final int BALL_TRAIL_NUMBER = 15;
         public static final int BALL_PARTICLES_NUMBER = 25;
     }
@@ -76,10 +77,11 @@ public final class Constants {
     public static final class Baseline {
 
         public static final float TITLE = Border.TOP * 0.8f;
-        public static final float FIRST_MENU_ITEM = Border.TOP * 0.5f;
-        public static final float SECOND_MENU_ITEM = Border.TOP * 0.4f;
-        public static final float THIRD_MENU_ITEM = Border.TOP * 0.3f;
-        public static final float FOURTH_MENU_ITEM = Border.TOP * 0.2f;
+        public static final float FIRST_ROW = Border.TOP * 0.5f;
+        public static final float SECOND_ROW = Border.TOP * 0.4f;
+        public static final float THIRD_ROW = Border.TOP * 0.3f;
+        public static final float FOURTH_ROW = Border.TOP * 0.2f;
+        public static final float COUNTER = Border.TOP - 20f;
     }
 
     public static final class Colors {

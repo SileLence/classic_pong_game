@@ -54,7 +54,7 @@ public class PhysicsEngine {
         return alpha;
     }
 
-    public void setAlpha() {
+    public void resetAlpha() {
         this.alpha = 1f;
         isGrow = false;
     }
