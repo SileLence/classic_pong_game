@@ -9,7 +9,7 @@ public final class Constants {
 
         public static final float BOTTOM = 0f;
         public static final float TOP = Gdx.graphics.getHeight();
-        public static final float GAME_FIELD_TOP = Gdx.graphics.getHeight() - 100f;
+        public static final float GAME_FIELD_TOP = Gdx.graphics.getHeight() * 0.9f;
         public static final float RIGHT = Gdx.graphics.getWidth();
         public static final float LEFT = 0f;
         public static final float BOTTOM_BALL_BOUNDARY = BOTTOM + Object.BALL_RADIUS;
@@ -35,7 +35,7 @@ public final class Constants {
     public static final class Speed {
 
         public static final float BALL_SPEED = 1000f;
-        public static final float PLATFORM_SPEED = 1100f;
+        public static final float PLATFORM_SPEED = BALL_SPEED * 0.9f;
     }
 
     public static final class Physics {
@@ -81,7 +81,8 @@ public final class Constants {
         public static final float SECOND_ROW = Border.TOP * 0.4f;
         public static final float THIRD_ROW = Border.TOP * 0.3f;
         public static final float FOURTH_ROW = Border.TOP * 0.2f;
-        public static final float COUNTER = Border.TOP - 20f;
+        public static final float MIDDLE_OF_COUNTER_FILED = (Border.TOP - Border.GAME_FIELD_TOP) / 2f
+            + Constants.Border.GAME_FIELD_TOP;
     }
 
     public static final class Colors {

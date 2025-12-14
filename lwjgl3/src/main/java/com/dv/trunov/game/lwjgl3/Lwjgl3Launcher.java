@@ -2,7 +2,6 @@ package com.dv.trunov.game.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.dv.trunov.game.Main;
 
 /** Launches the desktop (LWJGL3) application. */
@@ -14,8 +13,8 @@ public class Lwjgl3Launcher {
         createApplication();
     }
 
-    private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new Main(), getDefaultConfiguration());
+    private static void createApplication() {
+        new Lwjgl3Application(new Main(), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
@@ -36,7 +35,7 @@ public class Lwjgl3Launcher {
         configuration.setResizable(false);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
-        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+        configuration.setWindowIcon("icon/icon256", "icon/icon128.png", "icon/icon64.png", "icon/icon32.png");
 
         //// This should improve compatibility with Windows machines with buggy OpenGL drivers, Macs
         //// with Apple Silicon that have to emulate compatibility with OpenGL anyway, and more.

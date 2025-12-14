@@ -2,9 +2,9 @@ package com.dv.trunov.game.ui;
 
 import com.dv.trunov.game.util.TextLabel;
 
-public class Pause extends Title {
+public class Colon extends Title {
 
-    public Pause(TextLabel textLabel) {
+    public Colon(TextLabel textLabel) {
         super(textLabel);
     }
 }

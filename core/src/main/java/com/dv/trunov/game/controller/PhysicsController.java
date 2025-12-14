@@ -91,13 +91,26 @@ public class PhysicsController {
 
     private void calcPlatformCollision(Platform[] platforms, Ball ball) {
         for (Platform platform : platforms) {
-            if (ballIntersectsPlatform(platform, ball)) {
+            if (!ballIntersectsPlatform(platform, ball)) {
+                continue;
+            }
+            float ballX = ball.getX();
+            float ballY = ball.getY();
+            float radius = ball.getRadius();
+            float closestX = MathUtils.clamp(ballX, platform.getX(), platform.getX() + platform.getWidth());
+            float closestY = MathUtils.clamp(ballY, platform.getY(), platform.getY() + platform.getHeight());
+            float distX = ballX - closestX;
+            float distY = ballY - closestY;
+            boolean isSideHit = Math.abs(distX) > Math.abs(distY);
+            float newDirectionX;
+            float newDirectionY;
 
+            if (isSideHit) {
                 // correct ball position to prevent sticking
                 if (platform.isPlayerOne()) {
-                    ball.setX(platform.getX() - ball.getRadius());
+                    ball.setX(platform.getX() - radius);
                 } else {
-                    ball.setX(platform.getX() + platform.getWidth() + ball.getRadius());
+                    ball.setX(platform.getX() + platform.getWidth() + radius);
                 }
 
                 float ballCenter = ball.getY();
@@ -107,9 +120,9 @@ public class PhysicsController {
                 // calc offset and adjust it with spin (platform moving)
                 hitOffset = MathUtils.clamp(hitOffset + spin, -1f, 1f);
 
-                float newDirectionY = hitOffset;
+                newDirectionY = hitOffset;
                 // calc horizontal hit depending on spin (platform moving)
-                float newDirectionX = 1f - Math.abs(spin) * Constants.Physics.SPIN_FACTOR;
+                newDirectionX = 1f - Math.abs(spin) * Constants.Physics.SPIN_FACTOR;
                 // normalize
                 float vectorLength = (float) Math.sqrt(newDirectionX * newDirectionX + newDirectionY * newDirectionY);
                 newDirectionX /= vectorLength;
@@ -118,10 +131,40 @@ public class PhysicsController {
                 if (platform.isPlayerOne()) {
                     newDirectionX = -newDirectionX;
                 }
+            } else {
+                float distanceSquared = distX * distX + distY * distY;
+                if (distanceSquared == 0f) {
+                    // if ball hit directly to corner
+                    distX = platform.isPlayerOne() ? 1f : -1f;
+                    distY = 0f;
+                    distanceSquared = 1f;
+                }
+                float distance = (float) Math.sqrt(distanceSquared);
+                float normalX = distX / distance;
+                float normalY = distY / distance;
+                float penetration = radius - distance;
 
-                ball.setDirection(newDirectionX, newDirectionY);
-                break;
+                // correct ball position to prevent sticking
+                ball.setPosition(ballX + normalX * penetration, ballY + normalY * penetration);
+
+                // отражение направления по нормали
+                float dirX = ball.getDirectionX();
+                float dirY = ball.getDirectionY();
+
+                float dot = dirX * normalX + dirY * normalY;
+
+                newDirectionX = dirX - 2f * dot * normalX;
+                newDirectionY = dirY - 2f * dot * normalY;
+
+                // нормализация направления
+                float vectorLength = (float) Math.sqrt(newDirectionX * newDirectionX + newDirectionY * newDirectionY);
+                if (vectorLength != 0f) {
+                    newDirectionX /= vectorLength;
+                    newDirectionY /= vectorLength;
+                }
             }
+            ball.setDirection(newDirectionX, newDirectionY);
+            break;
         }
     }
 

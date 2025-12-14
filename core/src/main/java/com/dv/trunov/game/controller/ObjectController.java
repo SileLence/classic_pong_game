@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.dv.trunov.game.ui.Colon;
 import com.dv.trunov.game.ui.Continue;
 import com.dv.trunov.game.ui.Counter;
 import com.dv.trunov.game.ui.Exit;
@@ -37,6 +38,7 @@ public class ObjectController {
     private Exit exit;
     private Counter counterOne;
     private Counter counterTwo;
+    private Colon colon;
     private Continue continueGame;
     private ExitToMenu exitToMenu;
     private BitmapFont titleFont;
@@ -116,23 +118,32 @@ public class ObjectController {
         titleParams.shadowOffsetX = 1;
         titleParams.shadowOffsetY = -1;
         counterFont = titleTextGenerator.generateFont(titleParams);
-        GlyphLayout counterLayout = new GlyphLayout(counterFont, "00");
+        GlyphLayout counterLayout = new GlyphLayout(counterFont, "0");
         TextLabel counterLabelOne = new TextLabel(
-            Constants.Border.RIGHT - 200f,
-            Constants.Baseline.COUNTER,
+            Constants.Border.RIGHT / 2f + 50f,
+            Constants.Baseline.MIDDLE_OF_COUNTER_FILED + counterLayout.height / 2f,
             counterFont,
             "0",
             counterLayout
         );
         TextLabel counterLabelTwo = new TextLabel(
-            Constants.Border.LEFT + 200f,
-            Constants.Baseline.COUNTER,
+            Constants.Border.RIGHT / 2f - counterLayout.width - 50f,
+            Constants.Baseline.MIDDLE_OF_COUNTER_FILED + counterLayout.height / 2f,
             counterFont,
             "0",
             counterLayout
         );
+        GlyphLayout colonLayout = new GlyphLayout(counterFont, ":");
+        TextLabel colonLabel = new TextLabel(
+            Constants.Border.RIGHT / 2f - colonLayout.width / 2f,
+            Constants.Baseline.MIDDLE_OF_COUNTER_FILED + colonLayout.height / 2f,
+            counterFont,
+            ":",
+            colonLayout
+        );
         counterOne = new Counter(counterLabelOne);
         counterTwo = new Counter(counterLabelTwo);
+        colon = new Colon(colonLabel);
 
         titleTextGenerator.dispose();
     }
@@ -242,11 +253,11 @@ public class ObjectController {
     }
 
     public UITextItem[] getPauseScreen() {
-        return new UITextItem[]{pause, counterOne, counterTwo, continueGame, exitToMenu};
+        return new UITextItem[]{pause, counterOne, counterTwo, colon, continueGame, exitToMenu};
     }
 
     public UITextItem[] getPlayingScreen() {
-        return new UITextItem[]{counterOne, counterTwo};
+        return new UITextItem[]{counterOne, counterTwo, colon};
     }
 
     public GameParameters getGameParameters() {

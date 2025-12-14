@@ -2,12 +2,12 @@ package com.dv.trunov.game.ui;
 
 import com.dv.trunov.game.util.TextLabel;
 
-public class Counter extends UITextItem {
+public class Counter extends Title {
 
     private int value;
 
     public Counter(TextLabel textLabel) {
-        super(-1, textLabel);
+        super(textLabel);
         value = 0;
     }
 

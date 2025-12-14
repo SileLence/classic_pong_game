@@ -1,5 +1,6 @@
 package com.dv.trunov.game.model;
 
+import com.dv.trunov.game.ui.Counter;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 
@@ -9,6 +10,8 @@ public class GameParameters {
     private GameState gameState;
     private GameMode gameMode;
     private int activeMenuItemId;
+    private Counter counterOne;
+    private Counter counterTwo;
 
     public static GameParameters getInstance() {
         return INSTANCE;
@@ -58,4 +61,6 @@ public class GameParameters {
     public void setActiveMenuItemId(int activeMenuItemId) {
         this.activeMenuItemId = activeMenuItemId;
     }
+
+
 }

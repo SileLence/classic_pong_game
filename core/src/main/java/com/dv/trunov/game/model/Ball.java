@@ -10,13 +10,12 @@ import java.util.List;
 
 public class Ball extends WorldObject {
 
-    private static final float MIN_X_VALUE = 0.3f;
+    private static final float MIN_X_VALUE = 0.5f;
     private final Circle circle;
     private final List<Vector2> trailPoints = new ArrayList<>(Constants.Object.BALL_TRAIL_NUMBER);
     private final List<BallParticle> particles = new ArrayList<>(Constants.Object.BALL_PARTICLES_NUMBER);
     private float directionX;
     private float directionY;
-    public float vectorLength;
 
     public Ball(String texturePath) {
         super(texturePath);
@@ -33,7 +32,7 @@ public class Ball extends WorldObject {
         }
         directionY = MathUtils.random(-1f, 1f);
         // normalize vector
-        vectorLength = (float) Math.sqrt(directionX * directionX + directionY * directionY);
+        float vectorLength = (float) Math.sqrt(directionX * directionX + directionY * directionY);
         directionX /= vectorLength;
         directionY /= vectorLength;
     }
