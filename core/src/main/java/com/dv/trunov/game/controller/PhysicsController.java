@@ -87,10 +87,23 @@ public class PhysicsController {
         }
         // update particles position if case of explosion
         ball.updateParticles(timeStep);
+        ball.updateHitCooldown(timeStep);
     }
 
     private void calcPlatformCollision(Platform[] platforms, Ball ball) {
+        if (ball.getHitCooldown() > 0) {
+            return;
+        }
         for (Platform platform : platforms) {
+            if (platform.isPlayerOne()) {
+                if (ball.getX() > platform.getX() + platform.getWidth()) {
+                    continue;
+                }
+            } else {
+                if (ball.getX() < platform.getX()) {
+                    continue;
+                }
+            }
             if (!ballIntersectsPlatform(platform, ball)) {
                 continue;
             }
@@ -134,29 +147,40 @@ public class PhysicsController {
             } else {
                 float distanceSquared = distX * distX + distY * distY;
                 if (distanceSquared == 0f) {
-                    // if ball hit directly to corner
-                    distX = platform.isPlayerOne() ? 1f : -1f;
-                    distY = 0f;
-                    distanceSquared = 1f;
+                    // Degenerate case: ball center exactly matches closest point on platform.
+                    // In this situation collision normal cannot be determined (zero-length vector).
+                    // Use inverse ball direction as a fallback normal to keep physics stable.
+                    float dirX = ball.getDirectionX();
+                    float dirY = ball.getDirectionY();
+                    distX = -dirX;
+                    distY = -dirY;
+                    distanceSquared = distX * distX + distY * distY;
                 }
                 float distance = (float) Math.sqrt(distanceSquared);
                 float normalX = distX / distance;
                 float normalY = distY / distance;
                 float penetration = radius - distance;
+                // reduce penetration value
+                penetration = Math.min(penetration, radius * 0.4f);
 
-                // correct ball position to prevent sticking
+                // return ball to platform surface by normal direction
                 ball.setPosition(ballX + normalX * penetration, ballY + normalY * penetration);
 
-                // отражение направления по нормали
-                float dirX = ball.getDirectionX();
-                float dirY = ball.getDirectionY();
+                // calc ball reflection by formula: R = D - 2 * (D · N) * N
+                // where
+                // R - reflected vector,
+                // D - current ball direction vector,
+                // N - normal is vector equals to 1 and perpendicular to surface, for example, [0, 1] for bottom
+                // · (dotProduct) is a scalar (dot) multiplication (product) of direction and normal vectors.
+                // Since both vectors are normalized (length = 1),
+                // dotProduct is equal to cos(angle) between them.
+                // Therefore, explicit cos(angle) calculation is not required.
+                float directionX = ball.getDirectionX();
+                float directionY = ball.getDirectionY();
 
-                float dot = dirX * normalX + dirY * normalY;
-
-                newDirectionX = dirX - 2f * dot * normalX;
-                newDirectionY = dirY - 2f * dot * normalY;
-
-                // нормализация направления
+                float dotProduct = directionX * normalX + directionY * normalY;
+                newDirectionX = directionX - 2f * dotProduct * normalX;
+                newDirectionY = directionY - 2f * dotProduct * normalY;
                 float vectorLength = (float) Math.sqrt(newDirectionX * newDirectionX + newDirectionY * newDirectionY);
                 if (vectorLength != 0f) {
                     newDirectionX /= vectorLength;
@@ -164,6 +188,7 @@ public class PhysicsController {
                 }
             }
             ball.setDirection(newDirectionX, newDirectionY);
+            ball.setHitCooldown();
             break;
         }
     }

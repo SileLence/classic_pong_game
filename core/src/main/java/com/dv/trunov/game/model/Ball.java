@@ -11,11 +11,13 @@ import java.util.List;
 public class Ball extends WorldObject {
 
     private static final float MIN_X_VALUE = 0.5f;
+    private static final float HIT_COOLDOWN = 0.03f;
     private final Circle circle;
     private final List<Vector2> trailPoints = new ArrayList<>(Constants.Object.BALL_TRAIL_NUMBER);
     private final List<BallParticle> particles = new ArrayList<>(Constants.Object.BALL_PARTICLES_NUMBER);
     private float directionX;
     private float directionY;
+    private float hitCooldown;
 
     public Ball(String texturePath) {
         super(texturePath);
@@ -70,6 +72,15 @@ public class Ball extends WorldObject {
         }
     }
 
+    public void updateHitCooldown(float timeStep) {
+        if (hitCooldown > 0) {
+            hitCooldown -= timeStep;
+        }
+        if (hitCooldown < 0) {
+            hitCooldown = 0;
+        }
+    }
+
     public float getX() {
         return circle.x;
     }
@@ -114,5 +125,13 @@ public class Ball extends WorldObject {
 
     public List<BallParticle> getParticles() {
         return particles;
+    }
+
+    public float getHitCooldown() {
+        return hitCooldown;
+    }
+
+    public void setHitCooldown() {
+        hitCooldown = HIT_COOLDOWN;
     }
 }
