@@ -26,9 +26,9 @@ public class PhysicsController {
     private void calcPlatformPhysics(Platform[] platforms, float timeStep) {
         for (Platform platform : platforms) {
             float targetVelocity = 0f;
-            if (platform.getDirection() < 0) {
+            if (platform.getDirection() < 0f) {
                 targetVelocity = -Constants.Speed.PLATFORM_SPEED;
-            } else if (platform.getDirection() > 0) {
+            } else if (platform.getDirection() > 0f) {
                 targetVelocity = Constants.Speed.PLATFORM_SPEED;
             }
 
@@ -38,8 +38,8 @@ public class PhysicsController {
             platform.setVelocityY(interpolatedVelocity);
             platform.setY(platform.getY() + interpolatedVelocity * timeStep);
 
-            if (platform.getY() < 0) {
-                platform.setY(0);
+            if (platform.getY() < 0f) {
+                platform.setY(0f);
             }
             if (platform.getY() > Constants.Border.TOP_PLATFORM_BOUNDARY) {
                 platform.setY(Constants.Border.TOP_PLATFORM_BOUNDARY);
@@ -91,16 +91,16 @@ public class PhysicsController {
     }
 
     private void calcPlatformCollision(Platform[] platforms, Ball ball) {
-        if (ball.getHitCooldown() > 0) {
+        if (ball.getHitCooldown() > 0f) {
             return;
         }
         for (Platform platform : platforms) {
             if (platform.isPlayerOne()) {
-                if (ball.getX() > platform.getX() + platform.getWidth()) {
+                if (ball.getX() > platform.getX() + platform.getWidth() && ball.getDirectionX() > 0f) {
                     continue;
                 }
             } else {
-                if (ball.getX() < platform.getX()) {
+                if (ball.getX() < platform.getX() && ball.getDirectionX() < 0f) {
                     continue;
                 }
             }

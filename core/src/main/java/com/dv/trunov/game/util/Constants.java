@@ -34,7 +34,7 @@ public final class Constants {
 
     public static final class Speed {
 
-        public static final float BALL_SPEED = 1000f;
+        public static final float BALL_SPEED = 1200f;
         public static final float PLATFORM_SPEED = BALL_SPEED * 0.9f;
     }
 

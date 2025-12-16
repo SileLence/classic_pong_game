@@ -73,11 +73,11 @@ public class Ball extends WorldObject {
     }
 
     public void updateHitCooldown(float timeStep) {
-        if (hitCooldown > 0) {
+        if (hitCooldown > 0f) {
             hitCooldown -= timeStep;
         }
-        if (hitCooldown < 0) {
-            hitCooldown = 0;
+        if (hitCooldown < 0f) {
+            hitCooldown = 0f;
         }
     }
 
