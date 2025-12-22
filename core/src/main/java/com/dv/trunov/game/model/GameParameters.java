@@ -1,6 +1,5 @@
 package com.dv.trunov.game.model;
 
-import com.dv.trunov.game.ui.Counter;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 
@@ -10,9 +9,9 @@ public class GameParameters {
     private GameState gameState;
     private GameMode gameMode;
     private int activeMenuItemId;
-    private Counter counterOne;
-    private Counter counterTwo;
-
+    private float cooldown;
+    private int scoreOne;
+    private int scoreTwo;
     public static GameParameters getInstance() {
         return INSTANCE;
     }
@@ -20,6 +19,7 @@ public class GameParameters {
     private GameParameters() {
         gameState = GameState.TITLE;
         activeMenuItemId = 0;
+        cooldown = 0f;
     }
 
     public void setGameParametersByMenuItemId(int menuItemId) {
@@ -62,5 +62,27 @@ public class GameParameters {
         this.activeMenuItemId = activeMenuItemId;
     }
 
+    public float getCooldown() {
+        return cooldown;
+    }
 
+    public void setCooldown(float cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public int getScoreOne() {
+        return scoreOne;
+    }
+
+    public void addScoreOne() {
+        scoreOne++;
+    }
+
+    public int getScoreTwo() {
+        return scoreTwo;
+    }
+
+    public void addScoreTwo() {
+        scoreTwo++;
+    }
 }

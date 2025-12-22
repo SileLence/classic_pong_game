@@ -8,5 +8,6 @@ public enum GameState {
     PLAYING,
     PAUSE,
     GOAL,
+    WIN,
     EXIT
 }

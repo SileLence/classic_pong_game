@@ -9,10 +9,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.dv.trunov.game.controller.InputController;
 import com.dv.trunov.game.controller.ObjectController;
 import com.dv.trunov.game.controller.PhysicsController;
+import com.dv.trunov.game.controller.UIController;
 import com.dv.trunov.game.engine.PhysicsEngine;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.renderer.ObjectRenderer;
-import com.dv.trunov.game.renderer.TextRenderer;
+import com.dv.trunov.game.renderer.UIRenderer;
+import com.dv.trunov.game.ui.UITextItem;
 import com.dv.trunov.game.util.GameState;
 
 public class Main extends ApplicationAdapter {
@@ -20,11 +22,12 @@ public class Main extends ApplicationAdapter {
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
     private ObjectController objectController;
+    private UIController uiController;
     private InputController inputController;
     private PhysicsController physicsController;
     private PhysicsEngine physicsEngine;
     private ObjectRenderer objectRenderer;
-    private TextRenderer textRenderer;
+    private UIRenderer uiRenderer;
     private GameParameters gameParameters;
     private boolean worldObjectsCreated;
 
@@ -33,103 +36,112 @@ public class Main extends ApplicationAdapter {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         objectController = ObjectController.getInstance();
-        objectController.init();
+        objectController.initGameParameters();
         gameParameters = objectController.getGameParameters();
+        uiController = UIController.getInstance();
+        uiController.createUIObjects();
         inputController = InputController.getInstance();
         physicsController = PhysicsController.getInstance();
         physicsEngine = PhysicsEngine.getInstance();
         objectRenderer = ObjectRenderer.getInstance();
-        textRenderer = TextRenderer.getInstance();
+        uiRenderer = UIRenderer.getInstance();
     }
 
     @Override
     public void render() {
-
-        // TODO Добавить отскок мяча от торцов платформы
-
         float deltaTime = Gdx.graphics.getDeltaTime();
         GameState gameState = gameParameters.getGameState();
-        if (gameState == GameState.TITLE || gameState == GameState.PAUSE || gameState == GameState.MENU) {
+        if (GameState.TITLE == gameState || GameState.PAUSE == gameState || GameState.MENU == gameState) {
             physicsEngine.updateAlpha(deltaTime);
         }
         clearScreen();
-        if (gameState == GameState.TITLE) {
-            gameParameters = inputController.processTitleInputs(gameParameters);
-
-            spriteBatch.begin();
-            textRenderer.drawUI(
-                objectController.getTitleScreen(),
-                gameParameters.getActiveMenuItemId(),
-                physicsEngine.getAlpha(),
-                spriteBatch
-            );
-            spriteBatch.end();
+        if (GameState.TITLE == gameState) {
+            inputController.processTitleInputs(gameParameters);
+            drawUI(uiController.getTitleScreen());
         }
-        if (gameState == GameState.MENU) {
-            gameParameters = inputController.processMenuInputs(gameParameters, physicsEngine);
-
-            spriteBatch.begin();
-            textRenderer.drawUI(
-                objectController.getMenuScreen(),
-                gameParameters.getActiveMenuItemId(),
-                physicsEngine.getAlpha(),
-                spriteBatch
-            );
-            spriteBatch.end();
+        if (GameState.MENU == gameState) {
+            inputController.processMenuInputs(gameParameters, physicsEngine);
+            drawUI(uiController.getMenuScreen());
         }
-        if (gameState == GameState.PLAYING && !worldObjectsCreated) {
+        if (GameState.PLAYING == gameState && !worldObjectsCreated) {
             worldObjectsCreated = objectController.createWorldObjects(gameParameters);
         }
-        if (gameState == GameState.PLAYING) {
+        if (GameState.PLAYING == gameState) {
             physicsEngine.resume();
-            physicsEngine.updatePhysics(
-                physicsController,
-                objectController.getPlatforms(),
-                objectController.getBall(),
-                gameParameters.getGameMode(),
-                deltaTime);
-            gameParameters = inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
-
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            objectRenderer.drawBorder(shapeRenderer);
-            shapeRenderer.end();
-            Gdx.gl.glDisable(GL20.GL_BLEND);
-
-            spriteBatch.begin();
-            objectRenderer.drawWorldObjects(objectController.getPlatforms(), objectController.getBall(), spriteBatch);
-            textRenderer.drawUI(objectController.getPlayingScreen(), spriteBatch);
-            spriteBatch.end();
+            updatePhysics(deltaTime);
+            inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
+            drawBackground();
+            drawWorldObjects();
+            drawUI(uiController.getPlayingScreen());
         }
-        if (gameState == GameState.PAUSE) {
-            gameParameters = inputController.processPauseInputs(gameParameters, physicsEngine);
-
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            objectRenderer.drawBorder(shapeRenderer);
-            shapeRenderer.end();
-            Gdx.gl.glDisable(GL20.GL_BLEND);
-
-            spriteBatch.begin();
-            objectRenderer.drawWorldObjects(objectController.getPlatforms(), objectController.getBall(), spriteBatch);
-            textRenderer.drawUI(
-                objectController.getPauseScreen(),
-                gameParameters.getActiveMenuItemId(),
-                physicsEngine.getAlpha(),
-                spriteBatch
-            );
-            spriteBatch.end();
-
+        if (GameState.GOAL == gameState) {
+            physicsEngine.goalCooldown(gameParameters, deltaTime);
+            if (gameParameters.getCooldown() <= 1f) {
+                uiController.updateCounters(gameParameters);
+            }
+            if (gameParameters.getCooldown() <= 0.5f) {
+                objectController.resetBallPosition();
+            }
+            updatePhysics(deltaTime);
+            inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
+            drawBackground();
+            drawWorldObjects();
+            drawUI(uiController.getPlayingScreen());
+        }
+        if (GameState.PAUSE == gameState) {
+            inputController.processPauseInputs(gameParameters, physicsEngine);
+            drawBackground();
+            drawWorldObjects();
+            drawUI(uiController.getPauseScreen());
             physicsEngine.pause();
             if (gameParameters.getGameState() == GameState.MENU) {
                 worldObjectsCreated = objectController.destroyWorldObjects();
             }
         }
-        if (gameState == GameState.EXIT) {
+        if (GameState.EXIT == gameState) {
             Gdx.app.exit();
         }
+    }
+
+    private void updatePhysics(float deltaTime) {
+        physicsEngine.updatePhysics(
+            physicsController,
+            objectController.getPlatforms(),
+            objectController.getBall(),
+            gameParameters,
+            deltaTime
+        );
+    }
+
+    private void drawBackground() {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        objectRenderer.drawBorder(shapeRenderer);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+
+    private void drawWorldObjects() {
+        spriteBatch.begin();
+        objectRenderer.drawWorldObjects(
+            objectController.getPlatforms(),
+            objectController.getBall(),
+            gameParameters,
+            spriteBatch
+        );
+        spriteBatch.end();
+    }
+
+    private void drawUI(UITextItem[] uiTextItems) {
+        spriteBatch.begin();
+        uiRenderer.drawUI(
+            uiTextItems,
+            gameParameters.getActiveMenuItemId(),
+            physicsEngine.getAlpha(),
+            spriteBatch
+        );
+        spriteBatch.end();
     }
 
     @Override
@@ -141,6 +153,7 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         spriteBatch.dispose();
         shapeRenderer.dispose();
+        uiController.dispose();
         if (worldObjectsCreated) {
             objectController.dispose();
         }

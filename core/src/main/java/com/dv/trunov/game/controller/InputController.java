@@ -18,15 +18,14 @@ public class InputController {
         return INSTANCE;
     }
 
-    public GameParameters processTitleInputs(GameParameters gameParameters) {
+    public void processTitleInputs(GameParameters gameParameters) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             gameParameters.setGameState(GameState.MENU);
             gameParameters.setActiveMenuItemId(1);
         }
-        return gameParameters;
     }
 
-    public GameParameters processMenuInputs(GameParameters gameParameters, PhysicsEngine physicsEngine) {
+    public void processMenuInputs(GameParameters gameParameters, PhysicsEngine physicsEngine) {
         int activeMenuItemId = gameParameters.getActiveMenuItemId();
         int newActiveMenuItemId = gameParameters.getActiveMenuItemId();
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -47,10 +46,9 @@ public class InputController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             gameParameters.setGameParametersByMenuItemId(activeMenuItemId);
         }
-        return gameParameters;
     }
 
-    public GameParameters processPauseInputs(GameParameters gameParameters, PhysicsEngine physicsEngine) {
+    public void processPauseInputs(GameParameters gameParameters, PhysicsEngine physicsEngine) {
         int activeMenuItemId = gameParameters.getActiveMenuItemId();
         int newActiveMenuItemId = gameParameters.getActiveMenuItemId();
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
@@ -71,10 +69,9 @@ public class InputController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             gameParameters.setGameParametersByMenuItemId(activeMenuItemId);
         }
-        return gameParameters;
     }
 
-    public GameParameters processPlayingInputs(Platform[] platforms, GameParameters gameParameters) {
+    public void processPlayingInputs(Platform[] platforms, GameParameters gameParameters) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             gameParameters.setGameState(GameState.PAUSE);
         } else {
@@ -98,6 +95,5 @@ public class InputController {
                 }
             }
         }
-        return gameParameters;
     }
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.dv.trunov.game.model.Ball;
 import com.dv.trunov.game.model.BallParticle;
+import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
 
@@ -42,10 +43,12 @@ public class ObjectRenderer {
         );
     }
 
-    public void drawWorldObjects(Platform[] platforms, Ball ball, SpriteBatch batch) {
+    public void drawWorldObjects(Platform[] platforms, Ball ball, GameParameters gameParameters, SpriteBatch batch) {
         drawPlatforms(platforms, batch);
-        drawBall(ball, batch);
-        drawBallTail(ball, batch);
+        if (gameParameters.getCooldown() <= 0.5f) {
+            drawBall(ball, batch);
+            drawBallTail(ball, batch);
+        }
         drawBallExplosion(ball, batch);
     }
 

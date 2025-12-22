@@ -2,9 +2,10 @@ package com.dv.trunov.game.engine;
 
 import com.dv.trunov.game.controller.PhysicsController;
 import com.dv.trunov.game.model.Ball;
+import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
-import com.dv.trunov.game.util.GameMode;
+import com.dv.trunov.game.util.GameState;
 
 public class PhysicsEngine {
 
@@ -29,7 +30,7 @@ public class PhysicsEngine {
     public void updatePhysics(PhysicsController physicsController,
                               Platform[] platforms,
                               Ball ball,
-                              GameMode gameMode,
+                              GameParameters gameParameters,
                               float deltaTime) {
 
         if (paused) {
@@ -37,7 +38,7 @@ public class PhysicsEngine {
         }
         accumulator += deltaTime;
         while (accumulator >= TIMESTEP) {
-            physicsController.update(platforms, ball, gameMode, TIMESTEP);
+            physicsController.processPhysics(platforms, ball, gameParameters, TIMESTEP);
             accumulator -= TIMESTEP;
         }
     }
@@ -72,5 +73,21 @@ public class PhysicsEngine {
             alpha = 0.5f;
             isGrow = true;
         }
+    }
+
+    public void goalCooldown(GameParameters gameParameters, float deltaTime) {
+        GameState gameState = gameParameters.getGameState();
+        float cooldown = gameParameters.getCooldown();
+        if (gameState == GameState.GOAL && cooldown == 0f) {
+            cooldown = 1.5f;
+        }
+        if (GameState.GOAL == gameState) {
+            cooldown -= deltaTime;
+            if (cooldown < 0f) {
+                gameParameters.setGameState(GameState.PLAYING);
+                cooldown = 0f;
+            }
+        }
+        gameParameters.setCooldown(cooldown);
     }
 }

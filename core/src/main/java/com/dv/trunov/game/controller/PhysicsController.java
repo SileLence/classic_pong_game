@@ -2,9 +2,11 @@ package com.dv.trunov.game.controller;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.dv.trunov.game.model.Ball;
+import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
+import com.dv.trunov.game.util.GameState;
 
 public class PhysicsController {
 
@@ -17,9 +19,15 @@ public class PhysicsController {
         return INSTANCE;
     }
 
-    public void update(Platform[] platforms, Ball ball, GameMode gameMode, float timeStep) {
+    public void processPhysics(Platform[] platforms, Ball ball, GameParameters gameParameters, float timeStep) {
+        if (GameState.GOAL == gameParameters.getGameState()) {
+            calcPlatformPhysics(platforms, timeStep);
+            ball.updateParticles(timeStep);
+            ball.addTrailPoint();
+            return;
+        }
         calcPlatformPhysics(platforms, timeStep);
-        calcBallPhysics(ball, gameMode, timeStep);
+        calcBallPhysics(ball, gameParameters, timeStep);
         calcPlatformCollision(platforms, ball);
     }
 
@@ -33,7 +41,11 @@ public class PhysicsController {
             }
 
             // interpolate platform movement
-            float interpolatedVelocity = MathUtils.lerp(platform.getVelocityY(), targetVelocity, Constants.Physics.INTERPOLATION_COEFFICIENT);
+            float interpolatedVelocity = MathUtils.lerp(
+                platform.getVelocityY(),
+                targetVelocity,
+                Constants.Physics.INTERPOLATION_COEFFICIENT
+            );
 
             platform.setVelocityY(interpolatedVelocity);
             platform.setY(platform.getY() + interpolatedVelocity * timeStep);
@@ -47,7 +59,7 @@ public class PhysicsController {
         }
     }
 
-    private void calcBallPhysics(Ball ball, GameMode gameMode, float timeStep) {
+    private void calcBallPhysics(Ball ball, GameParameters gameParameters, float timeStep) {
         float directionX = ball.getDirectionX();
         float directionY = ball.getDirectionY();
 
@@ -66,7 +78,7 @@ public class PhysicsController {
             directionY = -directionY;
         }
 
-        if (gameMode == GameMode.SINGLEPLAYER) {
+        if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
             if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
                 ball.setX(Constants.Border.LEFT_BALL_BOUNDARY);
                 directionX = -directionX;
@@ -75,18 +87,18 @@ public class PhysicsController {
 
             if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
-                ball.setStartPosition();
+                gameParameters.setGameState(GameState.GOAL);
             }
         } else {
             ball.setDirection(directionX, directionY);
 
-            if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY || ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
-                ball.spawnExplosion();
-                ball.setStartPosition();
+            if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
+                processGoal(ball, gameParameters, true);
+            }
+            if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
+                processGoal(ball, gameParameters, false);
             }
         }
-        // update particles position if case of explosion
-        ball.updateParticles(timeStep);
         ball.updateHitCooldown(timeStep);
     }
 
@@ -205,5 +217,15 @@ public class PhysicsController {
         float distY = ballY - closestY;
 
         return distX * distX + distY * distY < radius * radius;
+    }
+
+    private void processGoal(Ball ball, GameParameters gameParameters, boolean isPlayerOne) {
+        ball.spawnExplosion();
+        gameParameters.setGameState(GameState.GOAL);
+        if (isPlayerOne) {
+            gameParameters.addScoreOne();
+        } else {
+            gameParameters.addScoreTwo();
+        }
     }
 }

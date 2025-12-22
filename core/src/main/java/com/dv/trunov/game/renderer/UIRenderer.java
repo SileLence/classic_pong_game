@@ -6,19 +6,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dv.trunov.game.ui.UITextItem;
 import com.dv.trunov.game.util.Constants;
 
-public class TextRenderer {
+public class UIRenderer {
 
-    private static final TextRenderer INSTANCE = new TextRenderer();
+    private static final UIRenderer INSTANCE = new UIRenderer();
 
-    private TextRenderer() {
+    private UIRenderer() {
     }
 
-    public static TextRenderer getInstance() {
+    public static UIRenderer getInstance() {
         return INSTANCE;
-    }
-
-    public void drawUI(UITextItem[] textItems, SpriteBatch spriteBatch) {
-        drawUI(textItems, Integer.MIN_VALUE, Integer.MIN_VALUE, spriteBatch);
     }
 
     public void drawUI(UITextItem[] textItems, int activeTextItem, float alpha, SpriteBatch spriteBatch) {

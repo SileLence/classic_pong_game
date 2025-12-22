@@ -27,6 +27,7 @@ public class Ball extends WorldObject {
     }
 
     public void setStartPosition() {
+        trailPoints.clear();
         circle.setPosition(Constants.Object.BALL_START_X, Constants.Object.BALL_START_Y);
         directionX = MathUtils.random(-1f, 1f);
         if (Math.abs(directionX) < MIN_X_VALUE) {
