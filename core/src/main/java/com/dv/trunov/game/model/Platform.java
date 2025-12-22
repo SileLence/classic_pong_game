@@ -16,16 +16,8 @@ public class Platform extends WorldObject {
         this.playerOne = playerOne;
     }
 
-    public Rectangle getBounds() {
-        return bounds;
-    }
-
     public float getX() {
         return bounds.x;
-    }
-
-    public void setX(float x) {
-        this.bounds.x = x;
     }
 
     public float getY() {

@@ -4,6 +4,7 @@ import com.dv.trunov.game.model.Ball;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
+import com.dv.trunov.game.util.Language;
 
 public class ObjectController {
 
@@ -19,8 +20,9 @@ public class ObjectController {
         return INSTANCE;
     }
 
-    public void initGameParameters() {
+    public void initGameParameters(Language language) {
         gameParameters = GameParameters.getInstance();
+        Constants.setLocalization(language);
     }
 
     public boolean createWorldObjects(GameParameters gameParameters) {

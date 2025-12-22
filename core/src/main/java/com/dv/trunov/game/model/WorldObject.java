@@ -2,7 +2,7 @@ package com.dv.trunov.game.model;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class WorldObject {
+public abstract class WorldObject {
 
     private final Texture texture;
 

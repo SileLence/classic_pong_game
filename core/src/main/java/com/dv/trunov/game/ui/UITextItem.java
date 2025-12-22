@@ -1,7 +1,6 @@
 package com.dv.trunov.game.ui;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.dv.trunov.game.util.TextLabel;
 
 public abstract class UITextItem {
@@ -35,9 +34,5 @@ public abstract class UITextItem {
 
     public String getText() {
         return textLabel.text();
-    }
-
-    public GlyphLayout getLayout() {
-        return textLabel.layout();
     }
 }

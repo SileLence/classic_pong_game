@@ -16,6 +16,7 @@ import com.dv.trunov.game.renderer.ObjectRenderer;
 import com.dv.trunov.game.renderer.UIRenderer;
 import com.dv.trunov.game.ui.UITextItem;
 import com.dv.trunov.game.util.GameState;
+import com.dv.trunov.game.util.Language;
 
 public class Main extends ApplicationAdapter {
 
@@ -36,7 +37,7 @@ public class Main extends ApplicationAdapter {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         objectController = ObjectController.getInstance();
-        objectController.initGameParameters();
+        objectController.initGameParameters(Language.ENGLISH);
         gameParameters = objectController.getGameParameters();
         uiController = UIController.getInstance();
         uiController.createUIObjects();
@@ -62,6 +63,10 @@ public class Main extends ApplicationAdapter {
         if (GameState.MENU == gameState) {
             inputController.processMenuInputs(gameParameters, physicsEngine);
             drawUI(uiController.getMenuScreen());
+        }
+        if (GameState.SETTINGS == gameState) {
+            // TODO Implement settings
+            gameParameters.setGameState(GameState.MENU);
         }
         if (GameState.PLAYING == gameState && !worldObjectsCreated) {
             worldObjectsCreated = objectController.createWorldObjects(gameParameters);

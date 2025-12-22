@@ -12,6 +12,7 @@ public class GameParameters {
     private float cooldown;
     private int scoreOne;
     private int scoreTwo;
+
     public static GameParameters getInstance() {
         return INSTANCE;
     }
