@@ -14,7 +14,7 @@ import com.dv.trunov.game.engine.PhysicsEngine;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.renderer.ObjectRenderer;
 import com.dv.trunov.game.renderer.UIRenderer;
-import com.dv.trunov.game.ui.UITextItem;
+import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.util.Language;
 
@@ -57,8 +57,9 @@ public class Main extends ApplicationAdapter {
         }
         clearScreen();
         if (GameState.TITLE == gameState) {
-            inputController.processTitleInputs(gameParameters);
-            drawUI(uiController.getTitleScreen());
+            inputController.processTitleInputs(gameParameters, uiController.getTitleMenu());
+            drawUI(uiController.getTitle());
+            drawUI(uiController.getTitleMenu());
         }
         if (GameState.MENU == gameState) {
             inputController.processMenuInputs(gameParameters, physicsEngine);
@@ -138,11 +139,11 @@ public class Main extends ApplicationAdapter {
         spriteBatch.end();
     }
 
-    private void drawUI(UITextItem[] uiTextItems) {
+    private void drawUI(TextLabel... textLabels) {
         spriteBatch.begin();
         uiRenderer.drawUI(
-            uiTextItems,
-            gameParameters.getActiveMenuItemId(),
+            textLabels,
+            gameParameters.getSelectedItemKey(),
             physicsEngine.getAlpha(),
             spriteBatch
         );

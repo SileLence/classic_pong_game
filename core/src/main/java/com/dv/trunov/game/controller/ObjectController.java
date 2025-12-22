@@ -32,17 +32,17 @@ public class ObjectController {
         ball = new Ball(Constants.Asset.BALL_TEXTURE_PATH);
         platforms = new Platform[gameParameters.getGameMode().getValue()];
         platforms[0] = new Platform(
-            Constants.Border.RIGHT_PLATFORM_BOUNDARY,
+            Constants.Border.LEFT_PLATFORM_BOUNDARY,
             Constants.Border.TOP_PLATFORM_BOUNDARY / 2f,
             true,
-            Constants.Asset.PLATFORM_RIGHT_TEXTURE_PATH
+            Constants.Asset.PLATFORM_LEFT_TEXTURE_PATH
         );
         if (platforms.length > 1) {
             platforms[1] = new Platform(
-                Constants.Border.LEFT_PLATFORM_BOUNDARY,
+                Constants.Border.RIGHT_PLATFORM_BOUNDARY,
                 Constants.Border.TOP_PLATFORM_BOUNDARY / 2f,
                 false,
-                Constants.Asset.PLATFORM_LEFT_TEXTURE_PATH
+                Constants.Asset.PLATFORM_RIGHT_TEXTURE_PATH
             );
         }
         return true;

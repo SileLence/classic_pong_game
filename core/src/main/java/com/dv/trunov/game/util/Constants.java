@@ -60,7 +60,7 @@ public final class Constants {
 
         public static final Color TITLE_FONT_COLOR = new Color(0.60f, 0.19f, 0.48f, 1f);
         public static final Color TITLE_SHADOW_COLOR = new Color(0.80f, 0.10f, 0.58f, 0.25f);
-        public static final Color REGULAR_FONT_COLOR = new Color(0.8f, 0.8f, 0.8f, 1f);
+        public static final Color REGULAR_FONT_COLOR = new Color(0.7f, 0.7f, 0.7f, 1f);
         public static final Color SELECTION_FONT_COLOR = new Color(0.90f, 0.35f, 0.65f, 1f);
     }
 
@@ -78,6 +78,24 @@ public final class Constants {
                 + "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
                 + "0123456789"
                 + " .,:;-_!?";
+    }
+
+    public static final class ItemKey {
+
+        public static final String TITLE_KEY = "title";
+        public static final String PAUSE_KEY = "pause";
+        public static final String COUNTER_ONE_KEY = "counterOne";
+        public static final String COUNTER_TWO_KEY = "counterTwo";
+        public static final String COLON_KEY = "colon";
+        public static final String PRESS_ENTER_KEY = "pressEnter";
+        public static final String RU_KEY = "ru";
+        public static final String EN_KEY = "en";
+        public static final String ONE_PLAYER_KEY = "onePlayer";
+        public static final String TWO_PLAYERS_KEY = "twoPlayers";
+        public static final String SETTINGS_KEY = "settings";
+        public static final String EXIT_KEY = "exit";
+        public static final String CONTINUE_KEY = "continue";
+        public static final String EXIT_TO_MENU_KEY = "exitToMenu";
     }
 
     public static final class Text {

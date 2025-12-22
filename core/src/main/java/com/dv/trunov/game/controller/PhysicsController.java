@@ -79,13 +79,13 @@ public class PhysicsController {
         }
 
         if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
-            if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
-                ball.setX(Constants.Border.LEFT_BALL_BOUNDARY);
+            if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
+                ball.setX(Constants.Border.RIGHT_BALL_BOUNDARY);
                 directionX = -directionX;
             }
             ball.setDirection(directionX, directionY);
 
-            if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
+            if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
                 gameParameters.setGameState(GameState.GOAL);
             }
@@ -93,30 +93,18 @@ public class PhysicsController {
             ball.setDirection(directionX, directionY);
 
             if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
-                processGoal(ball, gameParameters, true);
+                processGoal(ball, gameParameters, false);
             }
             if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
-                processGoal(ball, gameParameters, false);
+                processGoal(ball, gameParameters, true);
             }
         }
         ball.updateHitCooldown(timeStep);
     }
 
     private void calcPlatformCollision(Platform[] platforms, Ball ball) {
-        if (ball.getHitCooldown() > 0f) {
-            return;
-        }
         for (Platform platform : platforms) {
-            if (platform.isPlayerOne()) {
-                if (ball.getX() > platform.getX() + platform.getWidth() && ball.getDirectionX() > 0f) {
-                    continue;
-                }
-            } else {
-                if (ball.getX() < platform.getX() && ball.getDirectionX() < 0f) {
-                    continue;
-                }
-            }
-            if (!ballIntersectsPlatform(platform, ball)) {
+            if (!calculationNeeded(platform, ball)) {
                 continue;
             }
             float ballX = ball.getX();
@@ -153,7 +141,7 @@ public class PhysicsController {
                 newDirectionX /= vectorLength;
                 newDirectionY /= vectorLength;
 
-                if (platform.isPlayerOne()) {
+                if (!platform.isPlayerOne()) {
                     newDirectionX = -newDirectionX;
                 }
             } else {
@@ -205,6 +193,22 @@ public class PhysicsController {
         }
     }
 
+    private boolean calculationNeeded(Platform platform, Ball ball) {
+        if (ball.getHitCooldown() > 0f) {
+            return false;
+        }
+        if (platform.isPlayerOne()) {
+            if (ball.getX() < platform.getX() && ball.getDirectionX() < 0f) {
+                return false;
+            }
+        } else {
+            if (ball.getX() > platform.getX() + platform.getWidth() && ball.getDirectionX() > 0f) {
+                return false;
+            }
+        }
+        return ballIntersectsPlatform(platform, ball);
+    }
+
     private boolean ballIntersectsPlatform(Platform platform, Ball ball) {
         float ballX = ball.getX();
         float ballY = ball.getY();
@@ -219,10 +223,10 @@ public class PhysicsController {
         return distX * distX + distY * distY < radius * radius;
     }
 
-    private void processGoal(Ball ball, GameParameters gameParameters, boolean isPlayerOne) {
+    private void processGoal(Ball ball, GameParameters gameParameters, boolean isPlayerOneScoredGoal) {
         ball.spawnExplosion();
         gameParameters.setGameState(GameState.GOAL);
-        if (isPlayerOne) {
+        if (isPlayerOneScoredGoal) {
             gameParameters.addScoreOne();
         } else {
             gameParameters.addScoreTwo();
