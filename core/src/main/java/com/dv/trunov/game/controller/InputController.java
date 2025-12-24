@@ -19,70 +19,30 @@ public class InputController {
         return INSTANCE;
     }
 
-    public void processTitleInputs(GameParameters gameParameters, TextLabel[] titleMenu) {
-        String selectedMenuItemKey = gameParameters.getSelectedItemKey();
-        int selectedIndex = 0;
-        // TODO resolve problem with menu items selection
+    public void processMenuInputs(GameParameters gameParameters, TextLabel[] menuItems, PhysicsEngine physicsEngine) {
+        int oldSelectedItemIndex = gameParameters.getSelectedItemIndex();
+        int newSelectedItemIndex = gameParameters.getSelectedItemIndex();
+        String selectedItemKey = menuItems[oldSelectedItemIndex].key();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            gameParameters.setGameState(GameState.MENU);
-            gameParameters.setGameParametersBySelectedItemKey();
+            gameParameters.setGameParametersBySelectedItemKey(selectedItemKey);
+            return;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            selectedIndex = (++selectedIndex + titleMenu.length) % titleMenu.length;
-            selectedMenuItemKey = titleMenu[selectedIndex].key();
+            newSelectedItemIndex++;
+            if (newSelectedItemIndex > menuItems.length - 1) {
+                newSelectedItemIndex = 0;
+            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            selectedIndex = (--selectedIndex + titleMenu.length) % titleMenu.length;
-            selectedMenuItemKey = titleMenu[selectedIndex].key();
+            newSelectedItemIndex--;
+            if (newSelectedItemIndex < 0) {
+                newSelectedItemIndex = menuItems.length - 1;
+            }
         }
-        gameParameters.setSelectedItemKey(selectedMenuItemKey);
-        gameParameters.setGameParametersBySelectedItemKey();
-    }
-
-    public void processMenuInputs(GameParameters gameParameters, PhysicsEngine physicsEngine) {
-//        int activeMenuItemId = gameParameters.getSelectedItemKey();
-//        int newActiveMenuItemId = gameParameters.getSelectedItemKey();
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-//            newActiveMenuItemId++;
-//        }
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-//            newActiveMenuItemId--;
-//        }
-//        if (newActiveMenuItemId < 1) {
-//            newActiveMenuItemId = 4;
-//        } else if (newActiveMenuItemId > 4) {
-//            newActiveMenuItemId = 1;
-//        }
-//        gameParameters.setSelectedItemKey(newActiveMenuItemId);
-//        if (activeMenuItemId != newActiveMenuItemId) {
-//            physicsEngine.resetAlpha();
-//        }
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-//            gameParameters.setGameParametersByMenuItemId(activeMenuItemId);
-//        }
-    }
-
-    public void processPauseInputs(GameParameters gameParameters, PhysicsEngine physicsEngine) {
-//        int activeMenuItemId = gameParameters.getSelectedItemKey();
-//        int newActiveMenuItemId = gameParameters.getSelectedItemKey();
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)  || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-//            newActiveMenuItemId++;
-//        }
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-//            newActiveMenuItemId--;
-//        }
-//        if (newActiveMenuItemId < 5) {
-//            newActiveMenuItemId = 5;
-//        } else if (newActiveMenuItemId > 6) {
-//            newActiveMenuItemId = 6;
-//        }
-//        if (activeMenuItemId != newActiveMenuItemId) {
-//            physicsEngine.resetAlpha();
-//        }
-//        gameParameters.setSelectedItemKey(newActiveMenuItemId);
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-//            gameParameters.setGameParametersByMenuItemId(activeMenuItemId);
-//        }
+        if (oldSelectedItemIndex != newSelectedItemIndex) {
+            physicsEngine.resetAlpha();
+        }
+        gameParameters.setSelectedItemIndex(newSelectedItemIndex);
     }
 
     public void processPlayingInputs(Platform[] platforms, GameParameters gameParameters) {

@@ -121,9 +121,9 @@ public class PhysicsController {
             if (isSideHit) {
                 // correct ball position to prevent sticking
                 if (platform.isPlayerOne()) {
-                    ball.setX(platform.getX() - radius);
-                } else {
                     ball.setX(platform.getX() + platform.getWidth() + radius);
+                } else {
+                    ball.setX(platform.getX() - radius);
                 }
 
                 float ballCenter = ball.getY();

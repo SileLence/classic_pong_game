@@ -12,6 +12,9 @@ import com.dv.trunov.game.util.Constants;
 public class UIController {
 
     private static final UIController INSTANCE = new UIController();
+    FreeTypeFontGenerator titleFontGenerator;
+    FreeTypeFontGenerator regularFontGenerator;
+    FreeTypeFontGenerator.FreeTypeFontParameter regularParams;
     private BitmapFont titleFont;
     private BitmapFont pauseFont;
     private BitmapFont counterFont;
@@ -20,7 +23,6 @@ public class UIController {
     private TextLabel pause;
     private TextLabel english;
     private TextLabel russian;
-    private TextLabel pressEnter;
     private TextLabel onePlayer;
     private TextLabel twoPlayers;
     private TextLabel settings;
@@ -39,24 +41,34 @@ public class UIController {
     }
 
     public void createUIObjects() {
-        FreeTypeFontGenerator titleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TITLE_FONT));
-        FreeTypeFontGenerator regularFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TEXT_FONT));
-
-        FreeTypeFontGenerator.FreeTypeFontParameter regularParams = createRegularParameters();
+        titleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TITLE_FONT));
+        regularFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TEXT_FONT));
+        regularParams = createRegularParameters();
 
         createMainTitleText(titleFontGenerator);
+
+        russian = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.RU_KEY, Constants.Text.RUSSIAN, Constants.Baseline.SECOND_ROW);
+        english = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.EN_KEY, Constants.Text.ENGLISH, Constants.Baseline.THIRD_ROW);
+
+        titleFontGenerator.dispose();
+        regularFontGenerator.dispose();
+    }
+
+    public void updateLocalization(GameParameters gameParameters) {
+        Constants.setLocalization(gameParameters.getCurrentLanguage());
+        titleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TITLE_FONT));
+        regularFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TEXT_FONT));
+
         createSubtitleText(titleFontGenerator);
         createCounterText(titleFontGenerator);
 
-        pressEnter = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.PRESS_ENTER_KEY, Constants.Text.PRESS_ENTER, Constants.Baseline.THIRD_ROW);
-        russian = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.RU_KEY, Constants.Text.RUSSIAN, Constants.Baseline.SECOND_ROW);
-        english = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.EN_KEY, Constants.Text.ENGLISH, Constants.Baseline.THIRD_ROW);
         onePlayer = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.ONE_PLAYER_KEY, Constants.Text.ONE_PLAYER, Constants.Baseline.FIRST_ROW);
         twoPlayers = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.TWO_PLAYERS_KEY, Constants.Text.TWO_PLAYERS, Constants.Baseline.SECOND_ROW);
         settings = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.SETTINGS_KEY, Constants.Text.SETTINGS, Constants.Baseline.THIRD_ROW);
         exit = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.EXIT_KEY, Constants.Text.EXIT, Constants.Baseline.FOURTH_ROW);
         continueGame = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.CONTINUE_KEY, Constants.Text.CONTINUE, Constants.Baseline.THIRD_ROW);
         exitToMenu = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.EXIT_TO_MENU_KEY, Constants.Text.EXIT_TO_MENU, Constants.Baseline.FOURTH_ROW);
+
         titleFontGenerator.dispose();
         regularFontGenerator.dispose();
     }
@@ -177,12 +189,16 @@ public class UIController {
         return new TextLabel[]{russian, english};
     }
 
-    public TextLabel[] getMenuScreen() {
-        return new TextLabel[]{title, onePlayer, twoPlayers, settings, exit};
+    public TextLabel[] getMainMenu() {
+        return new TextLabel[]{onePlayer, twoPlayers, settings, exit};
     }
 
     public TextLabel[] getPauseScreen() {
-        return new TextLabel[]{pause, counterOne, counterTwo, colon, continueGame, exitToMenu};
+        return new TextLabel[]{pause, counterOne, counterTwo, colon};
+    }
+
+    public TextLabel[] getPauseMenu() {
+        return new TextLabel[]{continueGame, exitToMenu};
     }
 
     public TextLabel[] getPlayingScreen() {

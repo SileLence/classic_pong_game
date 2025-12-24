@@ -16,7 +16,6 @@ import com.dv.trunov.game.renderer.ObjectRenderer;
 import com.dv.trunov.game.renderer.UIRenderer;
 import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.GameState;
-import com.dv.trunov.game.util.Language;
 
 public class Main extends ApplicationAdapter {
 
@@ -37,7 +36,7 @@ public class Main extends ApplicationAdapter {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         objectController = ObjectController.getInstance();
-        objectController.initGameParameters(Language.ENGLISH);
+        objectController.initGameParameters();
         gameParameters = objectController.getGameParameters();
         uiController = UIController.getInstance();
         uiController.createUIObjects();
@@ -57,13 +56,17 @@ public class Main extends ApplicationAdapter {
         }
         clearScreen();
         if (GameState.TITLE == gameState) {
-            inputController.processTitleInputs(gameParameters, uiController.getTitleMenu());
+            inputController.processMenuInputs(gameParameters, uiController.getTitleMenu(), physicsEngine);
+            if (GameState.MENU == gameParameters.getGameState()) {
+                uiController.updateLocalization(gameParameters);
+            }
             drawUI(uiController.getTitle());
             drawUI(uiController.getTitleMenu());
         }
         if (GameState.MENU == gameState) {
-            inputController.processMenuInputs(gameParameters, physicsEngine);
-            drawUI(uiController.getMenuScreen());
+            inputController.processMenuInputs(gameParameters, uiController.getMainMenu(), physicsEngine);
+            drawUI(uiController.getTitle());
+            drawUI(uiController.getMainMenu());
         }
         if (GameState.SETTINGS == gameState) {
             // TODO Implement settings
@@ -95,10 +98,11 @@ public class Main extends ApplicationAdapter {
             drawUI(uiController.getPlayingScreen());
         }
         if (GameState.PAUSE == gameState) {
-            inputController.processPauseInputs(gameParameters, physicsEngine);
+            inputController.processMenuInputs(gameParameters, uiController.getTitleMenu(), physicsEngine);
             drawBackground();
             drawWorldObjects();
             drawUI(uiController.getPauseScreen());
+            drawUI(uiController.getPauseMenu());
             physicsEngine.pause();
             if (gameParameters.getGameState() == GameState.MENU) {
                 worldObjectsCreated = objectController.destroyWorldObjects();
@@ -143,7 +147,7 @@ public class Main extends ApplicationAdapter {
         spriteBatch.begin();
         uiRenderer.drawUI(
             textLabels,
-            gameParameters.getSelectedItemKey(),
+            gameParameters.getSelectedItemIndex(),
             physicsEngine.getAlpha(),
             spriteBatch
         );

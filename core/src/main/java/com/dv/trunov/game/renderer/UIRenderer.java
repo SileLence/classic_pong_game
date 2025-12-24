@@ -17,11 +17,12 @@ public class UIRenderer {
         return INSTANCE;
     }
 
-    public void drawUI(TextLabel[] textLabels, String selectedItemKey, float alpha, SpriteBatch spriteBatch) {
-        for (TextLabel textLabel : textLabels) {
+    public void drawUI(TextLabel[] textLabels, int selectedItemIndex, float alpha, SpriteBatch spriteBatch) {
+        for (int index = 0; index < textLabels.length; index++) {
+            TextLabel textLabel = textLabels[index];
             BitmapFont font = textLabel.font();
             Color staticColor = new Color(font.getColor());
-            if (textLabel.isSelectable() && textLabel.key().equals(selectedItemKey)) {
+            if (textLabel.isSelectable() && index == selectedItemIndex) {
                 Color blinkingColor = new Color().set(Constants.Colors.SELECTION_FONT_COLOR, alpha);
                 font.getColor().set(blinkingColor);
             }

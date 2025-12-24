@@ -3,14 +3,16 @@ package com.dv.trunov.game.model;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
+import com.dv.trunov.game.util.Language;
 
 public class GameParameters {
 
     private static final GameParameters INSTANCE = new GameParameters();
     private GameState gameState;
     private GameMode gameMode;
-    private String selectedItemKey;
+    private Language language;
     private float cooldown;
+    private int selectedItemIndex;
     private int scoreOne;
     private int scoreTwo;
 
@@ -20,11 +22,20 @@ public class GameParameters {
 
     private GameParameters() {
         gameState = GameState.TITLE;
+        selectedItemIndex = 0;
         cooldown = 0f;
     }
 
-    public void setGameParametersBySelectedItemKey() {
-        switch (this.selectedItemKey) {
+    public void setGameParametersBySelectedItemKey(String key) {
+        switch (key) {
+            case Constants.ItemKey.RU_KEY -> {
+                language = Language.RUSSIAN;
+                gameState = GameState.MENU;
+            }
+            case Constants.ItemKey.EN_KEY -> {
+                language = Language.ENGLISH;
+                gameState = GameState.MENU;
+            }
             case Constants.ItemKey.ONE_PLAYER_KEY -> {
                 gameMode = GameMode.SINGLEPLAYER;
                 gameState = GameState.PLAYING;
@@ -36,11 +47,9 @@ public class GameParameters {
             case Constants.ItemKey.SETTINGS_KEY -> gameState = GameState.SETTINGS;
             case Constants.ItemKey.EXIT_KEY -> gameState = GameState.EXIT;
             case Constants.ItemKey.CONTINUE_KEY -> gameState = GameState.PLAYING;
-            case Constants.ItemKey.EXIT_TO_MENU_KEY -> {
-                gameState = GameState.MENU;
-                this.selectedItemKey = Constants.ItemKey.ONE_PLAYER_KEY;
-            }
+            case Constants.ItemKey.EXIT_TO_MENU_KEY -> gameState = GameState.MENU;
         }
+        selectedItemIndex = 0;
     }
 
     public GameState getGameState() {
@@ -55,12 +64,12 @@ public class GameParameters {
         return gameMode;
     }
 
-    public String getSelectedItemKey() {
-        return selectedItemKey;
+    public int getSelectedItemIndex() {
+        return selectedItemIndex;
     }
 
-    public void setSelectedItemKey(String selectedItemKey) {
-        this.selectedItemKey = selectedItemKey;
+    public void setSelectedItemIndex(int selectedItemIndex) {
+        this.selectedItemIndex = selectedItemIndex;
     }
 
     public float getCooldown() {
@@ -85,5 +94,9 @@ public class GameParameters {
 
     public void addScoreTwo() {
         scoreTwo++;
+    }
+
+    public Language getCurrentLanguage() {
+        return language;
     }
 }
