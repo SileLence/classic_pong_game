@@ -15,6 +15,7 @@ public class GameParameters {
     private int selectedItemIndex;
     private int scoreOne;
     private int scoreTwo;
+    private int bestScore;
 
     public static GameParameters getInstance() {
         return INSTANCE;
@@ -52,6 +53,12 @@ public class GameParameters {
         selectedItemIndex = 0;
     }
 
+    public void checkWin() {
+        if (scoreOne == Constants.Score.WIN_SCORE || scoreTwo == Constants.Score.WIN_SCORE) {
+            gameState = GameState.MENU;
+        }
+    }
+
     public GameState getGameState() {
         return gameState;
     }
@@ -62,6 +69,10 @@ public class GameParameters {
 
     public GameMode getGameMode() {
         return gameMode;
+    }
+
+    public Language getCurrentLanguage() {
+        return language;
     }
 
     public int getSelectedItemIndex() {
@@ -85,7 +96,14 @@ public class GameParameters {
     }
 
     public void addScoreOne() {
-        scoreOne++;
+        if (GameMode.SINGLEPLAYER == gameMode) {
+            scoreOne++;
+            if (scoreOne > bestScore) {
+                bestScore = scoreOne;
+            }
+        } else {
+            scoreOne++;
+        }
     }
 
     public int getScoreTwo() {
@@ -96,7 +114,7 @@ public class GameParameters {
         scoreTwo++;
     }
 
-    public Language getCurrentLanguage() {
-        return language;
+    public int getBestScore() {
+        return bestScore;
     }
 }

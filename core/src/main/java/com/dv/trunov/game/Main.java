@@ -15,6 +15,7 @@ import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.renderer.ObjectRenderer;
 import com.dv.trunov.game.renderer.UIRenderer;
 import com.dv.trunov.game.ui.TextLabel;
+import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 
 public class Main extends ApplicationAdapter {
@@ -51,65 +52,81 @@ public class Main extends ApplicationAdapter {
     public void render() {
         float deltaTime = Gdx.graphics.getDeltaTime();
         GameState gameState = gameParameters.getGameState();
-        if (GameState.TITLE == gameState || GameState.PAUSE == gameState || GameState.MENU == gameState) {
-            physicsEngine.updateAlpha(deltaTime);
-        }
         clearScreen();
-        if (GameState.TITLE == gameState) {
-            inputController.processMenuInputs(gameParameters, uiController.getTitleMenu(), physicsEngine);
-            if (GameState.MENU == gameParameters.getGameState()) {
-                uiController.updateLocalization(gameParameters);
+        switch (gameState) {
+            case TITLE -> {
+                inputController.processMenuInputs(gameParameters, uiController.getTitleMenu(), physicsEngine);
+                if (GameState.MENU == gameParameters.getGameState()) {
+                    uiController.updateLocalization(gameParameters);
+                }
+                physicsEngine.updateAlpha(deltaTime);
+                drawUI(uiController.getTitle());
+                drawUI(uiController.getTitleMenu());
             }
-            drawUI(uiController.getTitle());
-            drawUI(uiController.getTitleMenu());
-        }
-        if (GameState.MENU == gameState) {
-            inputController.processMenuInputs(gameParameters, uiController.getMainMenu(), physicsEngine);
-            drawUI(uiController.getTitle());
-            drawUI(uiController.getMainMenu());
-        }
-        if (GameState.SETTINGS == gameState) {
-            // TODO Implement settings
-            gameParameters.setGameState(GameState.MENU);
-        }
-        if (GameState.PLAYING == gameState && !worldObjectsCreated) {
-            worldObjectsCreated = objectController.createWorldObjects(gameParameters);
-        }
-        if (GameState.PLAYING == gameState) {
-            physicsEngine.resume();
-            updatePhysics(deltaTime);
-            inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
-            drawBackground();
-            drawWorldObjects();
-            drawUI(uiController.getPlayingScreen());
-        }
-        if (GameState.GOAL == gameState) {
-            physicsEngine.goalCooldown(gameParameters, deltaTime);
-            if (gameParameters.getCooldown() <= 1f) {
-                uiController.updateCounters(gameParameters);
+            case MENU -> {
+                inputController.processMenuInputs(gameParameters, uiController.getMainMenu(), physicsEngine);
+                physicsEngine.updateAlpha(deltaTime);
+                drawUI(uiController.getTitle());
+                drawUI(uiController.getMainMenu());
             }
-            if (gameParameters.getCooldown() <= 0.5f) {
-                objectController.resetBallPosition();
+            case SETTINGS -> {
+                // TODO Implement settings
+                physicsEngine.updateAlpha(deltaTime);
+                gameParameters.setGameState(GameState.MENU);
             }
-            updatePhysics(deltaTime);
-            inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
-            drawBackground();
-            drawWorldObjects();
-            drawUI(uiController.getPlayingScreen());
-        }
-        if (GameState.PAUSE == gameState) {
-            inputController.processMenuInputs(gameParameters, uiController.getTitleMenu(), physicsEngine);
-            drawBackground();
-            drawWorldObjects();
-            drawUI(uiController.getPauseScreen());
-            drawUI(uiController.getPauseMenu());
-            physicsEngine.pause();
-            if (gameParameters.getGameState() == GameState.MENU) {
-                worldObjectsCreated = objectController.destroyWorldObjects();
+            case PLAYING ->  {
+                if (!worldObjectsCreated) {
+                    worldObjectsCreated = objectController.createWorldObjects(gameParameters);
+                }
+                physicsEngine.resume();
+                updatePhysics(deltaTime);
+                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
+                drawBackground();
+                drawWorldObjects();
+                if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
+                    uiController.updateSingleplayerCounters(gameParameters);
+                    drawUI(uiController.getSinglePlayingScreen());
+                } else {
+                    drawUI(uiController.getMultiPlayingScreen());
+                }
             }
-        }
-        if (GameState.EXIT == gameState) {
-            Gdx.app.exit();
+            case PAUSE -> {
+                inputController.processMenuInputs(gameParameters, uiController.getPauseMenu(), physicsEngine);
+                if (GameState.MENU == gameParameters.getGameState()) {
+                    worldObjectsCreated = objectController.destroyWorldObjects();
+                }
+                physicsEngine.updateAlpha(deltaTime);
+                drawBackground();
+                drawWorldObjects();
+                drawUI(uiController.getMultiPauseScreen());
+                drawUI(uiController.getPauseMenu());
+                physicsEngine.pause();
+            }
+            case GOAL -> {
+                physicsEngine.goalCooldown(gameParameters, deltaTime);
+                if (gameParameters.getCooldown() <= 1f) {
+                    uiController.updateMultiplayerCounters(gameParameters);
+                }
+                if (gameParameters.getCooldown() <= 0.5f) {
+                    objectController.resetBallPosition();
+                }
+                updatePhysics(deltaTime);
+                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
+                drawBackground();
+                drawWorldObjects();
+                if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
+                    drawUI(uiController.getSinglePlayingScreen());
+                } else {
+                    drawUI(uiController.getMultiPlayingScreen());
+                }
+                gameParameters.checkWin();
+            }
+            case WIN -> {
+                if (GameState.MENU == gameParameters.getGameState()) {
+                    worldObjectsCreated = objectController.destroyWorldObjects();
+                }
+            }
+            case EXIT -> Gdx.app.exit();
         }
     }
 

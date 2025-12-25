@@ -82,16 +82,11 @@ public class PhysicsController {
             if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
                 ball.setX(Constants.Border.RIGHT_BALL_BOUNDARY);
                 directionX = -directionX;
-            }
-            ball.setDirection(directionX, directionY);
-
-            if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
-                ball.spawnExplosion();
-                gameParameters.setGameState(GameState.GOAL);
+                gameParameters.addScoreOne();
+            } else if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
+                processGoal(ball, gameParameters, false);
             }
         } else {
-            ball.setDirection(directionX, directionY);
-
             if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
                 processGoal(ball, gameParameters, false);
             }
@@ -99,6 +94,7 @@ public class PhysicsController {
                 processGoal(ball, gameParameters, true);
             }
         }
+        ball.setDirection(directionX, directionY);
         ball.updateHitCooldown(timeStep);
     }
 
@@ -226,10 +222,14 @@ public class PhysicsController {
     private void processGoal(Ball ball, GameParameters gameParameters, boolean isPlayerOneScoredGoal) {
         ball.spawnExplosion();
         gameParameters.setGameState(GameState.GOAL);
-        if (isPlayerOneScoredGoal) {
-            gameParameters.addScoreOne();
+        if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
+            // TODO process game over
         } else {
-            gameParameters.addScoreTwo();
+            if (isPlayerOneScoredGoal) {
+                gameParameters.addScoreOne();
+            } else {
+                gameParameters.addScoreTwo();
+            }
         }
     }
 }

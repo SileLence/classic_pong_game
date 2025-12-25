@@ -39,8 +39,12 @@ public final class Constants {
         public static final float SECOND_ROW = Border.TOP * 0.4f;
         public static final float THIRD_ROW = Border.TOP * 0.3f;
         public static final float FOURTH_ROW = Border.TOP * 0.2f;
-        public static final float MIDDLE_OF_COUNTER_FILED = (Border.TOP - Border.GAME_FIELD_TOP) / 2f
-            + Constants.Border.GAME_FIELD_TOP;
+        public static final float SINGLEPLAYER_SCORE_TEXT_OFFSET = Border.LEFT + 30f;
+        public static final float MIDDLE_OF_COUNTER_FILED = (Border.TOP - Border.GAME_FIELD_TOP) / 2f + Constants.Border.GAME_FIELD_TOP;
+        public static final float QUARTER_OF_GAME_FIELD = (Border.TOP - Border.GAME_FIELD_TOP) / 2f * 0.5f;
+        public static float CURRENT_SCORE_TEXT;
+        public static float BEST_SCORE_TEXT;
+        public static float SINGLEPLAYER_COUNTER_OFFSET;
     }
 
     public static final class Speed {
@@ -62,6 +66,11 @@ public final class Constants {
         public static final Color TITLE_SHADOW_COLOR = new Color(0.80f, 0.10f, 0.58f, 0.25f);
         public static final Color REGULAR_FONT_COLOR = new Color(0.7f, 0.7f, 0.7f, 1f);
         public static final Color SELECTION_FONT_COLOR = new Color(0.90f, 0.35f, 0.65f, 1f);
+    }
+
+    public static final class Score {
+
+        public static final int WIN_SCORE = 10;
     }
 
     public static final class Asset {
@@ -86,13 +95,19 @@ public final class Constants {
         public static final String PAUSE_KEY = "pause";
         public static final String COUNTER_ONE_KEY = "counterOne";
         public static final String COUNTER_TWO_KEY = "counterTwo";
+        public static final String COUNTER_CURRENT_KEY = "counterCurrent";
+        public static final String COUNTER_BEST_KEY = "counterBest";
         public static final String COLON_KEY = "colon";
-        public static final String PRESS_ENTER_KEY = "pressEnter";
         public static final String RU_KEY = "ru";
         public static final String EN_KEY = "en";
         public static final String ONE_PLAYER_KEY = "onePlayer";
         public static final String TWO_PLAYERS_KEY = "twoPlayers";
         public static final String SETTINGS_KEY = "settings";
+        public static final String CURRENT_SCORE_KEY = "currentScore";
+        public static final String BEST_SCORE_KEY = "bestScore";
+        public static final String WIN_KEY = "win";
+        public static final String PLAYER_ONE_WINS_KEY = "playerOneWins";
+        public static final String PLAYER_TWO_WINS_KEY = "playerTwoWins";
         public static final String EXIT_KEY = "exit";
         public static final String CONTINUE_KEY = "continue";
         public static final String EXIT_TO_MENU_KEY = "exitToMenu";
@@ -103,21 +118,23 @@ public final class Constants {
         public static final String TITLE = "CLASSIC PONG";
         public static final String RUSSIAN = "Русский";
         public static final String ENGLISH = "English";
-        public static String PRESS_ENTER;
         public static String ONE_PLAYER ;
         public static String TWO_PLAYERS;
         public static String SETTINGS;
         public static String PAUSE;
         public static String CONTINUE;
+        public static String PRESS_ENTER_TO_START;
         public static String BEST_SCORE;
         public static String CURRENT_SCORE;
+        public static String WIN;
+        public static String PLAYER_ONE_WINS;
+        public static String PLAYER_TWO_WINS;
         public static String PLAY_AGAIN;
         public static String EXIT_TO_MENU;
         public static String EXIT;
 
         private static final class Russian {
 
-            public static final String PRESS_ENTER = "Нажмите Enter";
             public static final String ONE_PLAYER = "1 игрок";
             public static final String TWO_PLAYERS = "2 игрока";
             public static final String SETTINGS = "Настройки";
@@ -125,6 +142,9 @@ public final class Constants {
             public static final String CONTINUE = "Продолжить";
             public static final String BEST_SCORE = "Лучший счёт: ";
             public static final String CURRENT_SCORE = "Текущий счёт: ";
+            public static final String WIN = "ПОБЕДА!";
+            public static final String PLAYER_ONE_WINS = "Победил игрок 1";
+            public static final String PLAYER_TWO_WINS = "Победил игрок 2";
             public static final String PLAY_AGAIN = "Сыграть ещё раз";
             public static final String EXIT_TO_MENU = "Выйти в меню";
             public static final String EXIT = "Выход";
@@ -132,7 +152,6 @@ public final class Constants {
 
         private static final class English {
 
-            public static final String PRESS_ENTER = "Press Enter";
             public static final String ONE_PLAYER = "1 player";
             public static final String TWO_PLAYERS = "2 players";
             public static final String SETTINGS = "Settings";
@@ -140,6 +159,9 @@ public final class Constants {
             public static final String CONTINUE = "Continue";
             public static final String BEST_SCORE = "Best score: ";
             public static final String CURRENT_SCORE = "Current score: ";
+            public static final String WIN = "WIN!";
+            public static final String PLAYER_ONE_WINS = "Player 1 wins";
+            public static final String PLAYER_TWO_WINS = "Player 2 wins";
             public static final String PLAY_AGAIN = "Play again";
             public static final String EXIT_TO_MENU = "Exit to menu";
             public static final String EXIT = "Exit";
@@ -149,7 +171,6 @@ public final class Constants {
     public static void setLocalization(Language language) {
         switch (language) {
             case RUSSIAN -> {
-                Text.PRESS_ENTER = Text.Russian.PRESS_ENTER;
                 Text.ONE_PLAYER = Text.Russian.ONE_PLAYER;
                 Text.TWO_PLAYERS = Text.Russian.TWO_PLAYERS;
                 Text.SETTINGS = Text.Russian.SETTINGS;
@@ -162,7 +183,6 @@ public final class Constants {
                 Text.EXIT = Text.Russian.EXIT;
             }
             case ENGLISH -> {
-                Text.PRESS_ENTER = Text.English.PRESS_ENTER;
                 Text.ONE_PLAYER = Text.English.ONE_PLAYER;
                 Text.TWO_PLAYERS = Text.English.TWO_PLAYERS;
                 Text.SETTINGS = Text.English.SETTINGS;
@@ -175,6 +195,18 @@ public final class Constants {
                 Text.EXIT = Text.English.EXIT;
             }
         }
+    }
+
+    public static void setSingleplayerCounterOffset(float widestTextLayoutWidth) {
+        Baseline.SINGLEPLAYER_COUNTER_OFFSET = widestTextLayoutWidth + Baseline.SINGLEPLAYER_SCORE_TEXT_OFFSET + 10f;
+    }
+
+    public static void setCurrentScoreTextBaseline(float textLayoutHeight) {
+        Baseline.CURRENT_SCORE_TEXT = (Baseline.MIDDLE_OF_COUNTER_FILED + textLayoutHeight / 2f) - Baseline.QUARTER_OF_GAME_FIELD;
+    }
+
+    public static void setBestScoreTextBaseline(float textLayoutHeight) {
+       Baseline.BEST_SCORE_TEXT = (Baseline.MIDDLE_OF_COUNTER_FILED + textLayoutHeight / 2f) + Baseline.QUARTER_OF_GAME_FIELD;
     }
 
     private Constants() {

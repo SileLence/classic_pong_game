@@ -9,5 +9,6 @@ public enum GameState {
     PAUSE,
     GOAL,
     WIN,
+    GAME_OVER,
     EXIT
 }
