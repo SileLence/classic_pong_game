@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.Constants;
+import com.dv.trunov.game.util.Language;
 
 public class UIController {
 
@@ -16,30 +17,33 @@ public class UIController {
     FreeTypeFontGenerator regularFontGenerator;
     FreeTypeFontGenerator.FreeTypeFontParameter regularParams;
     private BitmapFont titleFont;
-    private BitmapFont pauseFont;
+    private BitmapFont subtitleFont;
     private BitmapFont counterFont;
     private BitmapFont scoreFont;
+    private BitmapFont winnerFont;
     private BitmapFont regularFont;
     private TextLabel title;
     private TextLabel pause;
     private TextLabel win;
+    private TextLabel playerOneWins;
+    private TextLabel playerTwoWins;
     private TextLabel currentScore;
     private TextLabel bestScore;
     private TextLabel counterCurrent;
     private TextLabel counterBest;
+    private TextLabel counterOne;
+    private TextLabel counterTwo;
+    private TextLabel colon;
     private TextLabel english;
     private TextLabel russian;
     private TextLabel onePlayer;
     private TextLabel twoPlayers;
     private TextLabel settings;
     private TextLabel exit;
-    private TextLabel counterOne;
-    private TextLabel counterTwo;
-    private TextLabel colon;
     private TextLabel continueGame;
     private TextLabel exitToMenu;
-    private TextLabel playerOneWins;
-    private TextLabel playerTwoWins;
+    private TextLabel pressEnter;
+    private TextLabel playAgain;
 
     private UIController() {
     }
@@ -62,14 +66,15 @@ public class UIController {
         regularFontGenerator.dispose();
     }
 
-    public void updateLocalization(GameParameters gameParameters) {
-        Constants.setLocalization(gameParameters.getCurrentLanguage());
+    public void updateLocalization(Language language) {
+        Constants.setLocalization(language);
         titleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TITLE_FONT));
         regularFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TEXT_FONT));
 
         createSubtitleText(titleFontGenerator);
         createCounterText(titleFontGenerator);
         createScoreText(titleFontGenerator);
+        createWinnerText(titleFontGenerator);
 
         onePlayer = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.ONE_PLAYER_KEY, Constants.Text.ONE_PLAYER, Constants.Baseline.FIRST_ROW);
         twoPlayers = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.TWO_PLAYERS_KEY, Constants.Text.TWO_PLAYERS, Constants.Baseline.SECOND_ROW);
@@ -77,25 +82,26 @@ public class UIController {
         exit = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.EXIT_KEY, Constants.Text.EXIT, Constants.Baseline.FOURTH_ROW);
         continueGame = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.CONTINUE_KEY, Constants.Text.CONTINUE, Constants.Baseline.THIRD_ROW);
         exitToMenu = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.EXIT_TO_MENU_KEY, Constants.Text.EXIT_TO_MENU, Constants.Baseline.FOURTH_ROW);
+        pressEnter = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.PRESS_ENTER_KEY, Constants.Text.PRESS_ENTER, Constants.Baseline.FOURTH_ROW);
+        playAgain = createRegularText(regularFontGenerator, regularParams, Constants.ItemKey.PLAY_AGAIN_KEY, Constants.Text.PLAY_AGAIN, Constants.Baseline.THIRD_ROW);
 
         titleFontGenerator.dispose();
         regularFontGenerator.dispose();
     }
 
-    public void updateSingleplayerCounters(GameParameters gameParameters) {
-        int currentScore = gameParameters.getScoreOne();
-        int bestScore = gameParameters.getBestScore();
-        counterCurrent = createSingleplayerCounter(Constants.ItemKey.CURRENT_SCORE_KEY, String.valueOf(currentScore), true);
-        if (currentScore == bestScore) {
-            counterBest = createSingleplayerCounter(Constants.ItemKey.BEST_SCORE_KEY, String.valueOf(bestScore), false);
+    public void updateCounters(GameParameters gameParameters, boolean isSingleplayer) {
+        int scoreOne = gameParameters.getScoreOne();
+        if (isSingleplayer) {
+            int bestScore = gameParameters.getBestScore();
+            counterCurrent = createSingleplayerCounter(String.valueOf(scoreOne), true);
+            if (scoreOne == bestScore) {
+                counterBest = createSingleplayerCounter(String.valueOf(bestScore), false);
+            }
+        } else {
+            int scoreTwo = gameParameters.getScoreTwo();
+            counterOne = createMultiplayerCounter(String.valueOf(scoreOne), true);
+            counterTwo = createMultiplayerCounter(String.valueOf(scoreTwo), false);
         }
-    }
-
-    public void updateMultiplayerCounters(GameParameters gameParameters) {
-        String scoreOne = String.valueOf(gameParameters.getScoreOne());
-        String scoreTwo = String.valueOf(gameParameters.getScoreTwo());
-        counterOne = createMultiplayerCounter(Constants.ItemKey.COUNTER_ONE_KEY, scoreOne, true);
-        counterTwo = createMultiplayerCounter(Constants.ItemKey.COUNTER_TWO_KEY, scoreTwo, false);
     }
 
     private void createMainTitleText(FreeTypeFontGenerator generator) {
@@ -106,7 +112,7 @@ public class UIController {
         titleFont = generator.generateFont(params);
         GlyphLayout titleLayout = new GlyphLayout(titleFont, Constants.Text.TITLE);
         title = new TextLabel(
-            Constants.ItemKey.TITLE_KEY,
+            Constants.ItemKey.STATIC_TEXT_KEY,
             (Constants.Border.RIGHT - titleLayout.width) / 2f,
             Constants.Baseline.TITLE,
             titleFont,
@@ -121,15 +127,25 @@ public class UIController {
         params.size = 92;
         params.shadowOffsetX = 3;
         params.shadowOffsetY = -3;
-        pauseFont = generator.generateFont(params);
-        GlyphLayout pauseLayout = new GlyphLayout(pauseFont, Constants.Text.PAUSE);
+        subtitleFont = generator.generateFont(params);
+        GlyphLayout pauseLayout = new GlyphLayout(subtitleFont, Constants.Text.PAUSE);
         pause = new TextLabel(
-            Constants.ItemKey.PAUSE_KEY,
+            Constants.ItemKey.STATIC_TEXT_KEY,
             (Constants.Border.RIGHT - pauseLayout.width) / 2f,
             Constants.Baseline.TITLE,
-            pauseFont,
+            subtitleFont,
             Constants.Text.PAUSE,
             pauseLayout,
+            false
+        );
+        GlyphLayout winLayout = new GlyphLayout(subtitleFont, Constants.Text.WIN);
+        win = new TextLabel(
+            Constants.ItemKey.STATIC_TEXT_KEY,
+            (Constants.Border.RIGHT - winLayout.width) / 2f,
+            Constants.Baseline.TITLE,
+            subtitleFont,
+            Constants.Text.WIN,
+            winLayout,
             false
         );
     }
@@ -142,7 +158,7 @@ public class UIController {
         counterFont = generator.generateFont(params);
         GlyphLayout colonLayout = new GlyphLayout(counterFont, ":");
         colon = new TextLabel(
-            Constants.ItemKey.COLON_KEY,
+            Constants.ItemKey.STATIC_TEXT_KEY,
             Constants.Border.RIGHT / 2f - colonLayout.width / 2f,
             Constants.Baseline.MIDDLE_OF_COUNTER_FILED + colonLayout.height / 2f,
             counterFont,
@@ -150,8 +166,33 @@ public class UIController {
             colonLayout,
             false
         );
-        counterOne = createMultiplayerCounter(Constants.ItemKey.COUNTER_ONE_KEY, "0", true);
-        counterTwo = createMultiplayerCounter(Constants.ItemKey.COUNTER_TWO_KEY, "0", false);
+        counterOne = createMultiplayerCounter("0", true);
+        counterTwo = createMultiplayerCounter("0", false);
+    }
+
+    private void createWinnerText(FreeTypeFontGenerator generator) {
+        FreeTypeFontGenerator.FreeTypeFontParameter params = createBaseTitleFontParameters();
+        params.size = 54;
+        winnerFont = generator.generateFont(params);
+        GlyphLayout winnerLayout = new GlyphLayout(winnerFont, Constants.Text.PLAYER_TWO_WINS);
+        playerOneWins = new TextLabel(
+            Constants.ItemKey.PLAYER_ONE_WINS_KEY,
+            Constants.Border.RIGHT / 2f - winnerLayout.width / 2f,
+            Constants.Baseline.TITLE,
+            winnerFont,
+            Constants.Text.PLAYER_ONE_WINS,
+            winnerLayout,
+            false
+        );
+        playerTwoWins = new TextLabel(
+            Constants.ItemKey.PLAYER_TWO_WINS_KEY,
+            Constants.Border.RIGHT / 2f - winnerLayout.width / 2f,
+            Constants.Baseline.TITLE,
+            winnerFont,
+            Constants.Text.PLAYER_TWO_WINS,
+            winnerLayout,
+            false
+        );
     }
 
     private void createScoreText(FreeTypeFontGenerator generator) {
@@ -164,7 +205,7 @@ public class UIController {
         Constants.setCurrentScoreTextBaseline(currentScoreLayout.height);
         Constants.setSingleplayerCounterOffset(currentScoreLayout.width);
         bestScore = new TextLabel(
-            Constants.ItemKey.BEST_SCORE_KEY,
+            Constants.ItemKey.STATIC_TEXT_KEY,
             Constants.Baseline.SINGLEPLAYER_SCORE_TEXT_OFFSET + currentScoreLayout.width - bestScoreLayout.width,
             Constants.Baseline.BEST_SCORE_TEXT,
             scoreFont,
@@ -173,7 +214,7 @@ public class UIController {
             false
         );
         currentScore = new TextLabel(
-            Constants.ItemKey.CURRENT_SCORE_KEY,
+            Constants.ItemKey.STATIC_TEXT_KEY,
             Constants.Baseline.SINGLEPLAYER_SCORE_TEXT_OFFSET,
             Constants.Baseline.CURRENT_SCORE_TEXT,
             scoreFont,
@@ -181,8 +222,8 @@ public class UIController {
             currentScoreLayout,
             false
         );
-        counterBest = createSingleplayerCounter(Constants.ItemKey.BEST_SCORE_KEY, "0", false);
-        counterCurrent = createSingleplayerCounter(Constants.ItemKey.CURRENT_SCORE_KEY, "0", true);
+        counterBest = createSingleplayerCounter("0", false);
+        counterCurrent = createSingleplayerCounter("0", true);
     }
 
     private TextLabel createRegularText(FreeTypeFontGenerator generator,
@@ -196,10 +237,10 @@ public class UIController {
         return new TextLabel(key, placement, baseline, regularFont, text, layout, true);
     }
 
-    private TextLabel createSingleplayerCounter(String key, String scoreValue, boolean isCurrentScore) {
+    private TextLabel createSingleplayerCounter(String scoreValue, boolean isCurrentScore) {
         GlyphLayout counterLayout = new GlyphLayout(scoreFont, scoreValue);
         return new TextLabel(
-            key,
+            Constants.ItemKey.STATIC_TEXT_KEY,
             Constants.Baseline.SINGLEPLAYER_COUNTER_OFFSET,
             isCurrentScore ? Constants.Baseline.CURRENT_SCORE_TEXT : Constants.Baseline.BEST_SCORE_TEXT,
             scoreFont,
@@ -209,10 +250,10 @@ public class UIController {
         );
     }
 
-    private TextLabel createMultiplayerCounter(String key, String scoreValue, boolean isCounterOne) {
+    private TextLabel createMultiplayerCounter(String scoreValue, boolean isCounterOne) {
         GlyphLayout counterLayout = new GlyphLayout(counterFont, scoreValue);
         return new TextLabel(
-            key,
+            Constants.ItemKey.STATIC_TEXT_KEY,
             isCounterOne ? Constants.Border.RIGHT / 2f - counterLayout.width - 50f : Constants.Border.RIGHT / 2f + 50f,
             Constants.Baseline.MIDDLE_OF_COUNTER_FILED + counterLayout.height / 2f,
             counterFont,
@@ -255,27 +296,40 @@ public class UIController {
         return new TextLabel[]{onePlayer, twoPlayers, settings, exit};
     }
 
-    public TextLabel[] getSinglePlayingScreen() {
-        return new TextLabel[]{bestScore, currentScore, counterCurrent, counterBest};
+    public TextLabel[] getPlayingScreen(boolean isSingleplayer) {
+        return isSingleplayer
+            ? new TextLabel[]{bestScore, currentScore, counterCurrent, counterBest}
+            : new TextLabel[]{counterOne, counterTwo, colon};
     }
 
-    public TextLabel[] getMultiPauseScreen() {
-        return new TextLabel[]{pause, counterOne, counterTwo, colon};
+    public TextLabel[] getPauseScreen(boolean isSingleplayer) {
+        return isSingleplayer
+            ? new TextLabel[]{bestScore, currentScore, counterCurrent, counterBest}
+            : new TextLabel[]{pause, counterOne, counterTwo, colon};
     }
 
     public TextLabel[] getPauseMenu() {
         return new TextLabel[]{continueGame, exitToMenu};
     }
 
-    public TextLabel[] getMultiPlayingScreen() {
-        return new TextLabel[]{counterOne, counterTwo, colon};
+    public TextLabel[] getWinScreen(boolean isPlayerOneWins) {
+        return new TextLabel[]{isPlayerOneWins ? playerOneWins : playerTwoWins};
+    }
+
+    public TextLabel[] getEndGameMenu() {
+        return new TextLabel[]{playAgain, exitToMenu};
+    }
+
+    public TextLabel getPressEnter() {
+        return pressEnter;
     }
 
     public void dispose() {
         titleFont.dispose();
-        pauseFont.dispose();
+        subtitleFont.dispose();
         counterFont.dispose();
         regularFont.dispose();
         scoreFont.dispose();
+        winnerFont.dispose();
     }
 }

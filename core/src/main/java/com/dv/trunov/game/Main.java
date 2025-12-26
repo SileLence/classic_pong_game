@@ -15,6 +15,7 @@ import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.renderer.ObjectRenderer;
 import com.dv.trunov.game.renderer.UIRenderer;
 import com.dv.trunov.game.ui.TextLabel;
+import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 
@@ -52,19 +53,23 @@ public class Main extends ApplicationAdapter {
     public void render() {
         float deltaTime = Gdx.graphics.getDeltaTime();
         GameState gameState = gameParameters.getGameState();
+        boolean isSingleplayer = GameMode.SINGLEPLAYER == gameParameters.getGameMode();
         clearScreen();
         switch (gameState) {
             case TITLE -> {
-                inputController.processMenuInputs(gameParameters, uiController.getTitleMenu(), physicsEngine);
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getTitleMenu());
                 if (GameState.MENU == gameParameters.getGameState()) {
-                    uiController.updateLocalization(gameParameters);
+                    uiController.updateLocalization(gameParameters.getCurrentLanguage());
                 }
                 physicsEngine.updateAlpha(deltaTime);
                 drawUI(uiController.getTitle());
                 drawUI(uiController.getTitleMenu());
             }
             case MENU -> {
-                inputController.processMenuInputs(gameParameters, uiController.getMainMenu(), physicsEngine);
+                if (worldObjectsCreated) {
+                    worldObjectsCreated = objectController.destroyWorldObjects();
+                }
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getMainMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 drawUI(uiController.getTitle());
                 drawUI(uiController.getMainMenu());
@@ -74,57 +79,72 @@ public class Main extends ApplicationAdapter {
                 physicsEngine.updateAlpha(deltaTime);
                 gameParameters.setGameState(GameState.MENU);
             }
-            case PLAYING ->  {
+            case IDLE -> {
                 if (!worldObjectsCreated) {
                     worldObjectsCreated = objectController.createWorldObjects(gameParameters);
                 }
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPressEnter());
+                physicsEngine.updateAlpha(deltaTime);
+                drawBackground();
+                drawWorldObjects();
+                uiController.updateCounters(gameParameters, isSingleplayer);
+                drawUI(uiController.getPlayingScreen(isSingleplayer));
+                drawUI(uiController.getPressEnter());
+            }
+            case PLAYING ->  {
                 physicsEngine.resume();
                 updatePhysics(deltaTime);
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 drawBackground();
                 drawWorldObjects();
-                if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
-                    uiController.updateSingleplayerCounters(gameParameters);
-                    drawUI(uiController.getSinglePlayingScreen());
-                } else {
-                    drawUI(uiController.getMultiPlayingScreen());
+                if (isSingleplayer) {
+                    uiController.updateCounters(gameParameters, true);
                 }
+                drawUI(uiController.getPlayingScreen(isSingleplayer));
             }
             case PAUSE -> {
-                inputController.processMenuInputs(gameParameters, uiController.getPauseMenu(), physicsEngine);
-                if (GameState.MENU == gameParameters.getGameState()) {
-                    worldObjectsCreated = objectController.destroyWorldObjects();
-                }
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPauseMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 drawBackground();
                 drawWorldObjects();
-                drawUI(uiController.getMultiPauseScreen());
+                drawUI(uiController.getPauseScreen(isSingleplayer));
                 drawUI(uiController.getPauseMenu());
                 physicsEngine.pause();
+                if (GameState.MENU == gameParameters.getGameState()) {
+                    worldObjectsCreated = objectController.destroyWorldObjects();
+                }
             }
             case GOAL -> {
-                physicsEngine.goalCooldown(gameParameters, deltaTime);
-                if (gameParameters.getCooldown() <= 1f) {
-                    uiController.updateMultiplayerCounters(gameParameters);
+                physicsEngine.processCooldown(gameParameters, deltaTime);
+                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.66f) {
+                    uiController.updateCounters(gameParameters, false);
                 }
-                if (gameParameters.getCooldown() <= 0.5f) {
+                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.33f) {
                     objectController.resetBallPosition();
                 }
                 updatePhysics(deltaTime);
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 drawBackground();
                 drawWorldObjects();
-                if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
-                    drawUI(uiController.getSinglePlayingScreen());
-                } else {
-                    drawUI(uiController.getMultiPlayingScreen());
-                }
+                drawUI(uiController.getPlayingScreen(false));
                 gameParameters.checkWin();
             }
             case WIN -> {
-                if (GameState.MENU == gameParameters.getGameState()) {
-                    worldObjectsCreated = objectController.destroyWorldObjects();
+                // TODO Fix bug when ball is not visible after Win
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());
+                physicsEngine.updateAlpha(deltaTime);
+                objectController.resetBallPosition();
+                updatePhysics(deltaTime);
+                drawBackground();
+                drawWorldObjects();
+                int scoreOne = gameParameters.getScoreOne();
+                int scoreTwo = gameParameters.getScoreTwo();
+                if (scoreOne > scoreTwo) {
+                    drawUI(uiController.getWinScreen(true));
+                } else  {
+                    drawUI(uiController.getWinScreen(false));
                 }
+                drawUI(uiController.getEndGameMenu());
             }
             case EXIT -> Gdx.app.exit();
         }

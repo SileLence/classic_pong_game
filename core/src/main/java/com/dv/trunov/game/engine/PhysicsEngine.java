@@ -75,17 +75,17 @@ public class PhysicsEngine {
         }
     }
 
-    public void goalCooldown(GameParameters gameParameters, float deltaTime) {
+    public void processCooldown(GameParameters gameParameters, float deltaTime) {
         GameState gameState = gameParameters.getGameState();
         float cooldown = gameParameters.getCooldown();
-        if (gameState == GameState.GOAL && cooldown == 0f) {
-            cooldown = 1.5f;
-        }
-        if (GameState.GOAL == gameState) {
+        if (gameState == GameState.GOAL) {
+            if (cooldown == 0f) {
+                cooldown = Constants.Physics.GOAL_COOLDOWN;
+            }
             cooldown -= deltaTime;
             if (cooldown < 0f) {
-                gameParameters.setGameState(GameState.PLAYING);
                 cooldown = 0f;
+                gameParameters.setGameState(GameState.PLAYING);
             }
         }
         gameParameters.setCooldown(cooldown);

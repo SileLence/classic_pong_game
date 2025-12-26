@@ -39,24 +39,45 @@ public class GameParameters {
             }
             case Constants.ItemKey.ONE_PLAYER_KEY -> {
                 gameMode = GameMode.SINGLEPLAYER;
-                gameState = GameState.PLAYING;
+                gameState = GameState.IDLE;
+                setStartGame();
             }
             case Constants.ItemKey.TWO_PLAYERS_KEY -> {
                 gameMode = GameMode.MULTIPLAYER;
-                gameState = GameState.PLAYING;
+                gameState = GameState.IDLE;
+                setStartGame();
             }
+            case Constants.ItemKey.PRESS_ENTER_KEY,
+                 Constants.ItemKey.CONTINUE_KEY -> gameState = GameState.PLAYING;
             case Constants.ItemKey.SETTINGS_KEY -> gameState = GameState.SETTINGS;
-            case Constants.ItemKey.EXIT_KEY -> gameState = GameState.EXIT;
-            case Constants.ItemKey.CONTINUE_KEY -> gameState = GameState.PLAYING;
+            case Constants.ItemKey.PLAY_AGAIN_KEY -> {
+                gameState = GameState.IDLE;
+                setStartGame();
+            }
             case Constants.ItemKey.EXIT_TO_MENU_KEY -> gameState = GameState.MENU;
+            case Constants.ItemKey.EXIT_KEY -> gameState = GameState.EXIT;
         }
         selectedItemIndex = 0;
     }
 
     public void checkWin() {
         if (scoreOne == Constants.Score.WIN_SCORE || scoreTwo == Constants.Score.WIN_SCORE) {
-            gameState = GameState.MENU;
+            gameState = GameState.WIN;
         }
+    }
+
+    public void processGoal(boolean isPlayerOneScoredGoal) {
+        gameState = GameState.GOAL;
+        if (isPlayerOneScoredGoal) {
+            scoreOne++;
+        } else {
+            scoreTwo++;
+        }
+    }
+
+    private void setStartGame() {
+        scoreOne = 0;
+        scoreTwo = 0;
     }
 
     public GameState getGameState() {
@@ -95,23 +116,15 @@ public class GameParameters {
         return scoreOne;
     }
 
-    public void addScoreOne() {
-        if (GameMode.SINGLEPLAYER == gameMode) {
-            scoreOne++;
-            if (scoreOne > bestScore) {
-                bestScore = scoreOne;
-            }
-        } else {
-            scoreOne++;
+    public void updateLevel() {
+        scoreOne++;
+        if (scoreOne > bestScore) {
+            bestScore = scoreOne;
         }
     }
 
     public int getScoreTwo() {
         return scoreTwo;
-    }
-
-    public void addScoreTwo() {
-        scoreTwo++;
     }
 
     public int getBestScore() {

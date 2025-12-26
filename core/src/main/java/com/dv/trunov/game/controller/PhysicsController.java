@@ -25,6 +25,10 @@ public class PhysicsController {
             ball.updateParticles(timeStep);
             ball.addTrailPoint();
             return;
+        } else if (GameState.WIN == gameParameters.getGameState()) {
+            ball.updateParticles(timeStep);
+            ball.addTrailPoint();
+            return;
         }
         calcPlatformPhysics(platforms, timeStep);
         calcBallPhysics(ball, gameParameters, timeStep);
@@ -82,16 +86,19 @@ public class PhysicsController {
             if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
                 ball.setX(Constants.Border.RIGHT_BALL_BOUNDARY);
                 directionX = -directionX;
-                gameParameters.addScoreOne();
+                gameParameters.updateLevel();
             } else if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
-                processGoal(ball, gameParameters, false);
+                ball.spawnExplosion();
+                // TODO implement game over
+                gameParameters.setGameState(GameState.MENU);
             }
         } else {
             if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
-                processGoal(ball, gameParameters, false);
-            }
-            if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
-                processGoal(ball, gameParameters, true);
+                ball.spawnExplosion();
+                gameParameters.processGoal(false);
+            } else if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
+                ball.spawnExplosion();
+                gameParameters.processGoal(true);
             }
         }
         ball.setDirection(directionX, directionY);
@@ -217,19 +224,5 @@ public class PhysicsController {
         float distY = ballY - closestY;
 
         return distX * distX + distY * distY < radius * radius;
-    }
-
-    private void processGoal(Ball ball, GameParameters gameParameters, boolean isPlayerOneScoredGoal) {
-        ball.spawnExplosion();
-        gameParameters.setGameState(GameState.GOAL);
-        if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
-            // TODO process game over
-        } else {
-            if (isPlayerOneScoredGoal) {
-                gameParameters.addScoreOne();
-            } else {
-                gameParameters.addScoreTwo();
-            }
-        }
     }
 }

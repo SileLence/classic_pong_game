@@ -19,7 +19,7 @@ public class InputController {
         return INSTANCE;
     }
 
-    public void processMenuInputs(GameParameters gameParameters, TextLabel[] menuItems, PhysicsEngine physicsEngine) {
+    public void processMenuInputs(GameParameters gameParameters, PhysicsEngine physicsEngine, TextLabel... menuItems) {
         int oldSelectedItemIndex = gameParameters.getSelectedItemIndex();
         int newSelectedItemIndex = gameParameters.getSelectedItemIndex();
         String selectedItemKey = menuItems[oldSelectedItemIndex].key();

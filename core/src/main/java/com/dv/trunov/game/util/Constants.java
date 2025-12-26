@@ -58,6 +58,7 @@ public final class Constants {
         public static final float INTERPOLATION_COEFFICIENT = 0.1f;
         public static final float SPIN_FACTOR = 0.3f;
         public static final float FIXED_TIMESTEP = 1f / 240f;
+        public static final float GOAL_COOLDOWN = 1.5f;
     }
 
     public static final class Colors {
@@ -66,11 +67,13 @@ public final class Constants {
         public static final Color TITLE_SHADOW_COLOR = new Color(0.80f, 0.10f, 0.58f, 0.25f);
         public static final Color REGULAR_FONT_COLOR = new Color(0.7f, 0.7f, 0.7f, 1f);
         public static final Color SELECTION_FONT_COLOR = new Color(0.90f, 0.35f, 0.65f, 1f);
+        public static final Color PLAYER_ONE_COLOR = new Color(0.322f, 0.486f, 0.843f, 1f);
+        public static final Color PLAYER_TWO_COLOR = new Color(0.843f, 0.475f, 0.322f, 1f);
     }
 
     public static final class Score {
 
-        public static final int WIN_SCORE = 10;
+        public static final int WIN_SCORE = 1;
     }
 
     public static final class Asset {
@@ -91,25 +94,18 @@ public final class Constants {
 
     public static final class ItemKey {
 
-        public static final String TITLE_KEY = "title";
-        public static final String PAUSE_KEY = "pause";
-        public static final String COUNTER_ONE_KEY = "counterOne";
-        public static final String COUNTER_TWO_KEY = "counterTwo";
-        public static final String COUNTER_CURRENT_KEY = "counterCurrent";
-        public static final String COUNTER_BEST_KEY = "counterBest";
-        public static final String COLON_KEY = "colon";
+        public static final String STATIC_TEXT_KEY = "staticText";
         public static final String RU_KEY = "ru";
         public static final String EN_KEY = "en";
+        public static final String PLAYER_ONE_WINS_KEY = "playerOneWins";
+        public static final String PLAYER_TWO_WINS_KEY = "playerTwoWins";
         public static final String ONE_PLAYER_KEY = "onePlayer";
         public static final String TWO_PLAYERS_KEY = "twoPlayers";
         public static final String SETTINGS_KEY = "settings";
-        public static final String CURRENT_SCORE_KEY = "currentScore";
-        public static final String BEST_SCORE_KEY = "bestScore";
-        public static final String WIN_KEY = "win";
-        public static final String PLAYER_ONE_WINS_KEY = "playerOneWins";
-        public static final String PLAYER_TWO_WINS_KEY = "playerTwoWins";
         public static final String EXIT_KEY = "exit";
+        public static final String PRESS_ENTER_KEY = "pressEnter";
         public static final String CONTINUE_KEY = "continue";
+        public static final String PLAY_AGAIN_KEY = "playAgain";
         public static final String EXIT_TO_MENU_KEY = "exitToMenu";
     }
 
@@ -123,7 +119,7 @@ public final class Constants {
         public static String SETTINGS;
         public static String PAUSE;
         public static String CONTINUE;
-        public static String PRESS_ENTER_TO_START;
+        public static String PRESS_ENTER;
         public static String BEST_SCORE;
         public static String CURRENT_SCORE;
         public static String WIN;
@@ -140,11 +136,12 @@ public final class Constants {
             public static final String SETTINGS = "Настройки";
             public static final String PAUSE = "ПАУЗА";
             public static final String CONTINUE = "Продолжить";
+            public static final String PRESS_ENTER = "Нажмите Enter";
             public static final String BEST_SCORE = "Лучший счёт: ";
             public static final String CURRENT_SCORE = "Текущий счёт: ";
             public static final String WIN = "ПОБЕДА!";
-            public static final String PLAYER_ONE_WINS = "Победил игрок 1";
-            public static final String PLAYER_TWO_WINS = "Победил игрок 2";
+            public static final String PLAYER_ONE_WINS = "Победил игрок 1!";
+            public static final String PLAYER_TWO_WINS = "Победил игрок 2!";
             public static final String PLAY_AGAIN = "Сыграть ещё раз";
             public static final String EXIT_TO_MENU = "Выйти в меню";
             public static final String EXIT = "Выход";
@@ -157,11 +154,12 @@ public final class Constants {
             public static final String SETTINGS = "Settings";
             public static final String PAUSE = "PAUSE";
             public static final String CONTINUE = "Continue";
+            public static final String PRESS_ENTER = "Press Enter";
             public static final String BEST_SCORE = "Best score: ";
             public static final String CURRENT_SCORE = "Current score: ";
             public static final String WIN = "WIN!";
-            public static final String PLAYER_ONE_WINS = "Player 1 wins";
-            public static final String PLAYER_TWO_WINS = "Player 2 wins";
+            public static final String PLAYER_ONE_WINS = "Player 1 wins!";
+            public static final String PLAYER_TWO_WINS = "Player 2 wins!";
             public static final String PLAY_AGAIN = "Play again";
             public static final String EXIT_TO_MENU = "Exit to menu";
             public static final String EXIT = "Exit";
@@ -176,8 +174,12 @@ public final class Constants {
                 Text.SETTINGS = Text.Russian.SETTINGS;
                 Text.PAUSE = Text.Russian.PAUSE;
                 Text.CONTINUE = Text.Russian.CONTINUE;
+                Text.PRESS_ENTER = Text.Russian.PRESS_ENTER;
                 Text.BEST_SCORE = Text.Russian.BEST_SCORE;
                 Text.CURRENT_SCORE = Text.Russian.CURRENT_SCORE;
+                Text.WIN = Text.Russian.WIN;
+                Text.PLAYER_ONE_WINS = Text.Russian.PLAYER_ONE_WINS;
+                Text.PLAYER_TWO_WINS = Text.Russian.PLAYER_TWO_WINS;
                 Text.PLAY_AGAIN = Text.Russian.PLAY_AGAIN;
                 Text.EXIT_TO_MENU = Text.Russian.EXIT_TO_MENU;
                 Text.EXIT = Text.Russian.EXIT;
@@ -188,8 +190,12 @@ public final class Constants {
                 Text.SETTINGS = Text.English.SETTINGS;
                 Text.PAUSE = Text.English.PAUSE;
                 Text.CONTINUE = Text.English.CONTINUE;
+                Text.PRESS_ENTER = Text.English.PRESS_ENTER;
                 Text.BEST_SCORE = Text.English.BEST_SCORE;
                 Text.CURRENT_SCORE = Text.English.CURRENT_SCORE;
+                Text.WIN = Text.English.WIN;
+                Text.PLAYER_ONE_WINS = Text.English.PLAYER_ONE_WINS;
+                Text.PLAYER_TWO_WINS = Text.English.PLAYER_TWO_WINS;
                 Text.PLAY_AGAIN = Text.English.PLAY_AGAIN;
                 Text.EXIT_TO_MENU = Text.English.EXIT_TO_MENU;
                 Text.EXIT = Text.English.EXIT;
