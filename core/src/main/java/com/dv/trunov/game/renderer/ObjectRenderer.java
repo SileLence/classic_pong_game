@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.dv.trunov.game.model.Ball;
 import com.dv.trunov.game.model.BallParticle;
-import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
 
@@ -43,16 +42,7 @@ public class ObjectRenderer {
         );
     }
 
-    public void drawWorldObjects(Platform[] platforms, Ball ball, GameParameters gameParameters, SpriteBatch batch) {
-        drawPlatforms(platforms, batch);
-        if (gameParameters.getCooldown() <= 0.5f) {
-            drawBall(ball, batch);
-            drawBallTail(ball, batch);
-        }
-        drawBallExplosion(ball, batch);
-    }
-
-    private void drawPlatforms(Platform[] platforms, SpriteBatch batch) {
+    public void drawPlatforms(Platform[] platforms, SpriteBatch batch) {
         for (Platform platform : platforms) {
             batch.draw(
                 platform.getTexture(),
@@ -64,7 +54,7 @@ public class ObjectRenderer {
         }
     }
 
-    private void drawBall(Ball ball, SpriteBatch batch) {
+    public void drawBall(Ball ball, SpriteBatch batch) {
         batch.draw(
             ball.getTexture(),
             ball.getX() - ball.getRadius(),
@@ -74,7 +64,7 @@ public class ObjectRenderer {
         );
     }
 
-    private void drawBallTail(Ball ball, SpriteBatch batch) {
+    public void drawBallTail(Ball ball, SpriteBatch batch) {
         List<Vector2> trailPoints = ball.getTrailPoints();
         int trailsNumber = trailPoints.size();
         for (int index = 0; index < trailsNumber; index++) {
@@ -88,7 +78,7 @@ public class ObjectRenderer {
         }
     }
 
-    private void drawBallExplosion(Ball ball, SpriteBatch batch) {
+    public void drawBallExplosion(Ball ball, SpriteBatch batch) {
         for (BallParticle particle : ball.getParticles()) {
             float time = particle.getNormalizedAge();
             float size = particle.getSize();

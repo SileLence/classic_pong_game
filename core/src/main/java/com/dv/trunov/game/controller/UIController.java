@@ -24,7 +24,6 @@ public class UIController {
     private BitmapFont regularFont;
     private TextLabel title;
     private TextLabel pause;
-    private TextLabel win;
     private TextLabel playerOneWins;
     private TextLabel playerTwoWins;
     private TextLabel currentScore;
@@ -52,7 +51,7 @@ public class UIController {
         return INSTANCE;
     }
 
-    public void createUIObjects() {
+    public void createLanguageSelectionUI() {
         titleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TITLE_FONT));
         regularFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TEXT_FONT));
         regularParams = createRegularParameters();
@@ -66,7 +65,7 @@ public class UIController {
         regularFontGenerator.dispose();
     }
 
-    public void updateLocalization(Language language) {
+    public void createLocalizedUI(Language language) {
         Constants.setLocalization(language);
         titleFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TITLE_FONT));
         regularFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.Asset.TEXT_FONT));
@@ -136,16 +135,6 @@ public class UIController {
             subtitleFont,
             Constants.Text.PAUSE,
             pauseLayout,
-            false
-        );
-        GlyphLayout winLayout = new GlyphLayout(subtitleFont, Constants.Text.WIN);
-        win = new TextLabel(
-            Constants.ItemKey.STATIC_TEXT_KEY,
-            (Constants.Border.RIGHT - winLayout.width) / 2f,
-            Constants.Baseline.TITLE,
-            subtitleFont,
-            Constants.Text.WIN,
-            winLayout,
             false
         );
     }
@@ -313,7 +302,7 @@ public class UIController {
     }
 
     public TextLabel[] getWinScreen(boolean isPlayerOneWins) {
-        return new TextLabel[]{isPlayerOneWins ? playerOneWins : playerTwoWins};
+        return new TextLabel[]{counterOne, counterTwo, colon, isPlayerOneWins ? playerOneWins : playerTwoWins};
     }
 
     public TextLabel[] getEndGameMenu() {

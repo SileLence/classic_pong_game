@@ -21,7 +21,7 @@ public class UIRenderer {
         for (int index = 0; index < textLabels.length; index++) {
             TextLabel textLabel = textLabels[index];
             BitmapFont font = textLabel.font();
-            Color staticColor = new Color(font.getColor());
+            Color originColor = new Color(font.getColor());
             String key = textLabel.key();
             if (textLabel.isSelectable() && index == selectedItemIndex) {
                 Color blinkingColor = new Color().set(Constants.Colors.SELECTION_FONT_COLOR, alpha);
@@ -34,7 +34,7 @@ public class UIRenderer {
                 font.getColor().set(playerTwoColor);
             }
             font.draw(spriteBatch, textLabel.text(), textLabel.x(), textLabel.y());
-            font.getColor().set(staticColor);
+            font.getColor().set(originColor);
         }
     }
 }

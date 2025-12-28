@@ -63,6 +63,7 @@ public class GameParameters {
     public void checkWin() {
         if (scoreOne == Constants.Score.WIN_SCORE || scoreTwo == Constants.Score.WIN_SCORE) {
             gameState = GameState.WIN;
+            cooldown = 0f;
         }
     }
 

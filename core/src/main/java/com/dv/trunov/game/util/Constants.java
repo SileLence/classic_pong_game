@@ -73,7 +73,7 @@ public final class Constants {
 
     public static final class Score {
 
-        public static final int WIN_SCORE = 1;
+        public static final int WIN_SCORE = 3;
     }
 
     public static final class Asset {
@@ -140,8 +140,8 @@ public final class Constants {
             public static final String BEST_SCORE = "Лучший счёт: ";
             public static final String CURRENT_SCORE = "Текущий счёт: ";
             public static final String WIN = "ПОБЕДА!";
-            public static final String PLAYER_ONE_WINS = "Победил игрок 1!";
-            public static final String PLAYER_TWO_WINS = "Победил игрок 2!";
+            public static final String PLAYER_ONE_WINS = "Победил 1 игрок!";
+            public static final String PLAYER_TWO_WINS = "Победил 2 игрок!";
             public static final String PLAY_AGAIN = "Сыграть ещё раз";
             public static final String EXIT_TO_MENU = "Выйти в меню";
             public static final String EXIT = "Выход";

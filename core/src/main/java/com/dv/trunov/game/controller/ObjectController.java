@@ -50,6 +50,12 @@ public class ObjectController {
         ball.setStartPosition();
     }
 
+    public void resetPlatformPosition() {
+        for (Platform platform : platforms) {
+            platform.setStartPosition();
+        }
+    }
+
     public Ball getBall() {
         return ball;
     }

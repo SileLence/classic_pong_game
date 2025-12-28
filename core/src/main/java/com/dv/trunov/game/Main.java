@@ -41,7 +41,7 @@ public class Main extends ApplicationAdapter {
         objectController.initGameParameters();
         gameParameters = objectController.getGameParameters();
         uiController = UIController.getInstance();
-        uiController.createUIObjects();
+        uiController.createLanguageSelectionUI();
         inputController = InputController.getInstance();
         physicsController = PhysicsController.getInstance();
         physicsEngine = PhysicsEngine.getInstance();
@@ -59,7 +59,7 @@ public class Main extends ApplicationAdapter {
             case TITLE -> {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getTitleMenu());
                 if (GameState.MENU == gameParameters.getGameState()) {
-                    uiController.updateLocalization(gameParameters.getCurrentLanguage());
+                    uiController.createLocalizedUI(gameParameters.getCurrentLanguage());
                 }
                 physicsEngine.updateAlpha(deltaTime);
                 drawUI(uiController.getTitle());
@@ -83,6 +83,8 @@ public class Main extends ApplicationAdapter {
                 if (!worldObjectsCreated) {
                     worldObjectsCreated = objectController.createWorldObjects(gameParameters);
                 }
+                objectController.resetPlatformPosition();
+                objectController.resetBallPosition();
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPressEnter());
                 physicsEngine.updateAlpha(deltaTime);
                 drawBackground();
@@ -119,24 +121,31 @@ public class Main extends ApplicationAdapter {
                 if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.66f) {
                     uiController.updateCounters(gameParameters, false);
                 }
-                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.33f) {
-                    objectController.resetBallPosition();
-                }
                 updatePhysics(deltaTime);
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 drawBackground();
-                drawWorldObjects();
+                spriteBatch.begin();
+                objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
+                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.33f) {
+                    objectController.resetBallPosition();
+                    objectRenderer.drawBall(objectController.getBall(), spriteBatch);
+                }
+                objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
+                spriteBatch.end();
                 drawUI(uiController.getPlayingScreen(false));
                 gameParameters.checkWin();
             }
             case WIN -> {
-                // TODO Fix bug when ball is not visible after Win
+                uiController.updateCounters(gameParameters, false);
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 objectController.resetBallPosition();
                 updatePhysics(deltaTime);
                 drawBackground();
-                drawWorldObjects();
+                spriteBatch.begin();
+                objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
+                objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
+                spriteBatch.end();
                 int scoreOne = gameParameters.getScoreOne();
                 int scoreTwo = gameParameters.getScoreTwo();
                 if (scoreOne > scoreTwo) {
@@ -171,12 +180,10 @@ public class Main extends ApplicationAdapter {
 
     private void drawWorldObjects() {
         spriteBatch.begin();
-        objectRenderer.drawWorldObjects(
-            objectController.getPlatforms(),
-            objectController.getBall(),
-            gameParameters,
-            spriteBatch
-        );
+        objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
+        objectRenderer.drawBall(objectController.getBall(), spriteBatch);
+        objectRenderer.drawBallTail(objectController.getBall(), spriteBatch);
+        objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
         spriteBatch.end();
     }
 
