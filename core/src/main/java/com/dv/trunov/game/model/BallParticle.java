@@ -31,7 +31,7 @@ public class BallParticle {
         position.x += velocity.x * deltaTime;
         position.y += velocity.y * deltaTime;
         // gravity
-        velocity.y -= 300f * deltaTime;
+        //velocity.y -= 300f * deltaTime;
     }
 
     public boolean isFinished() {

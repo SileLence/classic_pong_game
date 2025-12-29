@@ -18,11 +18,13 @@ public class Ball extends WorldObject {
     private float directionX;
     private float directionY;
     private float hitCooldown;
+    private float speed;
 
     public Ball(String texturePath) {
         super(texturePath);
         circle = new Circle();
         circle.radius = Constants.Object.BALL_RADIUS;
+        speed = Constants.Speed.BALL_SPEED;
         setStartPosition();
     }
 
@@ -50,13 +52,13 @@ public class Ball extends WorldObject {
     public void spawnExplosion() {
         for (int index = 0; index < Constants.Object.BALL_PARTICLES_NUMBER; index++) {
             float angle = MathUtils.random(0f, MathUtils.PI2);
-            float speed = MathUtils.random(200f, 600f);
+            float speed = MathUtils.random(100f, 500f);
             particles.add(new BallParticle(
                 circle.x,
                 circle.y,
                 (float) (Math.cos(angle) * speed),
                 (float) (Math.sin(angle) * speed),
-                MathUtils.random(0.3f, 1f),
+                MathUtils.random(0.3f, 1.2f),
                 6f,
                 0)
             );
@@ -134,5 +136,12 @@ public class Ball extends WorldObject {
 
     public void setHitCooldown() {
         hitCooldown = HIT_COOLDOWN;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 }

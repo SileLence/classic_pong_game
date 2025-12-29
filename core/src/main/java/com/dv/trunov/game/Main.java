@@ -11,6 +11,7 @@ import com.dv.trunov.game.controller.ObjectController;
 import com.dv.trunov.game.controller.PhysicsController;
 import com.dv.trunov.game.controller.UIController;
 import com.dv.trunov.game.engine.PhysicsEngine;
+import com.dv.trunov.game.model.Ball;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.renderer.ObjectRenderer;
 import com.dv.trunov.game.renderer.UIRenderer;
@@ -96,6 +97,9 @@ public class Main extends ApplicationAdapter {
             case PLAYING ->  {
                 physicsEngine.resume();
                 updatePhysics(deltaTime);
+                if (isSingleplayer) {
+                    objectController.increaseLevel(gameParameters.getLevel());
+                }
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 drawBackground();
                 drawWorldObjects();
@@ -108,7 +112,15 @@ public class Main extends ApplicationAdapter {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPauseMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 drawBackground();
-                drawWorldObjects();
+                spriteBatch.begin();
+                Ball ball = objectController.getBall();
+                objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
+                if (ball.getParticles().isEmpty()) {
+                    objectRenderer.drawBall(ball, spriteBatch);
+                    objectRenderer.drawBallTail(ball, spriteBatch);
+                }
+                objectRenderer.drawBallExplosion(ball, spriteBatch);
+                spriteBatch.end();
                 drawUI(uiController.getPauseScreen(isSingleplayer));
                 drawUI(uiController.getPauseMenu());
                 physicsEngine.pause();

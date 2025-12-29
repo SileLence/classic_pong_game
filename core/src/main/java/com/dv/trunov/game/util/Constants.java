@@ -13,7 +13,7 @@ public final class Constants {
         public static final float BALL_START_X = Border.RIGHT / 2f;
         public static final float BALL_START_Y = Border.GAME_FIELD_TOP / 2f;
         public static final int BALL_TRAIL_NUMBER = 15;
-        public static final int BALL_PARTICLES_NUMBER = 25;
+        public static final int BALL_PARTICLES_NUMBER = 30;
     }
 
     public static final class Border {
@@ -35,21 +35,24 @@ public final class Constants {
     public static final class Baseline {
 
         public static final float TITLE = Border.TOP * 0.8f;
+        public static final float SUBTITLE = Border.TOP * 0.6f;
         public static final float FIRST_ROW = Border.TOP * 0.5f;
         public static final float SECOND_ROW = Border.TOP * 0.4f;
         public static final float THIRD_ROW = Border.TOP * 0.3f;
         public static final float FOURTH_ROW = Border.TOP * 0.2f;
-        public static final float SINGLEPLAYER_SCORE_TEXT_OFFSET = Border.LEFT + 30f;
+        public static final float LEVEL_TEXT_OFFSET = Border.LEFT + 30f;
         public static final float MIDDLE_OF_COUNTER_FILED = (Border.TOP - Border.GAME_FIELD_TOP) / 2f + Constants.Border.GAME_FIELD_TOP;
         public static final float QUARTER_OF_GAME_FIELD = (Border.TOP - Border.GAME_FIELD_TOP) / 2f * 0.5f;
-        public static float CURRENT_SCORE_TEXT;
-        public static float BEST_SCORE_TEXT;
-        public static float SINGLEPLAYER_COUNTER_OFFSET;
+        public static float LEVEL_TEXT;
+        public static float BEST_LEVEL_TEXT;
+        public static float LEVEL_COUNTER_OFFSET;
+        public static float BEST_LEVEL_COUNTER_OFFSET;
     }
 
     public static final class Speed {
 
-        public static final float BALL_SPEED = 1200f;
+        public static final float BALL_SPEED = 900f;
+        public static final float BALL_SPEED_STEP = 100f;
         public static final float PLATFORM_SPEED = BALL_SPEED * 0.9f;
     }
 
@@ -120,9 +123,9 @@ public final class Constants {
         public static String PAUSE;
         public static String CONTINUE;
         public static String PRESS_ENTER;
-        public static String BEST_SCORE;
-        public static String CURRENT_SCORE;
-        public static String WIN;
+        public static String BEST_LEVEL;
+        public static String LEVEL;
+        public static String NEW_RECORD;
         public static String PLAYER_ONE_WINS;
         public static String PLAYER_TWO_WINS;
         public static String PLAY_AGAIN;
@@ -137,11 +140,11 @@ public final class Constants {
             public static final String PAUSE = "ПАУЗА";
             public static final String CONTINUE = "Продолжить";
             public static final String PRESS_ENTER = "Нажмите Enter";
-            public static final String BEST_SCORE = "Лучший счёт: ";
-            public static final String CURRENT_SCORE = "Текущий счёт: ";
-            public static final String WIN = "ПОБЕДА!";
-            public static final String PLAYER_ONE_WINS = "Победил 1 игрок!";
-            public static final String PLAYER_TWO_WINS = "Победил 2 игрок!";
+            public static final String BEST_LEVEL = "Лучший: ";
+            public static final String LEVEL = "Уровень: ";
+            public static final String NEW_RECORD = "Новый Рекорд!";
+            public static final String PLAYER_ONE_WINS = "Победил 1 Игрок!";
+            public static final String PLAYER_TWO_WINS = "Победил 2 Игрок!";
             public static final String PLAY_AGAIN = "Сыграть ещё раз";
             public static final String EXIT_TO_MENU = "Выйти в меню";
             public static final String EXIT = "Выход";
@@ -149,19 +152,19 @@ public final class Constants {
 
         private static final class English {
 
-            public static final String ONE_PLAYER = "1 player";
-            public static final String TWO_PLAYERS = "2 players";
+            public static final String ONE_PLAYER = "1 Player";
+            public static final String TWO_PLAYERS = "2 Players";
             public static final String SETTINGS = "Settings";
             public static final String PAUSE = "PAUSE";
             public static final String CONTINUE = "Continue";
             public static final String PRESS_ENTER = "Press Enter";
-            public static final String BEST_SCORE = "Best score: ";
-            public static final String CURRENT_SCORE = "Current score: ";
-            public static final String WIN = "WIN!";
-            public static final String PLAYER_ONE_WINS = "Player 1 wins!";
-            public static final String PLAYER_TWO_WINS = "Player 2 wins!";
-            public static final String PLAY_AGAIN = "Play again";
-            public static final String EXIT_TO_MENU = "Exit to menu";
+            public static final String BEST_LEVEL = "Best: ";
+            public static final String LEVEL = "Level: ";
+            public static final String NEW_RECORD = "New Record!";
+            public static final String PLAYER_ONE_WINS = "Player 1 Wins!";
+            public static final String PLAYER_TWO_WINS = "Player 2 Wins!";
+            public static final String PLAY_AGAIN = "Play Again";
+            public static final String EXIT_TO_MENU = "Exit to Menu";
             public static final String EXIT = "Exit";
         }
     }
@@ -175,9 +178,9 @@ public final class Constants {
                 Text.PAUSE = Text.Russian.PAUSE;
                 Text.CONTINUE = Text.Russian.CONTINUE;
                 Text.PRESS_ENTER = Text.Russian.PRESS_ENTER;
-                Text.BEST_SCORE = Text.Russian.BEST_SCORE;
-                Text.CURRENT_SCORE = Text.Russian.CURRENT_SCORE;
-                Text.WIN = Text.Russian.WIN;
+                Text.BEST_LEVEL = Text.Russian.BEST_LEVEL;
+                Text.LEVEL = Text.Russian.LEVEL;
+                Text.NEW_RECORD = Text.Russian.NEW_RECORD;
                 Text.PLAYER_ONE_WINS = Text.Russian.PLAYER_ONE_WINS;
                 Text.PLAYER_TWO_WINS = Text.Russian.PLAYER_TWO_WINS;
                 Text.PLAY_AGAIN = Text.Russian.PLAY_AGAIN;
@@ -191,9 +194,9 @@ public final class Constants {
                 Text.PAUSE = Text.English.PAUSE;
                 Text.CONTINUE = Text.English.CONTINUE;
                 Text.PRESS_ENTER = Text.English.PRESS_ENTER;
-                Text.BEST_SCORE = Text.English.BEST_SCORE;
-                Text.CURRENT_SCORE = Text.English.CURRENT_SCORE;
-                Text.WIN = Text.English.WIN;
+                Text.BEST_LEVEL = Text.English.BEST_LEVEL;
+                Text.LEVEL = Text.English.LEVEL;
+                Text.NEW_RECORD = Text.English.NEW_RECORD;
                 Text.PLAYER_ONE_WINS = Text.English.PLAYER_ONE_WINS;
                 Text.PLAYER_TWO_WINS = Text.English.PLAYER_TWO_WINS;
                 Text.PLAY_AGAIN = Text.English.PLAY_AGAIN;
@@ -203,16 +206,20 @@ public final class Constants {
         }
     }
 
-    public static void setSingleplayerCounterOffset(float widestTextLayoutWidth) {
-        Baseline.SINGLEPLAYER_COUNTER_OFFSET = widestTextLayoutWidth + Baseline.SINGLEPLAYER_SCORE_TEXT_OFFSET + 10f;
+    public static void setLevelCounterOffset(float textLayoutWidth) {
+        Baseline.LEVEL_COUNTER_OFFSET = Border.RIGHT / 2f - textLayoutWidth + 10f;
     }
 
-    public static void setCurrentScoreTextBaseline(float textLayoutHeight) {
-        Baseline.CURRENT_SCORE_TEXT = (Baseline.MIDDLE_OF_COUNTER_FILED + textLayoutHeight / 2f) - Baseline.QUARTER_OF_GAME_FIELD;
+    public static void setBestLevelCounterOffset(float textLayoutWidth) {
+        Baseline.BEST_LEVEL_COUNTER_OFFSET = Border.RIGHT / 2f - textLayoutWidth;
     }
 
-    public static void setBestScoreTextBaseline(float textLayoutHeight) {
-       Baseline.BEST_SCORE_TEXT = (Baseline.MIDDLE_OF_COUNTER_FILED + textLayoutHeight / 2f) + Baseline.QUARTER_OF_GAME_FIELD;
+    public static void setLevelTextBaseline(float textLayoutHeight) {
+        Baseline.LEVEL_TEXT = (Baseline.MIDDLE_OF_COUNTER_FILED + textLayoutHeight / 2f) - Baseline.QUARTER_OF_GAME_FIELD;
+    }
+
+    public static void setBestLevelTextBaseline(float textLayoutHeight) {
+       Baseline.BEST_LEVEL_TEXT = (Baseline.MIDDLE_OF_COUNTER_FILED + textLayoutHeight / 2f) + Baseline.QUARTER_OF_GAME_FIELD;
     }
 
     private Constants() {

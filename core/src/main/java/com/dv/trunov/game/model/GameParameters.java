@@ -15,7 +15,8 @@ public class GameParameters {
     private int selectedItemIndex;
     private int scoreOne;
     private int scoreTwo;
-    private int bestScore;
+    private int level;
+    private int bestLevel;
 
     public static GameParameters getInstance() {
         return INSTANCE;
@@ -25,6 +26,7 @@ public class GameParameters {
         gameState = GameState.TITLE;
         selectedItemIndex = 0;
         cooldown = 0f;
+        level = 1;
     }
 
     public void setGameParametersBySelectedItemKey(String key) {
@@ -76,6 +78,14 @@ public class GameParameters {
         }
     }
 
+    public void addPoint() {
+        scoreOne++;
+        level = scoreOne / 5 + 1;
+        if (level > bestLevel) {
+            bestLevel = level;
+        }
+    }
+
     private void setStartGame() {
         scoreOne = 0;
         scoreTwo = 0;
@@ -117,18 +127,15 @@ public class GameParameters {
         return scoreOne;
     }
 
-    public void updateLevel() {
-        scoreOne++;
-        if (scoreOne > bestScore) {
-            bestScore = scoreOne;
-        }
-    }
-
     public int getScoreTwo() {
         return scoreTwo;
     }
 
-    public int getBestScore() {
-        return bestScore;
+    public int getLevel() {
+        return level;
+    }
+
+    public int getBestLevel() {
+        return bestLevel;
     }
 }

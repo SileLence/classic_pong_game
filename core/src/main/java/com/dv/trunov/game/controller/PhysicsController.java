@@ -11,6 +11,7 @@ import com.dv.trunov.game.util.GameState;
 public class PhysicsController {
 
     private static final PhysicsController INSTANCE = new PhysicsController();
+    private static final float MIN_X_VALUE = 0.2f;
 
     private PhysicsController() {
     }
@@ -39,9 +40,9 @@ public class PhysicsController {
         for (Platform platform : platforms) {
             float targetVelocity = 0f;
             if (platform.getDirection() < 0f) {
-                targetVelocity = -Constants.Speed.PLATFORM_SPEED;
+                targetVelocity = -platform.getSpeed();
             } else if (platform.getDirection() > 0f) {
-                targetVelocity = Constants.Speed.PLATFORM_SPEED;
+                targetVelocity = platform.getSpeed();
             }
 
             // interpolate platform movement
@@ -68,8 +69,8 @@ public class PhysicsController {
         float directionY = ball.getDirectionY();
 
         ball.setPosition(
-            ball.getX() + directionX * Constants.Speed.BALL_SPEED * timeStep,
-            ball.getY() + directionY * Constants.Speed.BALL_SPEED * timeStep
+            ball.getX() + directionX * ball.getSpeed() * timeStep,
+            ball.getY() + directionY * ball.getSpeed() * timeStep
         );
         ball.addTrailPoint();
 
@@ -86,7 +87,7 @@ public class PhysicsController {
             if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
                 ball.setX(Constants.Border.RIGHT_BALL_BOUNDARY);
                 directionX = -directionX;
-                gameParameters.updateLevel();
+                gameParameters.addPoint();
             } else if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
                 // TODO implement game over
@@ -132,7 +133,7 @@ public class PhysicsController {
                 float ballCenter = ball.getY();
                 float platformCenter = platform.getY() + platform.getHeight() / 2f;
                 float hitOffset = (ballCenter - platformCenter) / (platform.getHeight() / 2f);
-                float spin = platform.getVelocityY() / Constants.Speed.PLATFORM_SPEED;
+                float spin = platform.getVelocityY() / platform.getSpeed();
                 // calc offset and adjust it with spin (platform moving)
                 hitOffset = MathUtils.clamp(hitOffset + spin, -1f, 1f);
 
@@ -189,6 +190,13 @@ public class PhysicsController {
                     newDirectionX /= vectorLength;
                     newDirectionY /= vectorLength;
                 }
+            }
+            // to prevent endless top/bottom bounces
+            if (Math.abs(newDirectionX) < MIN_X_VALUE) {
+                newDirectionX = Math.copySign(MIN_X_VALUE, newDirectionX);
+                float length = (float) Math.sqrt(newDirectionX * newDirectionX + newDirectionY * newDirectionY);
+                newDirectionX /= length;
+                newDirectionY /= length;
             }
             ball.setDirection(newDirectionX, newDirectionY);
             ball.setHitCooldown();
