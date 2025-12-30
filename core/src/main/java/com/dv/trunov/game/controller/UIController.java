@@ -27,10 +27,8 @@ public class UIController {
     private TextLabel newRecord;
     private TextLabel playerOneWins;
     private TextLabel playerTwoWins;
-    private TextLabel level;
-    private TextLabel bestLevel;
     private TextLabel counterLevel;
-    private TextLabel counterBest;
+    private TextLabel counterBestLevel;
     private TextLabel counterOne;
     private TextLabel counterTwo;
     private TextLabel colon;
@@ -154,7 +152,7 @@ public class UIController {
             int bestLevel = gameParameters.getBestLevel();
             counterLevel = createLevelCounter(String.valueOf(level), false);
             if (level == bestLevel) {
-                counterBest = createLevelCounter(String.valueOf(bestLevel), true);
+                counterBestLevel = createLevelCounter(String.valueOf(bestLevel), true);
             }
         } else {
             int scoreOne = gameParameters.getScoreOne();
@@ -247,34 +245,10 @@ public class UIController {
 
     private void createLevelCounterText(FreeTypeFontGenerator generator) {
         FreeTypeFontGenerator.FreeTypeFontParameter params = createBaseTitleFontParameters();
-        params.size = 34;
+        params.size = 42;
         levelCounterFont = generator.generateFont(params);
-        GlyphLayout levelLayout = new GlyphLayout(levelCounterFont, Constants.Text.LEVEL);
-        GlyphLayout bestLevelLayout = new GlyphLayout(levelCounterFont, Constants.Text.BEST_LEVEL + "1");
-        Constants.setBestLevelTextBaseline(bestLevelLayout.height);
-        Constants.setLevelTextBaseline(levelLayout.height);
-        Constants.setLevelCounterOffset(levelLayout.width);
-        Constants.setBestLevelCounterOffset(levelLayout.width);
-        level = new TextLabel(
-            Constants.ItemKey.STATIC_TEXT_KEY,
-            Constants.Baseline.LEVEL_TEXT_OFFSET,
-            Constants.Baseline.MIDDLE_OF_COUNTER_FILED + levelLayout.height / 2f,
-            levelCounterFont,
-            Constants.Text.LEVEL,
-            levelLayout,
-            false
-        );
-        bestLevel = new TextLabel(
-            Constants.ItemKey.STATIC_TEXT_KEY,
-            Constants.Border.RIGHT / 2f - bestLevelLayout.width / 2f,
-            Constants.Baseline.SUBTITLE,
-            levelCounterFont,
-            Constants.Text.BEST_LEVEL,
-            bestLevelLayout,
-            false
-        );
-        counterLevel = createLevelCounter("1", false);
-        counterBest = createLevelCounter("1", true);
+        counterLevel = createLevelCounter("1", true);
+        counterBestLevel = createLevelCounter("1", false);
     }
 
     private TextLabel createRegularText(FreeTypeFontGenerator generator,
@@ -289,18 +263,17 @@ public class UIController {
     }
 
     private TextLabel createLevelCounter(String counterValue, boolean isBest) {
-        // TODO Align counters and texts
         String text = isBest ? Constants.Text.BEST_LEVEL + counterValue : Constants.Text.LEVEL + counterValue;
-        GlyphLayout counterLayout = new GlyphLayout(levelCounterFont, text);
-        float x = isBest ? Constants.Baseline.BEST_LEVEL_COUNTER_OFFSET : Constants.Baseline.LEVEL_COUNTER_OFFSET;
-        float y = isBest ? Constants.Baseline.SUBTITLE : Constants.Baseline.MIDDLE_OF_COUNTER_FILED + counterLayout.height / 2f;
+        GlyphLayout layout = new GlyphLayout(levelCounterFont, text);
+        float x = isBest ? Constants.Border.RIGHT / 2f - layout.width / 2f : Constants.Border.LEFT + 30f;
+        float y = isBest ? Constants.Baseline.SUBTITLE : Constants.Baseline.MIDDLE_OF_COUNTER_FILED + layout.height / 2f;
         return new TextLabel(
             Constants.ItemKey.STATIC_TEXT_KEY,
             x,
             y,
             levelCounterFont,
-            counterValue,
-            counterLayout,
+            text,
+            layout,
             false
         );
     }
@@ -353,13 +326,13 @@ public class UIController {
 
     public TextLabel[] getPlayingScreen(boolean isSingleplayer) {
         return isSingleplayer
-            ? new TextLabel[]{level, counterLevel}
+            ? new TextLabel[]{counterLevel}
             : new TextLabel[]{counterOne, counterTwo, colon};
     }
 
     public TextLabel[] getPauseScreen(boolean isSingleplayer) {
         return isSingleplayer
-            ? new TextLabel[]{pause, bestLevel, level, counterLevel, counterBest}
+            ? new TextLabel[]{pause, counterLevel, counterBestLevel}
             : new TextLabel[]{pause, counterOne, counterTwo, colon};
     }
 

@@ -27,6 +27,7 @@ public class GameParameters {
         selectedItemIndex = 0;
         cooldown = 0f;
         level = 1;
+        bestLevel = 1;
     }
 
     public void setGameParametersBySelectedItemKey(String key) {
@@ -89,6 +90,7 @@ public class GameParameters {
     private void setStartGame() {
         scoreOne = 0;
         scoreTwo = 0;
+        level = 1;
     }
 
     public GameState getGameState() {

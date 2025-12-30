@@ -40,13 +40,8 @@ public final class Constants {
         public static final float SECOND_ROW = Border.TOP * 0.4f;
         public static final float THIRD_ROW = Border.TOP * 0.3f;
         public static final float FOURTH_ROW = Border.TOP * 0.2f;
-        public static final float LEVEL_TEXT_OFFSET = Border.LEFT + 30f;
         public static final float MIDDLE_OF_COUNTER_FILED = (Border.TOP - Border.GAME_FIELD_TOP) / 2f + Constants.Border.GAME_FIELD_TOP;
         public static final float QUARTER_OF_GAME_FIELD = (Border.TOP - Border.GAME_FIELD_TOP) / 2f * 0.5f;
-        public static float LEVEL_TEXT;
-        public static float BEST_LEVEL_TEXT;
-        public static float LEVEL_COUNTER_OFFSET;
-        public static float BEST_LEVEL_COUNTER_OFFSET;
     }
 
     public static final class Speed {
@@ -204,22 +199,6 @@ public final class Constants {
                 Text.EXIT = Text.English.EXIT;
             }
         }
-    }
-
-    public static void setLevelCounterOffset(float textLayoutWidth) {
-        Baseline.LEVEL_COUNTER_OFFSET = Border.RIGHT / 2f - textLayoutWidth + 10f;
-    }
-
-    public static void setBestLevelCounterOffset(float textLayoutWidth) {
-        Baseline.BEST_LEVEL_COUNTER_OFFSET = Border.RIGHT / 2f - textLayoutWidth;
-    }
-
-    public static void setLevelTextBaseline(float textLayoutHeight) {
-        Baseline.LEVEL_TEXT = (Baseline.MIDDLE_OF_COUNTER_FILED + textLayoutHeight / 2f) - Baseline.QUARTER_OF_GAME_FIELD;
-    }
-
-    public static void setBestLevelTextBaseline(float textLayoutHeight) {
-       Baseline.BEST_LEVEL_TEXT = (Baseline.MIDDLE_OF_COUNTER_FILED + textLayoutHeight / 2f) + Baseline.QUARTER_OF_GAME_FIELD;
     }
 
     private Constants() {
