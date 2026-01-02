@@ -22,16 +22,11 @@ public class UIRenderer {
             TextLabel textLabel = textLabels[index];
             BitmapFont font = textLabel.font();
             Color originColor = new Color(font.getColor());
-            String key = textLabel.key();
             if (textLabel.isSelectable() && index == selectedItemIndex) {
                 Color blinkingColor = new Color().set(Constants.Colors.SELECTION_FONT_COLOR, alpha);
                 font.getColor().set(blinkingColor);
-            } else if (Constants.ItemKey.PLAYER_ONE_WINS_KEY.equals(key)) {
-                Color playerOneColor = Constants.Colors.PLAYER_ONE_COLOR;
-                font.getColor().set(playerOneColor);
-            } else if (Constants.ItemKey.PLAYER_TWO_WINS_KEY.equals(key)) {
-                Color playerTwoColor = Constants.Colors.PLAYER_TWO_COLOR;
-                font.getColor().set(playerTwoColor);
+            } else {
+                font.getColor().set(textLabel.color());
             }
             font.draw(spriteBatch, textLabel.text(), textLabel.x(), textLabel.y());
             font.getColor().set(originColor);

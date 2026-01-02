@@ -1,6 +1,7 @@
 package com.dv.trunov.game.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -13,9 +14,9 @@ import com.dv.trunov.game.util.Language;
 public class UIController {
 
     private static final UIController INSTANCE = new UIController();
-    FreeTypeFontGenerator titleFontGenerator;
-    FreeTypeFontGenerator regularFontGenerator;
-    FreeTypeFontGenerator.FreeTypeFontParameter regularParams;
+    private FreeTypeFontGenerator titleFontGenerator;
+    private FreeTypeFontGenerator regularFontGenerator;
+    private FreeTypeFontGenerator.FreeTypeFontParameter regularParams;
     private BitmapFont titleFont;
     private BitmapFont subtitleFont;
     private BitmapFont scoreCounterFont;
@@ -167,6 +168,7 @@ public class UIController {
         params.size = 160;
         params.shadowOffsetX = 5;
         params.shadowOffsetY = -5;
+        params.shadowColor = Constants.Colors.TITLE_SHADOW_COLOR;
         titleFont = generator.generateFont(params);
         GlyphLayout titleLayout = new GlyphLayout(titleFont, Constants.Text.TITLE);
         title = new TextLabel(
@@ -176,6 +178,7 @@ public class UIController {
             titleFont,
             Constants.Text.TITLE,
             titleLayout,
+            Constants.Colors.TITLE_FONT_COLOR,
             false
         );
     }
@@ -185,6 +188,7 @@ public class UIController {
         params.size = 92;
         params.shadowOffsetX = 3;
         params.shadowOffsetY = -3;
+        params.shadowColor = Constants.Colors.TITLE_SHADOW_COLOR;
         subtitleFont = generator.generateFont(params);
         GlyphLayout pauseLayout = new GlyphLayout(subtitleFont, Constants.Text.PAUSE);
         pause = new TextLabel(
@@ -194,6 +198,7 @@ public class UIController {
             subtitleFont,
             Constants.Text.PAUSE,
             pauseLayout,
+            Constants.Colors.TITLE_FONT_COLOR,
             false
         );
     }
@@ -203,6 +208,7 @@ public class UIController {
         params.size = 72;
         params.shadowOffsetX = 1;
         params.shadowOffsetY = -1;
+        params.shadowColor = Constants.Colors.TITLE_SHADOW_COLOR;
         scoreCounterFont = generator.generateFont(params);
         GlyphLayout colonLayout = new GlyphLayout(scoreCounterFont, ":");
         colon = new TextLabel(
@@ -212,6 +218,7 @@ public class UIController {
             scoreCounterFont,
             ":",
             colonLayout,
+            Constants.Colors.TITLE_FONT_COLOR,
             false
         );
         counterOne = createScoreCounter("0", true);
@@ -230,6 +237,7 @@ public class UIController {
             winnerFont,
             Constants.Text.PLAYER_ONE_WINS,
             winnerLayout,
+            Constants.Colors.PLAYER_ONE_WINNER_COLOR,
             false
         );
         playerTwoWins = new TextLabel(
@@ -239,6 +247,7 @@ public class UIController {
             winnerFont,
             Constants.Text.PLAYER_TWO_WINS,
             winnerLayout,
+            Constants.Colors.PLAYER_TWO_WINNER_COLOR,
             false
         );
     }
@@ -259,7 +268,7 @@ public class UIController {
         regularFont = generator.generateFont(params);
         GlyphLayout layout = new GlyphLayout(regularFont, text);
         float placement = (Constants.Border.RIGHT - layout.width) / 2f;
-        return new TextLabel(key, placement, baseline, regularFont, text, layout, true);
+        return new TextLabel(key, placement, baseline, regularFont, text, layout, Constants.Colors.REGULAR_FONT_COLOR, true);
     }
 
     private TextLabel createLevelCounter(String counterValue, boolean isBest) {
@@ -274,6 +283,7 @@ public class UIController {
             levelCounterFont,
             text,
             layout,
+            Constants.Colors.TITLE_FONT_COLOR,
             false
         );
     }
@@ -287,6 +297,7 @@ public class UIController {
             scoreCounterFont,
             scoreValue,
             counterLayout,
+            Constants.Colors.TITLE_FONT_COLOR,
             false
         );
     }
@@ -294,8 +305,8 @@ public class UIController {
     private FreeTypeFontGenerator.FreeTypeFontParameter createBaseTitleFontParameters() {
         FreeTypeFontGenerator.FreeTypeFontParameter baseTitleParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
         baseTitleParams.characters = Constants.Asset.CHARACTERS;
-        baseTitleParams.color = Constants.Colors.TITLE_FONT_COLOR;
-        baseTitleParams.shadowColor = Constants.Colors.TITLE_SHADOW_COLOR;
+        baseTitleParams.color = Color.WHITE;
+        baseTitleParams.shadowColor = Color.WHITE;
         baseTitleParams.gamma = 1.2f;
         baseTitleParams.minFilter = Texture.TextureFilter.Linear;
         baseTitleParams.magFilter = Texture.TextureFilter.Linear;
@@ -306,7 +317,7 @@ public class UIController {
         FreeTypeFontGenerator.FreeTypeFontParameter regularParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
         regularParams.size = 42;
         regularParams.characters = Constants.Asset.CHARACTERS;
-        regularParams.color = Constants.Colors.REGULAR_FONT_COLOR;
+        regularParams.color = Color.WHITE;
         regularParams.minFilter = Texture.TextureFilter.Linear;
         regularParams.magFilter = Texture.TextureFilter.Linear;
         return regularParams;
@@ -354,10 +365,18 @@ public class UIController {
 
     public void dispose() {
         titleFont.dispose();
-        subtitleFont.dispose();
-        scoreCounterFont.dispose();
         regularFont.dispose();
-        levelCounterFont.dispose();
-        winnerFont.dispose();
+        if (subtitleFont != null) {
+            subtitleFont.dispose();
+        }
+        if (scoreCounterFont != null) {
+            scoreCounterFont.dispose();
+        }
+        if (levelCounterFont != null) {
+            levelCounterFont.dispose();
+        }
+        if (winnerFont != null) {
+            winnerFont.dispose();
+        }
     }
 }

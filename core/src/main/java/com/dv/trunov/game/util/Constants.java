@@ -64,9 +64,9 @@ public final class Constants {
         public static final Color TITLE_FONT_COLOR = new Color(0.60f, 0.19f, 0.48f, 1f);
         public static final Color TITLE_SHADOW_COLOR = new Color(0.80f, 0.10f, 0.58f, 0.25f);
         public static final Color REGULAR_FONT_COLOR = new Color(0.7f, 0.7f, 0.7f, 1f);
-        public static final Color SELECTION_FONT_COLOR = new Color(0.90f, 0.35f, 0.65f, 1f);
-        public static final Color PLAYER_ONE_COLOR = new Color(0.322f, 0.486f, 0.843f, 1f);
-        public static final Color PLAYER_TWO_COLOR = new Color(0.843f, 0.475f, 0.322f, 1f);
+        public static final Color SELECTION_FONT_COLOR = new Color(0.85f, 0.30f, 0.60f, 1f);
+        public static final Color PLAYER_ONE_WINNER_COLOR = new Color(0.28f, 0.51f, 0.88f, 1f);
+        public static final Color PLAYER_TWO_WINNER_COLOR = new Color(0.87f, 0.48f, 0.28f, 1f);
     }
 
     public static final class Score {
