@@ -17,6 +17,7 @@ public class GameParameters {
     private int scoreTwo;
     private int level;
     private int bestLevel;
+    private boolean isNewRecord;
 
     public static GameParameters getInstance() {
         return INSTANCE;
@@ -28,6 +29,7 @@ public class GameParameters {
         cooldown = 0f;
         level = 1;
         bestLevel = 1;
+        isNewRecord = false;
     }
 
     public void setGameParametersBySelectedItemKey(String key) {
@@ -64,14 +66,13 @@ public class GameParameters {
     }
 
     public void checkWin() {
-        if (scoreOne == Constants.Score.WIN_SCORE || scoreTwo == Constants.Score.WIN_SCORE) {
+        if (scoreOne >= Constants.Score.WIN_SCORE || scoreTwo >= Constants.Score.WIN_SCORE) {
             gameState = GameState.WIN;
             cooldown = 0f;
         }
     }
 
-    public void processGoal(boolean isPlayerOneScoredGoal) {
-        gameState = GameState.GOAL;
+    public void addMultiplayerPoint(boolean isPlayerOneScoredGoal) {
         if (isPlayerOneScoredGoal) {
             scoreOne++;
         } else {
@@ -79,11 +80,12 @@ public class GameParameters {
         }
     }
 
-    public void addPoint() {
+    public void addSingleplayerPoint() {
         scoreOne++;
         level = scoreOne / 5 + 1;
         if (level > bestLevel) {
             bestLevel = level;
+            isNewRecord = true;
         }
     }
 
@@ -91,6 +93,11 @@ public class GameParameters {
         scoreOne = 0;
         scoreTwo = 0;
         level = 1;
+        isNewRecord = false;
+    }
+
+    public boolean isNewRecord() {
+        return isNewRecord;
     }
 
     public GameState getGameState() {

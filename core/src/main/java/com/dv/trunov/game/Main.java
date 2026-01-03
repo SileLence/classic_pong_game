@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.dv.trunov.game.controller.InputController;
 import com.dv.trunov.game.controller.ObjectController;
-import com.dv.trunov.game.controller.PhysicsController;
+import com.dv.trunov.game.physics.PhysicsProcessor;
 import com.dv.trunov.game.controller.UIController;
-import com.dv.trunov.game.engine.PhysicsEngine;
+import com.dv.trunov.game.physics.PhysicsEngine;
 import com.dv.trunov.game.model.Ball;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.renderer.ObjectRenderer;
@@ -27,7 +27,7 @@ public class Main extends ApplicationAdapter {
     private ObjectController objectController;
     private UIController uiController;
     private InputController inputController;
-    private PhysicsController physicsController;
+    private PhysicsProcessor physicsProcessor;
     private PhysicsEngine physicsEngine;
     private ObjectRenderer objectRenderer;
     private UIRenderer uiRenderer;
@@ -44,7 +44,7 @@ public class Main extends ApplicationAdapter {
         uiController = UIController.getInstance();
         uiController.createLanguageSelectionUI();
         inputController = InputController.getInstance();
-        physicsController = PhysicsController.getInstance();
+        physicsProcessor = PhysicsProcessor.getInstance();
         physicsEngine = PhysicsEngine.getInstance();
         objectRenderer = ObjectRenderer.getInstance();
         uiRenderer = UIRenderer.getInstance();
@@ -88,24 +88,23 @@ public class Main extends ApplicationAdapter {
                 objectController.resetBallPosition();
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPressEnter());
                 physicsEngine.updateAlpha(deltaTime);
+                updatePhysics(deltaTime);
+                uiController.updateCounters(gameParameters, isSingleplayer);
                 drawBackground();
                 drawWorldObjects();
-                uiController.updateCounters(gameParameters, isSingleplayer);
                 drawUI(uiController.getPlayingScreen(isSingleplayer));
                 drawUI(uiController.getPressEnter());
             }
             case PLAYING ->  {
                 physicsEngine.resume();
+                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 updatePhysics(deltaTime);
                 if (isSingleplayer) {
-                    objectController.increaseLevel(gameParameters.getLevel());
-                }
-                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
-                drawBackground();
-                drawWorldObjects();
-                if (isSingleplayer) {
+                    objectController.increaseSpeed(gameParameters.getLevel());
                     uiController.updateCounters(gameParameters, true);
                 }
+                drawBackground();
+                drawWorldObjects();
                 drawUI(uiController.getPlayingScreen(isSingleplayer));
             }
             case PAUSE -> {
@@ -129,12 +128,13 @@ public class Main extends ApplicationAdapter {
                 }
             }
             case GOAL -> {
+                // TODO fix bug when you can add score by press Esc button at the goal time
+                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 physicsEngine.processCooldown(gameParameters, deltaTime);
+                updatePhysics(deltaTime);
                 if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.66f) {
                     uiController.updateCounters(gameParameters, false);
                 }
-                updatePhysics(deltaTime);
-                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
@@ -148,11 +148,10 @@ public class Main extends ApplicationAdapter {
                 gameParameters.checkWin();
             }
             case WIN -> {
-                uiController.updateCounters(gameParameters, false);
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());
                 physicsEngine.updateAlpha(deltaTime);
-                objectController.resetBallPosition();
                 updatePhysics(deltaTime);
+                uiController.updateCounters(gameParameters, false);
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
@@ -160,12 +159,23 @@ public class Main extends ApplicationAdapter {
                 spriteBatch.end();
                 int scoreOne = gameParameters.getScoreOne();
                 int scoreTwo = gameParameters.getScoreTwo();
-                if (scoreOne > scoreTwo) {
-                    drawUI(uiController.getWinScreen(true));
-                } else  {
-                    drawUI(uiController.getWinScreen(false));
-                }
+                drawUI(uiController.getWinScreen(scoreOne > scoreTwo));
                 drawUI(uiController.getEndGameMenu());
+                objectController.resetBallPosition();
+            }
+            case GAME_OVER -> {
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());
+                physicsEngine.updateAlpha(deltaTime);
+                updatePhysics(deltaTime);
+                uiController.updateCounters(gameParameters, true);
+                drawBackground();
+                spriteBatch.begin();
+                objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
+                objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
+                spriteBatch.end();
+                drawUI(uiController.getEndGameScreen(gameParameters.isNewRecord()));
+                drawUI(uiController.getEndGameMenu());
+                objectController.resetBallPosition();
             }
             case EXIT -> Gdx.app.exit();
         }
@@ -173,7 +183,7 @@ public class Main extends ApplicationAdapter {
 
     private void updatePhysics(float deltaTime) {
         physicsEngine.updatePhysics(
-            physicsController,
+            physicsProcessor,
             objectController.getPlatforms(),
             objectController.getBall(),
             gameParameters,

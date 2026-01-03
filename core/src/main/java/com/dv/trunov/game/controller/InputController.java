@@ -2,7 +2,7 @@ package com.dv.trunov.game.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.dv.trunov.game.engine.PhysicsEngine;
+import com.dv.trunov.game.physics.PhysicsEngine;
 import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.model.Platform;

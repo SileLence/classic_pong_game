@@ -30,6 +30,7 @@ public class UIController {
     private TextLabel playerTwoWins;
     private TextLabel counterLevel;
     private TextLabel counterBestLevel;
+    private TextLabel counterResult;
     private TextLabel counterOne;
     private TextLabel counterTwo;
     private TextLabel colon;
@@ -152,9 +153,7 @@ public class UIController {
             int level = gameParameters.getLevel();
             int bestLevel = gameParameters.getBestLevel();
             counterLevel = createLevelCounter(String.valueOf(level), false);
-            if (level == bestLevel) {
-                counterBestLevel = createLevelCounter(String.valueOf(bestLevel), true);
-            }
+            counterBestLevel = createLevelCounter(String.valueOf(bestLevel), true);
         } else {
             int scoreOne = gameParameters.getScoreOne();
             int scoreTwo = gameParameters.getScoreTwo();
@@ -201,6 +200,17 @@ public class UIController {
             Constants.Colors.TITLE_FONT_COLOR,
             false
         );
+        GlyphLayout newRecordLayout = new GlyphLayout(subtitleFont, Constants.Text.NEW_RECORD);
+        newRecord = new TextLabel(
+            Constants.ItemKey.STATIC_TEXT_KEY,
+            (Constants.Border.RIGHT - newRecordLayout.width) / 2f,
+            Constants.Baseline.TITLE,
+            subtitleFont,
+            Constants.Text.NEW_RECORD,
+            newRecordLayout,
+            Constants.Colors.TITLE_FONT_COLOR,
+            false
+        );
     }
 
     private void createScoreCounterText(FreeTypeFontGenerator generator) {
@@ -213,7 +223,7 @@ public class UIController {
         GlyphLayout colonLayout = new GlyphLayout(scoreCounterFont, ":");
         colon = new TextLabel(
             Constants.ItemKey.STATIC_TEXT_KEY,
-            Constants.Border.RIGHT / 2f - colonLayout.width / 2f,
+            (Constants.Border.RIGHT - colonLayout.width) / 2f,
             Constants.Baseline.MIDDLE_OF_COUNTER_FILED + colonLayout.height / 2f,
             scoreCounterFont,
             ":",
@@ -232,7 +242,7 @@ public class UIController {
         GlyphLayout winnerLayout = new GlyphLayout(winnerFont, Constants.Text.PLAYER_TWO_WINS);
         playerOneWins = new TextLabel(
             Constants.ItemKey.PLAYER_ONE_WINS_KEY,
-            Constants.Border.RIGHT / 2f - winnerLayout.width / 2f,
+            (Constants.Border.RIGHT - winnerLayout.width) / 2f,
             Constants.Baseline.TITLE,
             winnerFont,
             Constants.Text.PLAYER_ONE_WINS,
@@ -242,7 +252,7 @@ public class UIController {
         );
         playerTwoWins = new TextLabel(
             Constants.ItemKey.PLAYER_TWO_WINS_KEY,
-            Constants.Border.RIGHT / 2f - winnerLayout.width / 2f,
+            (Constants.Border.RIGHT - winnerLayout.width) / 2f,
             Constants.Baseline.TITLE,
             winnerFont,
             Constants.Text.PLAYER_TWO_WINS,
@@ -274,7 +284,7 @@ public class UIController {
     private TextLabel createLevelCounter(String counterValue, boolean isBest) {
         String text = isBest ? Constants.Text.BEST_LEVEL + counterValue : Constants.Text.LEVEL + counterValue;
         GlyphLayout layout = new GlyphLayout(levelCounterFont, text);
-        float x = isBest ? Constants.Border.RIGHT / 2f - layout.width / 2f : Constants.Border.LEFT + 30f;
+        float x = isBest ? (Constants.Border.RIGHT - layout.width) / 2f : Constants.Border.LEFT + 30f;
         float y = isBest ? Constants.Baseline.SUBTITLE : Constants.Baseline.MIDDLE_OF_COUNTER_FILED + layout.height / 2f;
         return new TextLabel(
             Constants.ItemKey.STATIC_TEXT_KEY,
@@ -353,6 +363,12 @@ public class UIController {
 
     public TextLabel[] getWinScreen(boolean isPlayerOneWins) {
         return new TextLabel[]{counterOne, counterTwo, colon, isPlayerOneWins ? playerOneWins : playerTwoWins};
+    }
+
+    public TextLabel[] getEndGameScreen(boolean isNewRecord) {
+        return isNewRecord
+            ? new TextLabel[]{newRecord, counterLevel}
+            : new TextLabel[]{counterLevel};
     }
 
     public TextLabel[] getEndGameMenu() {

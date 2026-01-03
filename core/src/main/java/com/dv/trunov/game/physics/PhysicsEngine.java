@@ -1,6 +1,5 @@
-package com.dv.trunov.game.engine;
+package com.dv.trunov.game.physics;
 
-import com.dv.trunov.game.controller.PhysicsController;
 import com.dv.trunov.game.model.Ball;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.model.Platform;
@@ -27,7 +26,7 @@ public class PhysicsEngine {
         return INSTANCE;
     }
 
-    public void updatePhysics(PhysicsController physicsController,
+    public void updatePhysics(PhysicsProcessor physicsProcessor,
                               Platform[] platforms,
                               Ball ball,
                               GameParameters gameParameters,
@@ -38,7 +37,12 @@ public class PhysicsEngine {
         }
         accumulator += deltaTime;
         while (accumulator >= TIMESTEP) {
-            physicsController.processPhysics(platforms, ball, gameParameters, TIMESTEP);
+            GameState gameState = gameParameters.getGameState();
+            switch (gameState) {
+                case IDLE, WIN, GAME_OVER -> ball.updateParticles(TIMESTEP);
+                case GOAL -> physicsProcessor.processGoalPhysics(platforms, ball, TIMESTEP);
+                default -> physicsProcessor.processPhysics(platforms, ball, gameParameters, TIMESTEP);
+            }
             accumulator -= TIMESTEP;
         }
     }

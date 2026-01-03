@@ -56,7 +56,7 @@ public class ObjectController {
         }
     }
 
-    public void increaseLevel(int level) {
+    public void increaseSpeed(int level) {
         float ballSpeed = Constants.Speed.BALL_SPEED + (level - 1) * Constants.Speed.BALL_SPEED_STEP;
         ball.setSpeed(ballSpeed);
         platforms[0].setSpeed(ballSpeed * 0.9f);

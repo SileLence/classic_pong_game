@@ -1,4 +1,4 @@
-package com.dv.trunov.game.controller;
+package com.dv.trunov.game.physics;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.dv.trunov.game.model.Ball;
@@ -8,29 +8,24 @@ import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 
-public class PhysicsController {
+public class PhysicsProcessor {
 
-    private static final PhysicsController INSTANCE = new PhysicsController();
+    private static final PhysicsProcessor INSTANCE = new PhysicsProcessor();
     private static final float MIN_X_VALUE = 0.2f;
 
-    private PhysicsController() {
+    private PhysicsProcessor() {
     }
 
-    public static PhysicsController getInstance() {
+    public static PhysicsProcessor getInstance() {
         return INSTANCE;
     }
 
-    public void processPhysics(Platform[] platforms, Ball ball, GameParameters gameParameters, float timeStep) {
-        if (GameState.GOAL == gameParameters.getGameState()) {
-            calcPlatformPhysics(platforms, timeStep);
-            ball.updateParticles(timeStep);
-            ball.addTrailPoint();
-            return;
-        } else if (GameState.WIN == gameParameters.getGameState()) {
-            ball.updateParticles(timeStep);
-            ball.addTrailPoint();
-            return;
-        }
+    void processGoalPhysics(Platform[] platforms, Ball ball, float timeStep) {
+        calcPlatformPhysics(platforms, timeStep);
+        ball.updateParticles(timeStep);
+    }
+
+    void processPhysics(Platform[] platforms, Ball ball, GameParameters gameParameters, float timeStep) {
         calcPlatformPhysics(platforms, timeStep);
         calcBallPhysics(ball, gameParameters, timeStep);
         calcPlatformCollision(platforms, ball);
@@ -65,44 +60,45 @@ public class PhysicsController {
     }
 
     private void calcBallPhysics(Ball ball, GameParameters gameParameters, float timeStep) {
+        float ballX = ball.getX();
+        float ballY = ball.getY();
         float directionX = ball.getDirectionX();
         float directionY = ball.getDirectionY();
 
         ball.setPosition(
-            ball.getX() + directionX * ball.getSpeed() * timeStep,
-            ball.getY() + directionY * ball.getSpeed() * timeStep
+            ballX + directionX * ball.getSpeed() * timeStep,
+            ballY + directionY * ball.getSpeed() * timeStep
         );
         ball.addTrailPoint();
 
-        if (ball.getY() < Constants.Border.BOTTOM_BALL_BOUNDARY) {
+        if (ballY < Constants.Border.BOTTOM_BALL_BOUNDARY) {
             ball.setY(Constants.Border.BOTTOM_BALL_BOUNDARY);
             directionY = -directionY;
         }
-        if (ball.getY() > Constants.Border.TOP_BALL_BOUNDARY) {
+        if (ballY > Constants.Border.TOP_BALL_BOUNDARY) {
             ball.setY(Constants.Border.TOP_BALL_BOUNDARY);
             directionY = -directionY;
         }
 
         if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
-            if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
+            if (ballX > Constants.Border.RIGHT_BALL_BOUNDARY) {
                 ball.setX(Constants.Border.RIGHT_BALL_BOUNDARY);
                 directionX = -directionX;
-                gameParameters.addPoint();
-            } else if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
+                gameParameters.addSingleplayerPoint();
+            } else if (ballX < Constants.Border.LEFT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
-                // TODO implement game over
-                gameParameters.setGameState(GameState.MENU);
+                gameParameters.setGameState(GameState.GAME_OVER);
             }
         } else {
-            if (ball.getX() < Constants.Border.LEFT_BALL_BOUNDARY) {
+            if (ballX < Constants.Border.LEFT_BALL_BOUNDARY || ballX > Constants.Border.RIGHT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
-                gameParameters.processGoal(false);
-            } else if (ball.getX() > Constants.Border.RIGHT_BALL_BOUNDARY) {
-                ball.spawnExplosion();
-                gameParameters.processGoal(true);
+                gameParameters.setGameState(GameState.GOAL);
+                boolean isPlayerOneScoredGoal = ballX > Constants.Border.RIGHT_BALL_BOUNDARY;
+                gameParameters.addMultiplayerPoint(isPlayerOneScoredGoal);
             }
         }
         ball.setDirection(directionX, directionY);
+        ball.updateParticles(timeStep);
         ball.updateHitCooldown(timeStep);
     }
 

@@ -65,10 +65,10 @@ public class Ball extends WorldObject {
         }
     }
 
-    public void updateParticles(float deltaTime) {
+    public void updateParticles(float timeStep) {
         for (int index = particles.size() - 1; index >= 0; index--) {
             BallParticle particle = particles.get(index);
-            particle.update(deltaTime);
+            particle.update(timeStep);
             if (particle.isFinished()) {
                 particles.remove(index);
             }
