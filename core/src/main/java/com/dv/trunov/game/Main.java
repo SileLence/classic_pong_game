@@ -108,7 +108,12 @@ public class Main extends ApplicationAdapter {
                 drawUI(uiController.getPlayingScreen(isSingleplayer));
             }
             case PAUSE -> {
+                physicsEngine.pause();
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPauseMenu());
+                if (GameState.MENU == gameParameters.getGameState()) {
+                    worldObjectsCreated = objectController.destroyWorldObjects();
+                    return;
+                }
                 physicsEngine.updateAlpha(deltaTime);
                 drawBackground();
                 spriteBatch.begin();
@@ -122,29 +127,30 @@ public class Main extends ApplicationAdapter {
                 spriteBatch.end();
                 drawUI(uiController.getPauseScreen(isSingleplayer));
                 drawUI(uiController.getPauseMenu());
-                physicsEngine.pause();
-                if (GameState.MENU == gameParameters.getGameState()) {
-                    worldObjectsCreated = objectController.destroyWorldObjects();
-                }
             }
             case GOAL -> {
                 // TODO fix bug when you can add score by press Esc button at the goal time
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
-                physicsEngine.processCooldown(gameParameters, deltaTime);
+                if (GameState.GOAL != gameParameters.getGameState()) {
+                    return;
+                }
+                physicsEngine.processCooldown(gameParameters);
                 updatePhysics(deltaTime);
-                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.66f) {
+                if (gameParameters.getGoalCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.66f) {
                     uiController.updateCounters(gameParameters, false);
                 }
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.33f) {
-                    objectController.resetBallPosition();
+                if (gameParameters.getGoalCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.33f) {
                     objectRenderer.drawBall(objectController.getBall(), spriteBatch);
                 }
                 objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
                 spriteBatch.end();
                 drawUI(uiController.getPlayingScreen(false));
+                if (gameParameters.getGoalCooldown() == 0f) {
+                    gameParameters.setGameState(GameState.PLAYING);
+                }
                 gameParameters.checkWin();
             }
             case WIN -> {
@@ -161,7 +167,6 @@ public class Main extends ApplicationAdapter {
                 int scoreTwo = gameParameters.getScoreTwo();
                 drawUI(uiController.getWinScreen(scoreOne > scoreTwo));
                 drawUI(uiController.getEndGameMenu());
-                objectController.resetBallPosition();
             }
             case GAME_OVER -> {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());
@@ -175,7 +180,6 @@ public class Main extends ApplicationAdapter {
                 spriteBatch.end();
                 drawUI(uiController.getEndGameScreen(gameParameters.isNewRecord()));
                 drawUI(uiController.getEndGameMenu());
-                objectController.resetBallPosition();
             }
             case EXIT -> Gdx.app.exit();
         }

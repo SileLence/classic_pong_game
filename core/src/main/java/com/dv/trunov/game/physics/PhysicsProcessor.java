@@ -87,6 +87,7 @@ public class PhysicsProcessor {
                 gameParameters.addSingleplayerPoint();
             } else if (ballX < Constants.Border.LEFT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
+                ball.setStartPosition();
                 gameParameters.setGameState(GameState.GAME_OVER);
             }
         } else {
@@ -95,6 +96,7 @@ public class PhysicsProcessor {
                 gameParameters.setGameState(GameState.GOAL);
                 boolean isPlayerOneScoredGoal = ballX > Constants.Border.RIGHT_BALL_BOUNDARY;
                 gameParameters.addMultiplayerPoint(isPlayerOneScoredGoal);
+                ball.setStartPosition();
             }
         }
         ball.setDirection(directionX, directionY);
