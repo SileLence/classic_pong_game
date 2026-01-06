@@ -3,6 +3,7 @@ package com.dv.trunov.game.renderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.Constants;
 
@@ -17,7 +18,10 @@ public class UIRenderer {
         return INSTANCE;
     }
 
-    public void drawUI(TextLabel[] textLabels, int selectedItemIndex, float alpha, SpriteBatch spriteBatch) {
+    public void drawUI(TextLabel[] textLabels, GameParameters gameParameters, float alpha, SpriteBatch spriteBatch) {
+        int selectedItemIndex = gameParameters.getSelectedItemIndex();
+        float levelUpCooldown = Constants.Physics.LEVEL_UP_COOLDOWN;
+        float cooldown = gameParameters.getCooldown();
         for (int index = 0; index < textLabels.length; index++) {
             TextLabel textLabel = textLabels[index];
             BitmapFont font = textLabel.font();
@@ -25,6 +29,13 @@ public class UIRenderer {
             if (textLabel.isSelectable() && index == selectedItemIndex) {
                 Color blinkingColor = new Color().set(Constants.Colors.SELECTION_FONT_COLOR, alpha);
                 font.getColor().set(blinkingColor);
+            } else if (Constants.ItemKey.LEVEL_COUNTER_KEY.equals(textLabel.key())) {
+                if ((cooldown < levelUpCooldown && cooldown > levelUpCooldown * 0.66f)
+                        || (cooldown < levelUpCooldown * 0.33f && cooldown > 0f)) {
+                    font.getColor().set(Constants.Colors.LEVEL_UP_COLOR);
+                } else {
+                    font.getColor().set(textLabel.color());
+                }
             } else {
                 font.getColor().set(textLabel.color());
             }

@@ -33,7 +33,7 @@ public class UIController {
     private TextLabel counterResult;
     private TextLabel counterOne;
     private TextLabel counterTwo;
-    private TextLabel colon;
+    private TextLabel scoreSeparator;
     private TextLabel english;
     private TextLabel russian;
     private TextLabel onePlayer;
@@ -62,7 +62,14 @@ public class UIController {
         FreeTypeFontGenerator.FreeTypeFontParameter subtitleParams = createSubtitleFontParameters();
         subtitleFont = titleFontGenerator.generateFont(subtitleParams);
 
+        FreeTypeFontGenerator.FreeTypeFontParameter scoreCounterParams = createScoreCounterFontParameters();
+        scoreCounterFont = titleFontGenerator.generateFont(scoreCounterParams);
+
+        FreeTypeFontGenerator.FreeTypeFontParameter levelCounterParams = createLevelCounterParams();
+        levelCounterFont = titleFontGenerator.generateFont(levelCounterParams);
+
         createMainTitleText(titleFontGenerator);
+        createScoreSeparator();
 
         russian = createRegularText(Constants.ItemKey.RU_KEY, Constants.Text.RUSSIAN, Constants.Baseline.SECOND_ROW);
         english = createRegularText(Constants.ItemKey.EN_KEY, Constants.Text.ENGLISH, Constants.Baseline.THIRD_ROW);
@@ -73,9 +80,6 @@ public class UIController {
 
         pause = createSubtitleText(Constants.Text.PAUSE, Constants.Baseline.TITLE);
         newRecord = createSubtitleText(Constants.Text.NEW_RECORD, Constants.Baseline.TITLE);
-
-        createScoreCounterText(titleFontGenerator);
-        createLevelCounterText(titleFontGenerator);
         createWinnerText(titleFontGenerator);
 
         onePlayer = createRegularText(Constants.ItemKey.ONE_PLAYER_KEY, Constants.Text.ONE_PLAYER, Constants.Baseline.FIRST_ROW);
@@ -98,7 +102,7 @@ public class UIController {
             counterLevel = createLevelCounter(String.valueOf(level), false);
             counterBestLevel = createLevelCounter(String.valueOf(bestLevel), true);
             if (GameState.GAME_OVER == gameParameters.getGameState()) {
-                counterResult = createSubtitleText(String.valueOf(level), Constants.Baseline.FIRST_ROW);
+                counterResult = createSubtitleText(String.valueOf(level), Constants.Baseline.SUBTITLE);
             }
         } else {
             int scoreOne = gameParameters.getScoreOne();
@@ -128,6 +132,20 @@ public class UIController {
         );
     }
 
+    private void createScoreSeparator() {
+        GlyphLayout layout = new GlyphLayout(scoreCounterFont, ":");
+        scoreSeparator = new TextLabel(
+            Constants.ItemKey.STATIC_TEXT_KEY,
+            (Constants.Border.RIGHT - layout.width) / 2f,
+            Constants.Baseline.MIDDLE_OF_COUNTER_FILED + layout.height / 2f,
+            scoreCounterFont,
+            ":",
+            layout,
+            Constants.Colors.TITLE_FONT_COLOR,
+            false
+        );
+    }
+
     private TextLabel createSubtitleText(String text, float baseline) {
         GlyphLayout layout = new GlyphLayout(subtitleFont, text);
         return new TextLabel(
@@ -137,26 +155,6 @@ public class UIController {
             subtitleFont,
             text,
             layout,
-            Constants.Colors.TITLE_FONT_COLOR,
-            false
-        );
-    }
-
-    private void createScoreCounterText(FreeTypeFontGenerator generator) {
-        FreeTypeFontGenerator.FreeTypeFontParameter params = createBaseTitleFontParameters();
-        params.size = 72;
-        params.shadowOffsetX = 1;
-        params.shadowOffsetY = -1;
-        params.shadowColor = Constants.Colors.TITLE_SHADOW_COLOR;
-        scoreCounterFont = generator.generateFont(params);
-        GlyphLayout colonLayout = new GlyphLayout(scoreCounterFont, ":");
-        colon = new TextLabel(
-            Constants.ItemKey.STATIC_TEXT_KEY,
-            (Constants.Border.RIGHT - colonLayout.width) / 2f,
-            Constants.Baseline.MIDDLE_OF_COUNTER_FILED + colonLayout.height / 2f,
-            scoreCounterFont,
-            ":",
-            colonLayout,
             Constants.Colors.TITLE_FONT_COLOR,
             false
         );
@@ -189,12 +187,6 @@ public class UIController {
         );
     }
 
-    private void createLevelCounterText(FreeTypeFontGenerator generator) {
-        FreeTypeFontGenerator.FreeTypeFontParameter params = createBaseTitleFontParameters();
-        params.size = 42;
-        levelCounterFont = generator.generateFont(params);
-    }
-
     private TextLabel createRegularText(String key, String text, float baseline) {
         GlyphLayout layout = new GlyphLayout(regularFont, text);
         float x = (Constants.Border.RIGHT - layout.width) / 2f;
@@ -207,7 +199,7 @@ public class UIController {
         float x = isBest ? (Constants.Border.RIGHT - layout.width) / 2f : Constants.Border.LEFT + 30f;
         float y = isBest ? Constants.Baseline.SUBTITLE : Constants.Baseline.MIDDLE_OF_COUNTER_FILED + layout.height / 2f;
         return new TextLabel(
-            Constants.ItemKey.STATIC_TEXT_KEY,
+            isBest ? Constants.ItemKey.STATIC_TEXT_KEY : Constants.ItemKey.LEVEL_COUNTER_KEY,
             x,
             y,
             levelCounterFont,
@@ -252,6 +244,21 @@ public class UIController {
         return subtitleParams;
     }
 
+    private FreeTypeFontGenerator.FreeTypeFontParameter createLevelCounterParams() {
+        FreeTypeFontGenerator.FreeTypeFontParameter levelCounterParams = createBaseTitleFontParameters();
+        levelCounterParams.size = 42;
+        return levelCounterParams;
+    }
+
+    private FreeTypeFontGenerator.FreeTypeFontParameter createScoreCounterFontParameters() {
+        FreeTypeFontGenerator.FreeTypeFontParameter scoreCounterParams = createBaseTitleFontParameters();
+        scoreCounterParams.size = 72;
+        scoreCounterParams.shadowOffsetX = 1;
+        scoreCounterParams.shadowOffsetY = -1;
+        scoreCounterParams.shadowColor = Constants.Colors.TITLE_SHADOW_COLOR;
+        return scoreCounterParams;
+    }
+
     private FreeTypeFontGenerator.FreeTypeFontParameter createRegularParameters() {
         FreeTypeFontGenerator.FreeTypeFontParameter regularParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
         regularParams.size = 42;
@@ -277,13 +284,13 @@ public class UIController {
     public TextLabel[] getPlayingScreen(boolean isSingleplayer) {
         return isSingleplayer
             ? new TextLabel[]{counterLevel}
-            : new TextLabel[]{counterOne, counterTwo, colon};
+            : new TextLabel[]{counterOne, counterTwo, scoreSeparator};
     }
 
     public TextLabel[] getPauseScreen(boolean isSingleplayer) {
         return isSingleplayer
             ? new TextLabel[]{pause, counterLevel, counterBestLevel}
-            : new TextLabel[]{pause, counterOne, counterTwo, colon};
+            : new TextLabel[]{pause, counterOne, counterTwo, scoreSeparator};
     }
 
     public TextLabel[] getPauseMenu() {
@@ -291,7 +298,7 @@ public class UIController {
     }
 
     public TextLabel[] getWinScreen(boolean isPlayerOneWins) {
-        return new TextLabel[]{counterOne, counterTwo, colon, isPlayerOneWins ? playerOneWins : playerTwoWins};
+        return new TextLabel[]{counterOne, counterTwo, scoreSeparator, isPlayerOneWins ? playerOneWins : playerTwoWins};
     }
 
     public TextLabel[] getEndGameScreen(boolean isNewRecord) {

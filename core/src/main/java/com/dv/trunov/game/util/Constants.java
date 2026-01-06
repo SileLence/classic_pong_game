@@ -13,7 +13,7 @@ public final class Constants {
         public static final float BALL_START_X = Border.RIGHT / 2f;
         public static final float BALL_START_Y = Border.GAME_FIELD_TOP / 2f;
         public static final int BALL_TRAIL_NUMBER = 15;
-        public static final int BALL_PARTICLES_NUMBER = 30;
+        public static final int BALL_PARTICLES_NUMBER = 50;
     }
 
     public static final class Border {
@@ -41,13 +41,12 @@ public final class Constants {
         public static final float THIRD_ROW = Border.TOP * 0.3f;
         public static final float FOURTH_ROW = Border.TOP * 0.2f;
         public static final float MIDDLE_OF_COUNTER_FILED = (Border.TOP - Border.GAME_FIELD_TOP) / 2f + Constants.Border.GAME_FIELD_TOP;
-        public static final float QUARTER_OF_GAME_FIELD = (Border.TOP - Border.GAME_FIELD_TOP) / 2f * 0.5f;
     }
 
     public static final class Speed {
 
-        public static final float BALL_SPEED = 900f;
-        public static final float BALL_SPEED_STEP = 100f;
+        public static final float BALL_SPEED = 800f;
+        public static final float BALL_SPEED_STEP = 50f;
         public static final float PLATFORM_SPEED = BALL_SPEED * 0.9f;
     }
 
@@ -57,6 +56,7 @@ public final class Constants {
         public static final float SPIN_FACTOR = 0.3f;
         public static final float FIXED_TIMESTEP = 1f / 240f;
         public static final float GOAL_COOLDOWN = 1.5f;
+        public static final float LEVEL_UP_COOLDOWN = 0.5f;
     }
 
     public static final class Colors {
@@ -67,6 +67,7 @@ public final class Constants {
         public static final Color SELECTION_FONT_COLOR = new Color(0.85f, 0.30f, 0.60f, 1f);
         public static final Color PLAYER_ONE_WINNER_COLOR = new Color(0.28f, 0.51f, 0.88f, 1f);
         public static final Color PLAYER_TWO_WINNER_COLOR = new Color(0.87f, 0.48f, 0.28f, 1f);
+        public static final Color LEVEL_UP_COLOR = new Color(0.60f, 0.85f, 0.43f, 1f);
     }
 
     public static final class Score {
@@ -105,6 +106,7 @@ public final class Constants {
         public static final String CONTINUE_KEY = "continue";
         public static final String PLAY_AGAIN_KEY = "playAgain";
         public static final String EXIT_TO_MENU_KEY = "exitToMenu";
+        public static final String LEVEL_COUNTER_KEY = "levelCounter";
     }
 
     public static final class Text {

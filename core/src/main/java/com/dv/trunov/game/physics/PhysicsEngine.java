@@ -78,16 +78,4 @@ public class PhysicsEngine {
             isGrow = true;
         }
     }
-
-    public void processCooldown(GameParameters gameParameters) {
-        float cooldown = gameParameters.getGoalCooldown();
-        if (cooldown == 0f) {
-            cooldown = Constants.Physics.GOAL_COOLDOWN;
-        }
-        cooldown -= TIMESTEP;
-        if (cooldown < 0f) {
-            cooldown = 0f;
-        }
-        gameParameters.setGoalCooldown(cooldown);
-    }
 }

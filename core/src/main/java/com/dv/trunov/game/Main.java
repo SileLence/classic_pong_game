@@ -102,6 +102,7 @@ public class Main extends ApplicationAdapter {
                 if (isSingleplayer) {
                     objectController.increaseSpeed(gameParameters.getLevel());
                     uiController.updateCounters(gameParameters, true);
+                    gameParameters.updateCooldown();
                 }
                 drawBackground();
                 drawWorldObjects();
@@ -129,26 +130,28 @@ public class Main extends ApplicationAdapter {
                 drawUI(uiController.getPauseMenu());
             }
             case GOAL -> {
+                // TODO сделать подачу после гола от платформы игрока пропустившего мяч по нажатию интер
+
                 // TODO fix bug when you can add score by press Esc button at the goal time
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 if (GameState.GOAL != gameParameters.getGameState()) {
                     return;
                 }
-                physicsEngine.processCooldown(gameParameters);
+                gameParameters.updateCooldown(Constants.Physics.GOAL_COOLDOWN);
                 updatePhysics(deltaTime);
-                if (gameParameters.getGoalCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.66f) {
+                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.66f) {
                     uiController.updateCounters(gameParameters, false);
                 }
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                if (gameParameters.getGoalCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.33f) {
+                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.33f) {
                     objectRenderer.drawBall(objectController.getBall(), spriteBatch);
                 }
                 objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
                 spriteBatch.end();
                 drawUI(uiController.getPlayingScreen(false));
-                if (gameParameters.getGoalCooldown() == 0f) {
+                if (gameParameters.getCooldown() == 0f) {
                     gameParameters.setGameState(GameState.PLAYING);
                 }
                 gameParameters.checkWin();
@@ -217,7 +220,7 @@ public class Main extends ApplicationAdapter {
         spriteBatch.begin();
         uiRenderer.drawUI(
             textLabels,
-            gameParameters.getSelectedItemIndex(),
+            gameParameters,
             physicsEngine.getAlpha(),
             spriteBatch
         );

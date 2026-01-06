@@ -11,7 +11,7 @@ public class GameParameters {
     private GameState gameState;
     private GameMode gameMode;
     private Language language;
-    private float goalCooldown;
+    private float cooldown;
     private int selectedItemIndex;
     private int scoreOne;
     private int scoreTwo;
@@ -26,7 +26,7 @@ public class GameParameters {
     private GameParameters() {
         gameState = GameState.TITLE;
         selectedItemIndex = 0;
-        goalCooldown = 0f;
+        cooldown = 0f;
         level = 1;
         bestLevel = 1;
         isNewRecord = false;
@@ -65,10 +65,20 @@ public class GameParameters {
         selectedItemIndex = 0;
     }
 
+    public void updateCooldown(float... cooldownValue) {
+        if (cooldown == 0f && cooldownValue.length > 0) {
+            cooldown = cooldownValue[0];
+        }
+        cooldown -= Constants.Physics.FIXED_TIMESTEP;
+        if (cooldown < 0f) {
+            cooldown = 0f;
+        }
+    }
+
     public void checkWin() {
         if (scoreOne >= Constants.Score.WIN_SCORE || scoreTwo >= Constants.Score.WIN_SCORE) {
             gameState = GameState.WIN;
-            goalCooldown = 0f;
+            cooldown = 0f;
         }
     }
 
@@ -124,12 +134,8 @@ public class GameParameters {
         this.selectedItemIndex = selectedItemIndex;
     }
 
-    public float getGoalCooldown() {
-        return goalCooldown;
-    }
-
-    public void setGoalCooldown(float goalCooldown) {
-        this.goalCooldown = goalCooldown;
+    public float getCooldown() {
+        return cooldown;
     }
 
     public int getScoreOne() {
