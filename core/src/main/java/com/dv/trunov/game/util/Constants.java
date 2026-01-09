@@ -12,17 +12,19 @@ public final class Constants {
         public static final float BALL_RADIUS = 15f;
         public static final float BALL_START_X = Border.RIGHT / 2f;
         public static final float BALL_START_Y = Border.GAME_FIELD_TOP / 2f;
+        public static final float BALL_PLAYER_ONE_SERVE = Border.LEFT_PLATFORM_BOUNDARY + PLATFORM_WIDTH + BALL_RADIUS;
+        public static final float BALL_PLAYER_TWO_SERVE = Border.RIGHT_PLATFORM_BOUNDARY - BALL_RADIUS;
         public static final int BALL_TRAIL_NUMBER = 15;
         public static final int BALL_PARTICLES_NUMBER = 50;
     }
 
     public static final class Border {
 
-        public static final float BOTTOM = 0f;
+        public static final float BOTTOM = 0;
         public static final float TOP = Gdx.graphics.getHeight();
         public static final float GAME_FIELD_TOP = Gdx.graphics.getHeight() * 0.9f;
         public static final float RIGHT = Gdx.graphics.getWidth();
-        public static final float LEFT = 0f;
+        public static final float LEFT = 0;
         public static final float BOTTOM_BALL_BOUNDARY = BOTTOM + Object.BALL_RADIUS;
         public static final float TOP_BALL_BOUNDARY = GAME_FIELD_TOP - Object.BALL_RADIUS;
         public static final float RIGHT_BALL_BOUNDARY = RIGHT - Object.BALL_RADIUS;
@@ -45,7 +47,7 @@ public final class Constants {
 
     public static final class Speed {
 
-        public static final float BALL_SPEED = 800f;
+        public static final float BALL_SPEED = 1000f;
         public static final float BALL_SPEED_STEP = 50f;
         public static final float PLATFORM_SPEED = BALL_SPEED * 0.9f;
     }
@@ -54,8 +56,8 @@ public final class Constants {
 
         public static final float INTERPOLATION_COEFFICIENT = 0.1f;
         public static final float SPIN_FACTOR = 0.3f;
+        public static final float SERVE_ANGLE_FACTOR = 0.5f;
         public static final float FIXED_TIMESTEP = 1f / 240f;
-        public static final float GOAL_COOLDOWN = 1.5f;
         public static final float LEVEL_UP_COOLDOWN = 0.5f;
     }
 

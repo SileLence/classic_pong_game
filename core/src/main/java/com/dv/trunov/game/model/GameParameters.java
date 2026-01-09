@@ -4,11 +4,13 @@ import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.util.Language;
+import com.dv.trunov.game.util.ServeState;
 
 public class GameParameters {
 
     private static final GameParameters INSTANCE = new GameParameters();
     private GameState gameState;
+    private ServeState serveState;
     private GameMode gameMode;
     private Language language;
     private float cooldown;
@@ -25,14 +27,15 @@ public class GameParameters {
 
     private GameParameters() {
         gameState = GameState.TITLE;
+        serveState = ServeState.NONE;
         selectedItemIndex = 0;
-        cooldown = 0f;
+        cooldown = 0;
         level = 1;
         bestLevel = 1;
         isNewRecord = false;
     }
 
-    public void setGameParametersBySelectedItemKey(String key) {
+    public void updateParametersBySelectedItemKey(String key) {
         switch (key) {
             case Constants.ItemKey.RU_KEY -> {
                 language = Language.RUSSIAN;
@@ -53,7 +56,7 @@ public class GameParameters {
                 setStartGame();
             }
             case Constants.ItemKey.PRESS_ENTER_KEY,
-                 Constants.ItemKey.CONTINUE_KEY -> gameState = GameState.PLAYING;
+                 Constants.ItemKey.CONTINUE_KEY -> gameState = serveState == ServeState.NONE ? GameState.PLAYING : GameState.GOAL;
             case Constants.ItemKey.SETTINGS_KEY -> gameState = GameState.SETTINGS;
             case Constants.ItemKey.PLAY_AGAIN_KEY -> {
                 gameState = GameState.IDLE;
@@ -66,19 +69,19 @@ public class GameParameters {
     }
 
     public void updateCooldown(float... cooldownValue) {
-        if (cooldown == 0f && cooldownValue.length > 0) {
+        if (cooldown == 0 && cooldownValue.length > 0) {
             cooldown = cooldownValue[0];
         }
         cooldown -= Constants.Physics.FIXED_TIMESTEP;
-        if (cooldown < 0f) {
-            cooldown = 0f;
+        if (cooldown < 0) {
+            cooldown = 0;
         }
     }
 
     public void checkWin() {
         if (scoreOne >= Constants.Score.WIN_SCORE || scoreTwo >= Constants.Score.WIN_SCORE) {
             gameState = GameState.WIN;
-            cooldown = 0f;
+            cooldown = 0;
         }
     }
 
@@ -104,6 +107,7 @@ public class GameParameters {
         scoreTwo = 0;
         level = 1;
         isNewRecord = false;
+        serveState = ServeState.NONE;
     }
 
     public boolean isNewRecord() {
@@ -152,5 +156,17 @@ public class GameParameters {
 
     public int getBestLevel() {
         return bestLevel;
+    }
+
+    public ServeState getServeState() {
+        return serveState;
+    }
+
+    public void setServeState(boolean isPlayerOneScoredGoal) {
+        serveState = isPlayerOneScoredGoal ? ServeState.PLAYER_TWO : ServeState.PLAYER_ONE;
+    }
+
+    public void setServeState(ServeState serveState) {
+        this.serveState = serveState;
     }
 }

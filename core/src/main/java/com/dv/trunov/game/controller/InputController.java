@@ -7,6 +7,7 @@ import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.model.GameParameters;
+import com.dv.trunov.game.util.ServeState;
 
 public class InputController {
 
@@ -24,7 +25,7 @@ public class InputController {
         int newSelectedItemIndex = gameParameters.getSelectedItemIndex();
         String selectedItemKey = menuItems[oldSelectedItemIndex].key();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            gameParameters.setGameParametersBySelectedItemKey(selectedItemKey);
+            gameParameters.updateParametersBySelectedItemKey(selectedItemKey);
             return;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
@@ -46,6 +47,12 @@ public class InputController {
     }
 
     public void processPlayingInputs(Platform[] platforms, GameParameters gameParameters) {
+        ServeState serveState = gameParameters.getServeState();
+        if ((serveState == ServeState.PLAYER_ONE && Gdx.input.isKeyJustPressed(Input.Keys.TAB))
+                || (serveState == ServeState.PLAYER_TWO && Gdx.input.isKeyJustPressed(Input.Keys.ENTER))) {
+            gameParameters.setGameState(GameState.PLAYING);
+            gameParameters.setServeState(ServeState.NONE);
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             gameParameters.setGameState(GameState.PAUSE);
         } else {

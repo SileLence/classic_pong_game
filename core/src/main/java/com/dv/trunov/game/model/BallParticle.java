@@ -23,7 +23,7 @@ public class BallParticle {
         this.lifeTime = lifeTime;
         this.startSize = startSize;
         this.endSize = endSize;
-        this.age = 0f;
+        this.age = 0;
     }
 
     public void update(float deltaTime) {

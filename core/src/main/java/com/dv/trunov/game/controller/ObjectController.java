@@ -46,16 +46,6 @@ public class ObjectController {
         return true;
     }
 
-    public void resetBallPosition() {
-        ball.setStartPosition();
-    }
-
-    public void resetPlatformPosition() {
-        for (Platform platform : platforms) {
-            platform.setStartPosition();
-        }
-    }
-
     public void increaseSpeed(int level) {
         float ballSpeed = ball.getSpeed();
         float newBallSpeed = Constants.Speed.BALL_SPEED + (level - 1) * Constants.Speed.BALL_SPEED_STEP;

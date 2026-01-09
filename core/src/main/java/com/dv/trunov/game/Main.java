@@ -8,15 +8,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.dv.trunov.game.controller.InputController;
 import com.dv.trunov.game.controller.ObjectController;
-import com.dv.trunov.game.physics.PhysicsProcessor;
 import com.dv.trunov.game.controller.UIController;
-import com.dv.trunov.game.physics.PhysicsEngine;
 import com.dv.trunov.game.model.Ball;
 import com.dv.trunov.game.model.GameParameters;
+import com.dv.trunov.game.physics.PhysicsEngine;
+import com.dv.trunov.game.physics.PhysicsProcessor;
 import com.dv.trunov.game.renderer.ObjectRenderer;
 import com.dv.trunov.game.renderer.UIRenderer;
 import com.dv.trunov.game.ui.TextLabel;
-import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 
@@ -84,8 +83,6 @@ public class Main extends ApplicationAdapter {
                 if (!worldObjectsCreated) {
                     worldObjectsCreated = objectController.createWorldObjects(gameParameters);
                 }
-                objectController.resetPlatformPosition();
-                objectController.resetBallPosition();
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPressEnter());
                 physicsEngine.updateAlpha(deltaTime);
                 updatePhysics(deltaTime);
@@ -96,7 +93,6 @@ public class Main extends ApplicationAdapter {
                 drawUI(uiController.getPressEnter());
             }
             case PLAYING ->  {
-                physicsEngine.resume();
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 updatePhysics(deltaTime);
                 if (isSingleplayer) {
@@ -111,8 +107,12 @@ public class Main extends ApplicationAdapter {
             case PAUSE -> {
                 physicsEngine.pause();
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPauseMenu());
-                if (GameState.MENU == gameParameters.getGameState()) {
-                    worldObjectsCreated = objectController.destroyWorldObjects();
+                gameState = gameParameters.getGameState();
+                if (GameState.PAUSE != gameState) {
+                    if (GameState.MENU == gameState) {
+                        worldObjectsCreated = objectController.destroyWorldObjects();
+                    }
+                    physicsEngine.resume();
                     return;
                 }
                 physicsEngine.updateAlpha(deltaTime);
@@ -120,40 +120,27 @@ public class Main extends ApplicationAdapter {
                 spriteBatch.begin();
                 Ball ball = objectController.getBall();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                if (ball.getParticles().isEmpty()) {
-                    objectRenderer.drawBall(ball, spriteBatch);
-                    objectRenderer.drawBallTail(ball, spriteBatch);
-                }
+                objectRenderer.drawBall(ball, spriteBatch);
+                objectRenderer.drawBallTail(ball, spriteBatch);
                 objectRenderer.drawBallExplosion(ball, spriteBatch);
                 spriteBatch.end();
                 drawUI(uiController.getPauseScreen(isSingleplayer));
                 drawUI(uiController.getPauseMenu());
             }
             case GOAL -> {
-                // TODO сделать подачу после гола от платформы игрока пропустившего мяч по нажатию интер
-
-                // TODO fix bug when you can add score by press Esc button at the goal time
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 if (GameState.GOAL != gameParameters.getGameState()) {
                     return;
                 }
-                gameParameters.updateCooldown(Constants.Physics.GOAL_COOLDOWN);
                 updatePhysics(deltaTime);
-                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.66f) {
-                    uiController.updateCounters(gameParameters, false);
-                }
+                uiController.updateCounters(gameParameters, false);
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                if (gameParameters.getCooldown() <= Constants.Physics.GOAL_COOLDOWN * 0.33f) {
-                    objectRenderer.drawBall(objectController.getBall(), spriteBatch);
-                }
+                objectRenderer.drawBall(objectController.getBall(), spriteBatch);
                 objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
                 spriteBatch.end();
                 drawUI(uiController.getPlayingScreen(false));
-                if (gameParameters.getCooldown() == 0f) {
-                    gameParameters.setGameState(GameState.PLAYING);
-                }
                 gameParameters.checkWin();
             }
             case WIN -> {
@@ -170,6 +157,7 @@ public class Main extends ApplicationAdapter {
                 int scoreTwo = gameParameters.getScoreTwo();
                 drawUI(uiController.getWinScreen(scoreOne > scoreTwo));
                 drawUI(uiController.getEndGameMenu());
+                worldObjectsCreated = false;
             }
             case GAME_OVER -> {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());
@@ -183,6 +171,7 @@ public class Main extends ApplicationAdapter {
                 spriteBatch.end();
                 drawUI(uiController.getEndGameScreen(gameParameters.isNewRecord()));
                 drawUI(uiController.getEndGameMenu());
+                worldObjectsCreated = false;
             }
             case EXIT -> Gdx.app.exit();
         }

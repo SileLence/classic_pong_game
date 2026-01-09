@@ -7,6 +7,7 @@ import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
+import com.dv.trunov.game.util.ServeState;
 
 public class PhysicsProcessor {
 
@@ -20,8 +21,20 @@ public class PhysicsProcessor {
         return INSTANCE;
     }
 
-    void processGoalPhysics(Platform[] platforms, Ball ball, float timeStep) {
+    void processGoalPhysics(Platform[] platforms, Ball ball, GameParameters gameParameters, float timeStep) {
         calcPlatformPhysics(platforms, timeStep);
+        ServeState serveState = gameParameters.getServeState();
+        if (ServeState.NONE != serveState) {
+            Platform platform = platforms[serveState.getValue()];
+            float platformSpeedRatio = platform.getVelocityY() / platform.getSpeed();
+            float directionY = platformSpeedRatio * Constants.Physics.SERVE_ANGLE_FACTOR;
+            float directionX = ball.getDirectionX();
+            float vector = (float) Math.sqrt(directionX * directionX + directionY * directionY);
+            directionX /= vector;
+            directionY /= vector;
+            ball.setDirection(directionX, directionY);
+            ball.setY(platform.getY() + Constants.Object.PLATFORM_HEIGHT / 2f);
+        }
         ball.updateParticles(timeStep);
     }
 
@@ -33,10 +46,10 @@ public class PhysicsProcessor {
 
     private void calcPlatformPhysics(Platform[] platforms, float timeStep) {
         for (Platform platform : platforms) {
-            float targetVelocity = 0f;
-            if (platform.getDirection() < 0f) {
+            float targetVelocity = 0;
+            if (platform.getDirection() < 0) {
                 targetVelocity = -platform.getSpeed();
-            } else if (platform.getDirection() > 0f) {
+            } else if (platform.getDirection() > 0) {
                 targetVelocity = platform.getSpeed();
             }
 
@@ -50,8 +63,8 @@ public class PhysicsProcessor {
             platform.setVelocityY(interpolatedVelocity);
             platform.setY(platform.getY() + interpolatedVelocity * timeStep);
 
-            if (platform.getY() < 0f) {
-                platform.setY(0f);
+            if (platform.getY() < 0) {
+                platform.setY(0);
             }
             if (platform.getY() > Constants.Border.TOP_PLATFORM_BOUNDARY) {
                 platform.setY(Constants.Border.TOP_PLATFORM_BOUNDARY);
@@ -87,7 +100,7 @@ public class PhysicsProcessor {
                 gameParameters.addSingleplayerPoint();
             } else if (ballX < Constants.Border.LEFT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
-                ball.setStartPosition();
+                ball.setStartPositionAndDirection(0);
                 gameParameters.setGameState(GameState.GAME_OVER);
             }
         } else {
@@ -96,10 +109,13 @@ public class PhysicsProcessor {
                 gameParameters.setGameState(GameState.GOAL);
                 boolean isPlayerOneScoredGoal = ballX > Constants.Border.RIGHT_BALL_BOUNDARY;
                 gameParameters.addMultiplayerPoint(isPlayerOneScoredGoal);
-                ball.setStartPosition();
+                gameParameters.setServeState(isPlayerOneScoredGoal);
+                ball.setStartPositionAndDirection(isPlayerOneScoredGoal ? -1 : 1);
             }
         }
-        ball.setDirection(directionX, directionY);
+        if (GameState.PLAYING == gameParameters.getGameState()) {
+            ball.setDirection(directionX, directionY);
+        }
         ball.updateParticles(timeStep);
         ball.updateHitCooldown(timeStep);
     }
@@ -148,7 +164,7 @@ public class PhysicsProcessor {
                 }
             } else {
                 float distanceSquared = distX * distX + distY * distY;
-                if (distanceSquared == 0f) {
+                if (distanceSquared == 0) {
                     // Degenerate case: ball center exactly matches closest point on platform.
                     // In this situation collision normal cannot be determined (zero-length vector).
                     // Use inverse ball direction as a fallback normal to keep physics stable.
@@ -184,7 +200,7 @@ public class PhysicsProcessor {
                 newDirectionX = directionX - 2f * dotProduct * normalX;
                 newDirectionY = directionY - 2f * dotProduct * normalY;
                 float vectorLength = (float) Math.sqrt(newDirectionX * newDirectionX + newDirectionY * newDirectionY);
-                if (vectorLength != 0f) {
+                if (vectorLength != 0) {
                     newDirectionX /= vectorLength;
                     newDirectionY /= vectorLength;
                 }
@@ -203,15 +219,15 @@ public class PhysicsProcessor {
     }
 
     private boolean calculationNeeded(Platform platform, Ball ball) {
-        if (ball.getHitCooldown() > 0f) {
+        if (ball.getHitCooldown() > 0) {
             return false;
         }
         if (platform.isPlayerOne()) {
-            if (ball.getX() < platform.getX() && ball.getDirectionX() < 0f) {
+            if (ball.getX() < platform.getX() && ball.getDirectionX() < 0) {
                 return false;
             }
         } else {
-            if (ball.getX() > platform.getX() + platform.getWidth() && ball.getDirectionX() > 0f) {
+            if (ball.getX() > platform.getX() + platform.getWidth() && ball.getDirectionX() > 0) {
                 return false;
             }
         }

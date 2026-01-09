@@ -18,12 +18,6 @@ public class Platform extends WorldObject {
         speed = Constants.Speed.PLATFORM_SPEED;
     }
 
-    public void setStartPosition() {
-        bounds.y = Constants.Border.TOP_PLATFORM_BOUNDARY / 2f;
-        direction = 0f;
-        velocityY = 0f;
-    }
-
     public float getX() {
         return bounds.x;
     }

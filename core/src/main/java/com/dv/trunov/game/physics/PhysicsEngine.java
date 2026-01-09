@@ -16,8 +16,8 @@ public class PhysicsEngine {
     private boolean isGrow;
 
     private PhysicsEngine() {
-        accumulator = 0f;
-        alpha = 1f;
+        accumulator = 0;
+        alpha = 1;
         paused = false;
         isGrow = false;
     }
@@ -40,7 +40,7 @@ public class PhysicsEngine {
             GameState gameState = gameParameters.getGameState();
             switch (gameState) {
                 case IDLE, WIN, GAME_OVER -> ball.updateParticles(TIMESTEP);
-                case GOAL -> physicsProcessor.processGoalPhysics(platforms, ball, TIMESTEP);
+                case GOAL -> physicsProcessor.processGoalPhysics(platforms, ball, gameParameters, TIMESTEP);
                 default -> physicsProcessor.processPhysics(platforms, ball, gameParameters, TIMESTEP);
             }
             accumulator -= TIMESTEP;
@@ -60,7 +60,7 @@ public class PhysicsEngine {
     }
 
     public void resetAlpha() {
-        this.alpha = 1f;
+        this.alpha = 1;
         isGrow = false;
     }
 
@@ -70,8 +70,8 @@ public class PhysicsEngine {
         } else {
             alpha -= deltaTime;
         }
-        if (alpha > 1f) {
-            alpha = 1f;
+        if (alpha > 1) {
+            alpha = 1;
             isGrow = false;
         } else if (alpha < 0.5f) {
             alpha = 0.5f;

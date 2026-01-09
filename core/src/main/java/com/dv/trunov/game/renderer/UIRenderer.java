@@ -31,7 +31,7 @@ public class UIRenderer {
                 font.getColor().set(blinkingColor);
             } else if (Constants.ItemKey.LEVEL_COUNTER_KEY.equals(textLabel.key())) {
                 if ((cooldown < levelUpCooldown && cooldown > levelUpCooldown * 0.66f)
-                        || (cooldown < levelUpCooldown * 0.33f && cooldown > 0f)) {
+                        || (cooldown < levelUpCooldown * 0.33f && cooldown > 0)) {
                     font.getColor().set(Constants.Colors.LEVEL_UP_COLOR);
                 } else {
                     font.getColor().set(textLabel.color());

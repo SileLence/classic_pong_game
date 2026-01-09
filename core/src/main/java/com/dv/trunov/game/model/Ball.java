@@ -25,16 +25,23 @@ public class Ball extends WorldObject {
         circle = new Circle();
         circle.radius = Constants.Object.BALL_RADIUS;
         speed = Constants.Speed.BALL_SPEED;
-        setStartPosition();
+        setStartPositionAndDirection(0f);
     }
 
-    public void setStartPosition() {
+    public void setStartPositionAndDirection(float serveX) {
         trailPoints.clear();
-        circle.setPosition(Constants.Object.BALL_START_X, Constants.Object.BALL_START_Y);
-        directionX = MathUtils.random(-1f, 1f);
-        if (Math.abs(directionX) < MIN_X_VALUE) {
-            directionX = Math.copySign(MIN_X_VALUE, directionX);
+        float x;
+        if (serveX == 0) {
+            directionX = MathUtils.random(-1f, 1f);
+            if (Math.abs(directionX) < MIN_X_VALUE) {
+                directionX = Math.copySign(MIN_X_VALUE, directionX);
+            }
+            x = Constants.Object.BALL_START_X;
+        } else {
+            x = serveX > 0 ? Constants.Object.BALL_PLAYER_ONE_SERVE : Constants.Object.BALL_PLAYER_TWO_SERVE;
+            directionX = serveX;
         }
+        circle.setPosition(x, Constants.Object.BALL_START_Y);
         directionY = MathUtils.random(-1f, 1f);
         // normalize vector
         float vectorLength = (float) Math.sqrt(directionX * directionX + directionY * directionY);
@@ -76,11 +83,11 @@ public class Ball extends WorldObject {
     }
 
     public void updateHitCooldown(float timeStep) {
-        if (hitCooldown > 0f) {
+        if (hitCooldown > 0) {
             hitCooldown -= timeStep;
         }
-        if (hitCooldown < 0f) {
-            hitCooldown = 0f;
+        if (hitCooldown < 0) {
+            hitCooldown = 0;
         }
     }
 
