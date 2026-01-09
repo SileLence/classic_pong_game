@@ -109,6 +109,8 @@ public final class Constants {
         public static final String PLAY_AGAIN_KEY = "playAgain";
         public static final String EXIT_TO_MENU_KEY = "exitToMenu";
         public static final String LEVEL_COUNTER_KEY = "levelCounter";
+        public static final String TAB_TO_SERVE_KEY = "tabToServe";
+        public static final String ENTER_TO_SERVE_KEY = "enterToServe";
     }
 
     public static final class Text {
@@ -130,6 +132,8 @@ public final class Constants {
         public static String PLAY_AGAIN;
         public static String EXIT_TO_MENU;
         public static String EXIT;
+        public static String TAB_TO_SERVE;
+        public static String ENTER_TO_SERVE;
 
         private static final class Russian {
 
@@ -147,6 +151,8 @@ public final class Constants {
             public static final String PLAY_AGAIN = "Сыграть ещё раз";
             public static final String EXIT_TO_MENU = "Выйти в меню";
             public static final String EXIT = "Выход";
+            public static final String TAB_TO_SERVE = "Tab - подача";
+            public static final String ENTER_TO_SERVE = "Enter - подача";
         }
 
         private static final class English {
@@ -165,6 +171,8 @@ public final class Constants {
             public static final String PLAY_AGAIN = "Play Again";
             public static final String EXIT_TO_MENU = "Exit to Menu";
             public static final String EXIT = "Exit";
+            public static final String TAB_TO_SERVE = "Tab to Serve";
+            public static final String ENTER_TO_SERVE = "Enter to Serve";
         }
     }
 
@@ -185,6 +193,8 @@ public final class Constants {
                 Text.PLAY_AGAIN = Text.Russian.PLAY_AGAIN;
                 Text.EXIT_TO_MENU = Text.Russian.EXIT_TO_MENU;
                 Text.EXIT = Text.Russian.EXIT;
+                Text.TAB_TO_SERVE = Text.Russian.TAB_TO_SERVE;
+                Text.ENTER_TO_SERVE = Text.Russian.ENTER_TO_SERVE;
             }
             case ENGLISH -> {
                 Text.ONE_PLAYER = Text.English.ONE_PLAYER;
@@ -201,6 +211,8 @@ public final class Constants {
                 Text.PLAY_AGAIN = Text.English.PLAY_AGAIN;
                 Text.EXIT_TO_MENU = Text.English.EXIT_TO_MENU;
                 Text.EXIT = Text.English.EXIT;
+                Text.TAB_TO_SERVE = Text.English.TAB_TO_SERVE;
+                Text.ENTER_TO_SERVE = Text.English.ENTER_TO_SERVE;
             }
         }
     }

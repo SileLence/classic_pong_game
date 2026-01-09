@@ -11,6 +11,7 @@ import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.util.Language;
+import com.dv.trunov.game.util.ServeState;
 
 public class UIController {
 
@@ -44,6 +45,8 @@ public class UIController {
     private TextLabel exitToMenu;
     private TextLabel pressEnter;
     private TextLabel playAgain;
+    private TextLabel tabToServe;
+    private TextLabel enterToServe;
 
     private UIController() {
     }
@@ -90,6 +93,8 @@ public class UIController {
         exitToMenu = createRegularText(Constants.ItemKey.EXIT_TO_MENU_KEY, Constants.Text.EXIT_TO_MENU, Constants.Baseline.FOURTH_ROW);
         pressEnter = createRegularText(Constants.ItemKey.PRESS_ENTER_KEY, Constants.Text.PRESS_ENTER, Constants.Baseline.FOURTH_ROW);
         playAgain = createRegularText(Constants.ItemKey.PLAY_AGAIN_KEY, Constants.Text.PLAY_AGAIN, Constants.Baseline.THIRD_ROW);
+        tabToServe = createRegularText(Constants.ItemKey.TAB_TO_SERVE_KEY, Constants.Text.TAB_TO_SERVE, Constants.Baseline.FOURTH_ROW);
+        enterToServe = createRegularText(Constants.ItemKey.ENTER_TO_SERVE_KEY, Constants.Text.ENTER_TO_SERVE, Constants.Baseline.FOURTH_ROW);
 
         titleFontGenerator.dispose();
         regularFontGenerator.dispose();
@@ -295,6 +300,10 @@ public class UIController {
 
     public TextLabel[] getPauseMenu() {
         return new TextLabel[]{continueGame, exitToMenu};
+    }
+
+    public TextLabel getServeText(ServeState serveState) {
+        return ServeState.PLAYER_ONE ==  serveState ? tabToServe : enterToServe;
     }
 
     public TextLabel[] getWinScreen(boolean isPlayerOneWins) {

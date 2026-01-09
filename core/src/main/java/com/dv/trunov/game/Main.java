@@ -101,7 +101,15 @@ public class Main extends ApplicationAdapter {
                     gameParameters.updateCooldown();
                 }
                 drawBackground();
-                drawWorldObjects();
+                spriteBatch.begin();
+                objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
+                if (GameState.PLAYING == gameParameters.getGameState()) {
+                    // since game state could change don't need to draw ball in that case
+                    objectRenderer.drawBall(objectController.getBall(), spriteBatch);
+                }
+                objectRenderer.drawBallTail(objectController.getBall(), spriteBatch);
+                objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
+                spriteBatch.end();
                 drawUI(uiController.getPlayingScreen(isSingleplayer));
             }
             case PAUSE -> {
@@ -129,19 +137,23 @@ public class Main extends ApplicationAdapter {
             }
             case GOAL -> {
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
-                if (GameState.GOAL != gameParameters.getGameState()) {
-                    return;
-                }
                 updatePhysics(deltaTime);
+                physicsEngine.updateAlpha(deltaTime);
                 uiController.updateCounters(gameParameters, false);
+                gameParameters.checkWin();
+                boolean isGameStateChanged = GameState.GOAL != gameParameters.getGameState();
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                objectRenderer.drawBall(objectController.getBall(), spriteBatch);
+                if (!isGameStateChanged) {
+                    objectRenderer.drawBall(objectController.getBall(), spriteBatch);
+                }
                 objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
                 spriteBatch.end();
                 drawUI(uiController.getPlayingScreen(false));
-                gameParameters.checkWin();
+                if (!isGameStateChanged) {
+                    drawUI(uiController.getServeText(gameParameters.getServeState()));
+                }
             }
             case WIN -> {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());
