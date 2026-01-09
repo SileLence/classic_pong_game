@@ -20,7 +20,6 @@ public class UIRenderer {
 
     public void drawUI(TextLabel[] textLabels, GameParameters gameParameters, float alpha, SpriteBatch spriteBatch) {
         int selectedItemIndex = gameParameters.getSelectedItemIndex();
-        float levelUpCooldown = Constants.Physics.LEVEL_UP_COOLDOWN;
         float cooldown = gameParameters.getCooldown();
         for (int index = 0; index < textLabels.length; index++) {
             TextLabel textLabel = textLabels[index];
@@ -30,8 +29,7 @@ public class UIRenderer {
                 Color blinkingColor = new Color().set(Constants.Colors.SELECTION_FONT_COLOR, alpha);
                 font.getColor().set(blinkingColor);
             } else if (Constants.ItemKey.LEVEL_COUNTER_KEY.equals(textLabel.key())) {
-                if ((cooldown < levelUpCooldown && cooldown > levelUpCooldown * 0.66f)
-                        || (cooldown < levelUpCooldown * 0.33f && cooldown > 0)) {
+                if (cooldown > 0) {
                     font.getColor().set(Constants.Colors.LEVEL_UP_COLOR);
                 } else {
                     font.getColor().set(textLabel.color());

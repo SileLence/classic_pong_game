@@ -58,7 +58,7 @@ public final class Constants {
         public static final float SPIN_FACTOR = 0.3f;
         public static final float SERVE_ANGLE_FACTOR = 0.5f;
         public static final float FIXED_TIMESTEP = 1f / 240f;
-        public static final float LEVEL_UP_COOLDOWN = 0.5f;
+        public static final float LEVEL_UP_COOLDOWN = 0.3f;
     }
 
     public static final class Colors {
