@@ -1,5 +1,6 @@
 package com.dv.trunov.game.model;
 
+import com.dv.trunov.game.storage.StorageService;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
@@ -31,7 +32,7 @@ public class GameParameters {
         selectedItemIndex = 0;
         cooldown = 0;
         level = 1;
-        bestLevel = 1;
+        bestLevel = StorageService.getValue(Constants.Prefs.BEST_LEVEL, 1);
         isNewRecord = false;
     }
 
@@ -99,6 +100,7 @@ public class GameParameters {
         if (level > bestLevel) {
             bestLevel = level;
             isNewRecord = true;
+            StorageService.storeValue(Constants.Prefs.BEST_LEVEL, bestLevel);
         }
     }
 

@@ -50,7 +50,7 @@ public class ObjectController {
         float ballSpeed = ball.getSpeed();
         float newBallSpeed = Constants.Speed.BALL_SPEED + (level - 1) * Constants.Speed.BALL_SPEED_STEP;
         ball.setSpeed(newBallSpeed);
-        platforms[0].setSpeed(newBallSpeed * 0.9f);
+        platforms[0].setSpeed(newBallSpeed * Constants.Speed.PLATFORM_SPEED_MODIFICATOR);
         if (newBallSpeed > ballSpeed) {
             gameParameters.updateCooldown(Constants.Physics.LEVEL_UP_COOLDOWN);
         }

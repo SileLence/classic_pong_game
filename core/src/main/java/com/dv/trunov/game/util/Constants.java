@@ -3,6 +3,8 @@ package com.dv.trunov.game.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
+import java.util.List;
+
 public final class Constants {
 
     public static final class Object {
@@ -49,7 +51,8 @@ public final class Constants {
 
         public static final float BALL_SPEED = 1000f;
         public static final float BALL_SPEED_STEP = 50f;
-        public static final float PLATFORM_SPEED = BALL_SPEED * 0.9f;
+        public static final float PLATFORM_SPEED_MODIFICATOR = 0.7f;
+        public static final float PLATFORM_SPEED = BALL_SPEED * PLATFORM_SPEED_MODIFICATOR;
     }
 
     public static final class Physics {
@@ -111,6 +114,15 @@ public final class Constants {
         public static final String LEVEL_COUNTER_KEY = "levelCounter";
         public static final String TAB_TO_SERVE_KEY = "tabToServe";
         public static final String ENTER_TO_SERVE_KEY = "enterToServe";
+    }
+
+    public static final class Prefs {
+
+        public static final String PREFS_NAME = "classic_pong";
+        public static final String HASH = "hash";
+        public static final String BEST_LEVEL = "bestLevel";
+        public static final String BALL_SPEED = "ballSpeed";
+        public static final List<String> KEYS = List.of(BEST_LEVEL, BALL_SPEED);
     }
 
     public static final class Text {
