@@ -10,7 +10,6 @@ import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameState;
-import com.dv.trunov.game.util.Language;
 import com.dv.trunov.game.util.ServeState;
 
 public class UIController {
@@ -47,6 +46,17 @@ public class UIController {
     private TextLabel playAgain;
     private TextLabel tabToServe;
     private TextLabel enterToServe;
+    private TextLabel pointsToWin;
+    private TextLabel ballSpeed;
+    private TextLabel sounds;
+    private TextLabel resetBestLevel;
+    private TextLabel back;
+    private TextLabel pointsToWinValue;
+    private TextLabel ballSpeedValue;
+    private TextLabel soundsValue;
+    private TextLabel resetBestLevelQuestion;
+    private TextLabel yes;
+    private TextLabel no;
 
     private UIController() {
     }
@@ -78,8 +88,8 @@ public class UIController {
         english = createRegularText(Constants.ItemKey.EN_KEY, Constants.Text.ENGLISH, Constants.Baseline.THIRD_ROW);
     }
 
-    public void createLocalizedUI(Language language) {
-        Constants.setLocalization(language);
+    public void createLocalizedUI(GameParameters gameParameters) {
+        Constants.setLocalization(gameParameters.getCurrentLanguage());
 
         pause = createSubtitleText(Constants.Text.PAUSE, Constants.Baseline.TITLE);
         newRecord = createSubtitleText(Constants.Text.NEW_RECORD, Constants.Baseline.TITLE);
@@ -95,6 +105,28 @@ public class UIController {
         playAgain = createRegularText(Constants.ItemKey.PLAY_AGAIN_KEY, Constants.Text.PLAY_AGAIN, Constants.Baseline.THIRD_ROW);
         tabToServe = createRegularText(Constants.ItemKey.TAB_TO_SERVE_KEY, Constants.Text.TAB_TO_SERVE, Constants.Baseline.FOURTH_ROW);
         enterToServe = createRegularText(Constants.ItemKey.ENTER_TO_SERVE_KEY, Constants.Text.ENTER_TO_SERVE, Constants.Baseline.FOURTH_ROW);
+        back = createRegularText(Constants.ItemKey.BACK_KEY, Constants.Text.BACK, Constants.Baseline.FOURTH_ROW);
+        resetBestLevel = createRegularText(Constants.ItemKey.RESET_BEST_KEY, Constants.Text.RESET_BEST, Constants.Baseline.THIRD_ROW);
+        resetBestLevelQuestion = createRegularText(Constants.ItemKey.RESET_BEST_QUESTION_KEY, Constants.Text.RESET_BEST_QUESTION, Constants.Baseline.SETTINGS_SECOND_ROW);
+        yes = createRegularText(Constants.ItemKey.YES_KEY, Constants.Text.YES, Constants.Baseline.SETTINGS_THIRD_ROW);
+        no = createRegularText(Constants.ItemKey.NO_KEY, Constants.Text.NO, Constants.Baseline.SETTINGS_FOURTH_ROW);
+
+        pointsToWin = createSettingsText(
+            Constants.ItemKey.POINTS_TO_WIN_KEY,
+            Constants.Text.POINTS_TO_WIN,
+            Constants.Baseline.SETTINGS_FIRST_ROW,
+            true);
+        ballSpeed = createSettingsText(
+            Constants.ItemKey.BALL_SPEED_KEY,
+            Constants.Text.BALL_SPEED,
+            Constants.Baseline.SETTINGS_SECOND_ROW,
+            true);
+        sounds = createSettingsText(
+            Constants.ItemKey.SOUNDS_KEY,
+            Constants.Text.SOUNDS,
+            Constants.Baseline.SETTINGS_THIRD_ROW,
+            true);
+        updateSettingsValues(gameParameters);
 
         titleFontGenerator.dispose();
         regularFontGenerator.dispose();
@@ -115,6 +147,32 @@ public class UIController {
             counterOne = createScoreCounter(String.valueOf(scoreOne), true);
             counterTwo = createScoreCounter(String.valueOf(scoreTwo), false);
         }
+    }
+
+    public void updateSettingsValues(GameParameters gameParameters) {
+        int ballSpeedValueIndex = gameParameters.getBallSpeed().getIndex();
+        String ballSpeedText = Constants.Text.BALL_SPEED_VALUES[ballSpeedValueIndex];
+        int soundsIndex = gameParameters.getSounds().getIndex();
+        String soundsValueText = soundsIndex == 1
+            ? Constants.Text.ON
+            : Constants.Text.OFF;
+        String pointsToWinText = gameParameters.getPointsToWin().getValue();
+
+        pointsToWinValue = createSettingsText(
+            Constants.ItemKey.POINTS_TO_WIN_VALUE_KEY,
+            pointsToWinText,
+            Constants.Baseline.SETTINGS_FIRST_ROW,
+            false);
+        ballSpeedValue = createSettingsText(
+            Constants.ItemKey.BALL_SPEED_VALUE_KEY,
+            ballSpeedText,
+            Constants.Baseline.SETTINGS_SECOND_ROW,
+            false);
+        soundsValue = createSettingsText(
+            Constants.ItemKey.SOUND_VALUE_KEY,
+            soundsValueText,
+            Constants.Baseline.SETTINGS_THIRD_ROW,
+            false);
     }
 
     private void createMainTitleText(FreeTypeFontGenerator generator) {
@@ -195,7 +253,17 @@ public class UIController {
     private TextLabel createRegularText(String key, String text, float baseline) {
         GlyphLayout layout = new GlyphLayout(regularFont, text);
         float x = (Constants.Border.RIGHT - layout.width) / 2f;
-        return new TextLabel(key, x, baseline, regularFont, text, layout, Constants.Colors.REGULAR_FONT_COLOR, true);
+        boolean isSelectable = !Constants.ItemKey.RESET_BEST_QUESTION_KEY.equals(key);
+        return new TextLabel(key, x, baseline, regularFont, text, layout, Constants.Colors.REGULAR_FONT_COLOR, isSelectable);
+    }
+
+    private TextLabel createSettingsText(String key, String text, float baseline, boolean isSettingName) {
+        GlyphLayout layout = new GlyphLayout(regularFont, text);
+        float x = isSettingName
+            ? Constants.Border.LEFT_SETTINGS_BOUNDARY - layout.width
+            : Constants.Border.RIGHT_SETTINGS_BOUNDARY;
+        boolean isSelectable = !isSettingName;
+        return new TextLabel(key, x, baseline, regularFont, text, layout, Constants.Colors.REGULAR_FONT_COLOR, isSelectable);
     }
 
     private TextLabel createLevelCounter(String counterValue, boolean isBest) {
@@ -284,6 +352,22 @@ public class UIController {
 
     public TextLabel[] getMainMenu() {
         return new TextLabel[]{onePlayer, twoPlayers, settings, exit};
+    }
+
+    public TextLabel[] getSettingsScreen() {
+        return new TextLabel[]{pointsToWin, ballSpeed, sounds};
+    }
+
+    public TextLabel[] getSettingsMenu() {
+        return new TextLabel[]{pointsToWinValue, ballSpeedValue, soundsValue, resetBestLevel, back};
+    }
+
+    public TextLabel getResetScreen() {
+        return resetBestLevelQuestion;
+    }
+
+    public TextLabel[] getResetMenu() {
+        return new TextLabel[]{yes, no};
     }
 
     public TextLabel[] getPlayingScreen(boolean isSingleplayer) {

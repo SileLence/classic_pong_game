@@ -5,6 +5,7 @@ public enum GameState {
     TITLE,
     MENU,
     SETTINGS,
+    RESET,
     IDLE,
     PLAYING,
     PAUSE,

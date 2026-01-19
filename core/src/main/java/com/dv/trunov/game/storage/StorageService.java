@@ -35,7 +35,7 @@ public class StorageService {
         if (value != null && freshHash.equals(storedHash)) {
             return value;
         } else {
-            System.out.printf("The value [%s] was changed manually! Return default value: %s",  key, defaultValue);
+            System.out.printf("The value [%s] was changed manually! Return default value: %s\n",  key, defaultValue);
             return defaultValue;
         }
     }

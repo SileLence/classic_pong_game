@@ -34,6 +34,8 @@ public final class Constants {
         public static final float TOP_PLATFORM_BOUNDARY = GAME_FIELD_TOP - Object.PLATFORM_HEIGHT;
         public static final float RIGHT_PLATFORM_BOUNDARY = RIGHT - Object.PLATFORM_WIDTH - 30f;
         public static final float LEFT_PLATFORM_BOUNDARY = LEFT + 30f;
+        public static final float LEFT_SETTINGS_BOUNDARY = RIGHT / 2f - 50f;
+        public static final float RIGHT_SETTINGS_BOUNDARY = RIGHT / 2f + 50f;
     }
 
     public static final class Baseline {
@@ -45,6 +47,11 @@ public final class Constants {
         public static final float THIRD_ROW = Border.TOP * 0.3f;
         public static final float FOURTH_ROW = Border.TOP * 0.2f;
         public static final float MIDDLE_OF_COUNTER_FILED = (Border.TOP - Border.GAME_FIELD_TOP) / 2f + Constants.Border.GAME_FIELD_TOP;
+        public static final float SETTINGS_FIRST_ROW = Border.TOP * 0.8f;
+        public static final float SETTINGS_SECOND_ROW = Border.TOP * 0.7f;
+        public static final float SETTINGS_THIRD_ROW = Border.TOP * 0.6f;
+        public static final float SETTINGS_FOURTH_ROW = Border.TOP * 0.5f;
+        public static final float SETTINGS_FIFTH_ROW = Border.TOP * 0.4f;
     }
 
     public static final class Speed {
@@ -93,7 +100,7 @@ public final class Constants {
                 + "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
                 + "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
                 + "0123456789"
-                + " .,:;-_!?";
+                + " .,:;-_!?()[]<>";
     }
 
     public static final class ItemKey {
@@ -114,6 +121,17 @@ public final class Constants {
         public static final String LEVEL_COUNTER_KEY = "levelCounter";
         public static final String TAB_TO_SERVE_KEY = "tabToServe";
         public static final String ENTER_TO_SERVE_KEY = "enterToServe";
+        public static final String POINTS_TO_WIN_KEY = "pointsToWin";
+        public static final String BALL_SPEED_KEY = "ballSpeed";
+        public static final String SOUNDS_KEY = "sounds";
+        public static final String RESET_BEST_KEY = "resetBest";
+        public static final String BACK_KEY = "back";
+        public static final String POINTS_TO_WIN_VALUE_KEY = "pointsToWinValue";
+        public static final String BALL_SPEED_VALUE_KEY = "ballSpeedValue";
+        public static final String SOUND_VALUE_KEY = "soundValue";
+        public static final String RESET_BEST_QUESTION_KEY = "resetBestQuestion";
+        public static final String YES_KEY = "yes";
+        public static final String NO_KEY = "no";
     }
 
     public static final class Prefs {
@@ -122,7 +140,9 @@ public final class Constants {
         public static final String HASH = "hash";
         public static final String BEST_LEVEL = "bestLevel";
         public static final String BALL_SPEED = "ballSpeed";
-        public static final List<String> KEYS = List.of(BEST_LEVEL, BALL_SPEED);
+        public static final String POINTS_TO_WIN = "pointsToWin";
+        public static final String SOUNDS = "sounds";
+        public static final List<String> KEYS = List.of(BEST_LEVEL, BALL_SPEED, POINTS_TO_WIN, SOUNDS);
     }
 
     public static final class Text {
@@ -146,6 +166,17 @@ public final class Constants {
         public static String EXIT;
         public static String TAB_TO_SERVE;
         public static String ENTER_TO_SERVE;
+        public static String POINTS_TO_WIN;
+        public static String BALL_SPEED;
+        public static String SOUNDS;
+        public static String RESET_BEST;
+        public static String BACK;
+        public static String[] BALL_SPEED_VALUES;
+        public static String RESET_BEST_QUESTION;
+        public static String ON;
+        public static String OFF;
+        public static String YES;
+        public static String NO;
 
         private static final class Russian {
 
@@ -165,6 +196,17 @@ public final class Constants {
             public static final String EXIT = "Выход";
             public static final String TAB_TO_SERVE = "Tab - подача";
             public static final String ENTER_TO_SERVE = "Enter - подача";
+            public static final String POINTS_TO_WIN = "Очки до победы (2 игрока):";
+            public static final String BALL_SPEED = "Скорость мяча (2 игрока):";
+            public static final String SOUNDS = "Звуки:";
+            public static final String RESET_BEST = "Сбросить лучший результат";
+            public static final String BACK = "Назад";
+            public static final String[] BALL_SPEED_VALUES = new String[]{"Медленно", "Нормально", "Быстро", "Очень быстро"};
+            public static final String RESET_BEST_QUESTION = "Сбросить лучший результат?";
+            public static final String ON = "Включены";
+            public static final String OFF = "Выключены";
+            public static final String YES = "Да";
+            public static final String NO = "Нет";
         }
 
         private static final class English {
@@ -185,6 +227,17 @@ public final class Constants {
             public static final String EXIT = "Exit";
             public static final String TAB_TO_SERVE = "Tab to Serve";
             public static final String ENTER_TO_SERVE = "Enter to Serve";
+            public static final String POINTS_TO_WIN = "Points to win (2 players):";
+            public static final String BALL_SPEED = "Ball speed (2 players):";
+            public static final String SOUNDS = "Sounds:";
+            public static final String RESET_BEST = "Reset best result";
+            public static final String BACK = "Back";
+            public static final String[] BALL_SPEED_VALUES = new String[]{"Slow", "Normal", "Fast", "Very fast"};
+            public static final String RESET_BEST_QUESTION = "Reset best result?";
+            public static final String ON = "On";
+            public static final String OFF = "Off";
+            public static final String YES = "Yes";
+            public static final String NO = "No";
         }
     }
 
@@ -207,6 +260,17 @@ public final class Constants {
                 Text.EXIT = Text.Russian.EXIT;
                 Text.TAB_TO_SERVE = Text.Russian.TAB_TO_SERVE;
                 Text.ENTER_TO_SERVE = Text.Russian.ENTER_TO_SERVE;
+                Text.POINTS_TO_WIN = Text.Russian.POINTS_TO_WIN;
+                Text.BALL_SPEED = Text.Russian.BALL_SPEED;
+                Text.SOUNDS = Text.Russian.SOUNDS;
+                Text.RESET_BEST = Text.Russian.RESET_BEST;
+                Text.BACK = Text.Russian.BACK;
+                Text.BALL_SPEED_VALUES = Text.Russian.BALL_SPEED_VALUES;
+                Text.RESET_BEST_QUESTION = Text.Russian.RESET_BEST_QUESTION;
+                Text.ON = Text.Russian.ON;
+                Text.OFF = Text.Russian.OFF;
+                Text.YES = Text.Russian.YES;
+                Text.NO = Text.Russian.NO;
             }
             case ENGLISH -> {
                 Text.ONE_PLAYER = Text.English.ONE_PLAYER;
@@ -225,6 +289,17 @@ public final class Constants {
                 Text.EXIT = Text.English.EXIT;
                 Text.TAB_TO_SERVE = Text.English.TAB_TO_SERVE;
                 Text.ENTER_TO_SERVE = Text.English.ENTER_TO_SERVE;
+                Text.POINTS_TO_WIN = Text.English.POINTS_TO_WIN;
+                Text.BALL_SPEED = Text.English.BALL_SPEED;
+                Text.SOUNDS = Text.English.SOUNDS;
+                Text.RESET_BEST = Text.English.RESET_BEST;
+                Text.BACK = Text.English.BACK;
+                Text.BALL_SPEED_VALUES = Text.English.BALL_SPEED_VALUES;
+                Text.RESET_BEST_QUESTION = Text.English.RESET_BEST_QUESTION;
+                Text.ON = Text.English.ON;
+                Text.OFF = Text.English.OFF;
+                Text.YES = Text.English.YES;
+                Text.NO = Text.English.NO;
             }
         }
     }

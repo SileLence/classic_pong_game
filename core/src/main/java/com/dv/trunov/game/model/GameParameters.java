@@ -1,11 +1,14 @@
 package com.dv.trunov.game.model;
 
 import com.dv.trunov.game.storage.StorageService;
+import com.dv.trunov.game.util.BallSpeed;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.util.Language;
+import com.dv.trunov.game.util.PointsToWin;
 import com.dv.trunov.game.util.ServeState;
+import com.dv.trunov.game.util.Toggle;
 
 public class GameParameters {
 
@@ -14,6 +17,9 @@ public class GameParameters {
     private ServeState serveState;
     private GameMode gameMode;
     private Language language;
+    private PointsToWin pointsToWin;
+    private BallSpeed ballSpeed;
+    private Toggle soundsState;
     private float cooldown;
     private int selectedItemIndex;
     private int scoreOne;
@@ -33,7 +39,12 @@ public class GameParameters {
         cooldown = 0;
         level = 1;
         bestLevel = StorageService.getValue(Constants.Prefs.BEST_LEVEL, 1);
+        pointsToWin = PointsToWin.fromIndex(StorageService.getValue(Constants.Prefs.POINTS_TO_WIN, 1));
+        ballSpeed = BallSpeed.fromIndex(StorageService.getValue(Constants.Prefs.BALL_SPEED, 1));
+        soundsState = Toggle.fromIndex(StorageService.getValue(Constants.Prefs.SOUNDS, 1));
         isNewRecord = false;
+
+        StorageService.storeValue(Constants.Prefs.SOUNDS, soundsState.getIndex());
     }
 
     public void updateParametersBySelectedItemKey(String key) {
@@ -59,11 +70,13 @@ public class GameParameters {
             case Constants.ItemKey.PRESS_ENTER_KEY,
                  Constants.ItemKey.CONTINUE_KEY -> gameState = serveState == ServeState.NONE ? GameState.PLAYING : GameState.GOAL;
             case Constants.ItemKey.SETTINGS_KEY -> gameState = GameState.SETTINGS;
+            case Constants.ItemKey.RESET_BEST_KEY -> gameState = GameState.RESET;
+            case Constants.ItemKey.BACK_KEY,
+                 Constants.ItemKey.EXIT_TO_MENU_KEY -> gameState = GameState.MENU;
             case Constants.ItemKey.PLAY_AGAIN_KEY -> {
                 gameState = GameState.IDLE;
                 setStartGame();
             }
-            case Constants.ItemKey.EXIT_TO_MENU_KEY -> gameState = GameState.MENU;
             case Constants.ItemKey.EXIT_KEY -> gameState = GameState.EXIT;
         }
         selectedItemIndex = 0;
@@ -130,6 +143,18 @@ public class GameParameters {
 
     public Language getCurrentLanguage() {
         return language;
+    }
+
+    public PointsToWin getPointsToWin() {
+        return pointsToWin;
+    }
+
+    public BallSpeed getBallSpeed() {
+        return ballSpeed;
+    }
+
+    public Toggle getSounds() {
+        return soundsState;
     }
 
     public int getSelectedItemIndex() {

@@ -46,6 +46,12 @@ public class InputController {
         gameParameters.setSelectedItemIndex(newSelectedItemIndex);
     }
 
+    public void processSettingsInputs(GameParameters gameParameters, PhysicsEngine physicsEngine, TextLabel... menuItems) {
+        int oldSelectedItemIndex = gameParameters.getSelectedItemIndex();
+        int newSelectedItemIndex = gameParameters.getSelectedItemIndex();
+        String selectedItemKey = menuItems[oldSelectedItemIndex].key();
+    }
+
     public void processPlayingInputs(Platform[] platforms, GameParameters gameParameters) {
         ServeState serveState = gameParameters.getServeState();
         if ((serveState == ServeState.PLAYER_ONE && Gdx.input.isKeyJustPressed(Input.Keys.TAB))

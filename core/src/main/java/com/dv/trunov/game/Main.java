@@ -51,6 +51,9 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
+        // TODO implement resize and fullscreen
+        // TODO add sounds
+        // TODO implement app icon
         float deltaTime = Gdx.graphics.getDeltaTime();
         GameState gameState = gameParameters.getGameState();
         boolean isSingleplayer = GameMode.SINGLEPLAYER == gameParameters.getGameMode();
@@ -59,7 +62,7 @@ public class Main extends ApplicationAdapter {
             case TITLE -> {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getTitleMenu());
                 if (GameState.MENU == gameParameters.getGameState()) {
-                    uiController.createLocalizedUI(gameParameters.getCurrentLanguage());
+                    uiController.createLocalizedUI(gameParameters);
                 }
                 physicsEngine.updateAlpha(deltaTime);
                 drawUI(uiController.getTitle());
@@ -75,9 +78,19 @@ public class Main extends ApplicationAdapter {
                 drawUI(uiController.getMainMenu());
             }
             case SETTINGS -> {
-                // TODO Implement settings
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getSettingsMenu());
                 physicsEngine.updateAlpha(deltaTime);
-                gameParameters.setGameState(GameState.MENU);
+                uiController.updateSettingsValues(gameParameters);
+                drawUI(uiController.getSettingsScreen());
+                drawUI(uiController.getSettingsMenu());
+                // TODO implement selection in this state
+            }
+            case RESET -> {
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getResetMenu());
+                physicsEngine.updateAlpha(deltaTime);
+                drawUI(uiController.getResetScreen());
+                drawUI(uiController.getResetMenu());
+                // TODO implement selection in this state
             }
             case IDLE -> {
                 if (!worldObjectsCreated) {
