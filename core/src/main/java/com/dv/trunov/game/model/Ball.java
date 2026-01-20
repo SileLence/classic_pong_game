@@ -24,7 +24,7 @@ public class Ball extends WorldObject {
         super(texturePath);
         circle = new Circle();
         circle.radius = Constants.Object.BALL_RADIUS;
-        speed = Constants.Speed.BALL_SPEED;
+        speed = Constants.Physics.BALL_SPEED;
         setStartPositionAndDirection(0f);
     }
 

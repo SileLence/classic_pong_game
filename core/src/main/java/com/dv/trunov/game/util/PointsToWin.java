@@ -26,7 +26,7 @@ public enum PointsToWin {
         return PointsToWin.values()[index];
     }
 
-    public static int getSize() {
+    public static int size() {
         return values().length;
     }
 }

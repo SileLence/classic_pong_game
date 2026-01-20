@@ -35,6 +35,7 @@ public class StorageService {
         if (value != null && freshHash.equals(storedHash)) {
             return value;
         } else {
+            // TODO resolve bug with default values
             System.out.printf("The value [%s] was changed manually! Return default value: %s\n",  key, defaultValue);
             return defaultValue;
         }
@@ -47,7 +48,7 @@ public class StorageService {
     }
 
     private static String calcHash() {
-        List<String> keys = Constants.Prefs.KEYS;
+        List<String> keys = Constants.Prefs.PREFS_KEY_LIST;
         StringBuilder builder = new StringBuilder();
         for (String key : keys) {
             builder.append(PREFERENCES.getString(key));

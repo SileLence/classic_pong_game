@@ -54,14 +54,6 @@ public final class Constants {
         public static final float SETTINGS_FIFTH_ROW = Border.TOP * 0.4f;
     }
 
-    public static final class Speed {
-
-        public static final float BALL_SPEED = 1000f;
-        public static final float BALL_SPEED_STEP = 50f;
-        public static final float PLATFORM_SPEED_MODIFICATOR = 0.7f;
-        public static final float PLATFORM_SPEED = BALL_SPEED * PLATFORM_SPEED_MODIFICATOR;
-    }
-
     public static final class Physics {
 
         public static final float INTERPOLATION_COEFFICIENT = 0.1f;
@@ -69,6 +61,9 @@ public final class Constants {
         public static final float SERVE_ANGLE_FACTOR = 0.5f;
         public static final float FIXED_TIMESTEP = 1f / 240f;
         public static final float LEVEL_UP_COOLDOWN = 0.3f;
+        public static final float BALL_SPEED = 800f;
+        public static final float BALL_SPEED_STEP = 75f;
+        public static final float PLATFORM_SPEED_MODIFICATOR = 0.7f;
     }
 
     public static final class Colors {
@@ -80,11 +75,6 @@ public final class Constants {
         public static final Color PLAYER_ONE_WINNER_COLOR = new Color(0.28f, 0.51f, 0.88f, 1f);
         public static final Color PLAYER_TWO_WINNER_COLOR = new Color(0.87f, 0.48f, 0.28f, 1f);
         public static final Color LEVEL_UP_COLOR = new Color(0.60f, 0.85f, 0.43f, 1f);
-    }
-
-    public static final class Score {
-
-        public static final int WIN_SCORE = 3;
     }
 
     public static final class Asset {
@@ -128,7 +118,7 @@ public final class Constants {
         public static final String BACK_KEY = "back";
         public static final String POINTS_TO_WIN_VALUE_KEY = "pointsToWinValue";
         public static final String BALL_SPEED_VALUE_KEY = "ballSpeedValue";
-        public static final String SOUND_VALUE_KEY = "soundValue";
+        public static final String SOUNDS_VALUE_KEY = "soundValue";
         public static final String RESET_BEST_QUESTION_KEY = "resetBestQuestion";
         public static final String YES_KEY = "yes";
         public static final String NO_KEY = "no";
@@ -138,11 +128,11 @@ public final class Constants {
 
         public static final String PREFS_NAME = "classic_pong";
         public static final String HASH = "hash";
-        public static final String BEST_LEVEL = "bestLevel";
-        public static final String BALL_SPEED = "ballSpeed";
-        public static final String POINTS_TO_WIN = "pointsToWin";
+        public static final String BEST_LEVEL = "best";
+        public static final String BALL_SPEED = "speed";
+        public static final String POINTS_TO_WIN = "points";
         public static final String SOUNDS = "sounds";
-        public static final List<String> KEYS = List.of(BEST_LEVEL, BALL_SPEED, POINTS_TO_WIN, SOUNDS);
+        public static final List<String> PREFS_KEY_LIST = List.of(BEST_LEVEL, BALL_SPEED, POINTS_TO_WIN, SOUNDS);
     }
 
     public static final class Text {
@@ -201,7 +191,7 @@ public final class Constants {
             public static final String SOUNDS = "Звуки:";
             public static final String RESET_BEST = "Сбросить лучший результат";
             public static final String BACK = "Назад";
-            public static final String[] BALL_SPEED_VALUES = new String[]{"Медленно", "Нормально", "Быстро", "Очень быстро"};
+            public static final String[] BALL_SPEED_VALUES = new String[]{"Медленно", "Нормально", "Быстро", "Очень быстро", "Экстримально"};
             public static final String RESET_BEST_QUESTION = "Сбросить лучший результат?";
             public static final String ON = "Включены";
             public static final String OFF = "Выключены";
@@ -232,7 +222,7 @@ public final class Constants {
             public static final String SOUNDS = "Sounds:";
             public static final String RESET_BEST = "Reset best result";
             public static final String BACK = "Back";
-            public static final String[] BALL_SPEED_VALUES = new String[]{"Slow", "Normal", "Fast", "Very fast"};
+            public static final String[] BALL_SPEED_VALUES = new String[]{"Slow", "Normal", "Fast", "Very fast", "Extreme"};
             public static final String RESET_BEST_QUESTION = "Reset best result?";
             public static final String ON = "On";
             public static final String OFF = "Off";

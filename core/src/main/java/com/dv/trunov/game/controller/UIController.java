@@ -150,9 +150,9 @@ public class UIController {
     }
 
     public void updateSettingsValues(GameParameters gameParameters) {
-        int ballSpeedValueIndex = gameParameters.getBallSpeed().getIndex();
+        int ballSpeedValueIndex = gameParameters.getMultiplayerBallSpeed().getIndex();
         String ballSpeedText = Constants.Text.BALL_SPEED_VALUES[ballSpeedValueIndex];
-        int soundsIndex = gameParameters.getSounds().getIndex();
+        int soundsIndex = gameParameters.getSoundsState().getIndex();
         String soundsValueText = soundsIndex == 1
             ? Constants.Text.ON
             : Constants.Text.OFF;
@@ -169,7 +169,7 @@ public class UIController {
             Constants.Baseline.SETTINGS_SECOND_ROW,
             false);
         soundsValue = createSettingsText(
-            Constants.ItemKey.SOUND_VALUE_KEY,
+            Constants.ItemKey.SOUNDS_VALUE_KEY,
             soundsValueText,
             Constants.Baseline.SETTINGS_THIRD_ROW,
             false);

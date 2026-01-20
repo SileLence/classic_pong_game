@@ -15,7 +15,6 @@ public class Platform extends WorldObject {
         super(texturePath);
         this.playerOne = playerOne;
         bounds = new Rectangle(x, y, Constants.Object.PLATFORM_WIDTH, Constants.Object.PLATFORM_HEIGHT);
-        speed = Constants.Speed.PLATFORM_SPEED;
     }
 
     public float getX() {

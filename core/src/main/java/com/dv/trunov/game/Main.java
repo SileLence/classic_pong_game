@@ -78,19 +78,17 @@ public class Main extends ApplicationAdapter {
                 drawUI(uiController.getMainMenu());
             }
             case SETTINGS -> {
-                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getSettingsMenu());
+                inputController.processSettingsInputs(gameParameters, physicsEngine, uiController.getSettingsMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 uiController.updateSettingsValues(gameParameters);
                 drawUI(uiController.getSettingsScreen());
                 drawUI(uiController.getSettingsMenu());
-                // TODO implement selection in this state
             }
             case RESET -> {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getResetMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 drawUI(uiController.getResetScreen());
                 drawUI(uiController.getResetMenu());
-                // TODO implement selection in this state
             }
             case IDLE -> {
                 if (!worldObjectsCreated) {

@@ -18,7 +18,7 @@ public class GameParameters {
     private GameMode gameMode;
     private Language language;
     private PointsToWin pointsToWin;
-    private BallSpeed ballSpeed;
+    private BallSpeed multiplayerBallSpeed;
     private Toggle soundsState;
     private float cooldown;
     private int selectedItemIndex;
@@ -40,7 +40,7 @@ public class GameParameters {
         level = 1;
         bestLevel = StorageService.getValue(Constants.Prefs.BEST_LEVEL, 1);
         pointsToWin = PointsToWin.fromIndex(StorageService.getValue(Constants.Prefs.POINTS_TO_WIN, 1));
-        ballSpeed = BallSpeed.fromIndex(StorageService.getValue(Constants.Prefs.BALL_SPEED, 1));
+        multiplayerBallSpeed = BallSpeed.fromIndex(StorageService.getValue(Constants.Prefs.BALL_SPEED, 1));
         soundsState = Toggle.fromIndex(StorageService.getValue(Constants.Prefs.SOUNDS, 1));
         isNewRecord = false;
 
@@ -69,13 +69,25 @@ public class GameParameters {
             }
             case Constants.ItemKey.PRESS_ENTER_KEY,
                  Constants.ItemKey.CONTINUE_KEY -> gameState = serveState == ServeState.NONE ? GameState.PLAYING : GameState.GOAL;
-            case Constants.ItemKey.SETTINGS_KEY -> gameState = GameState.SETTINGS;
+
+            case Constants.ItemKey.SETTINGS_KEY,
+                 Constants.ItemKey.NO_KEY -> gameState = GameState.SETTINGS;
+
             case Constants.ItemKey.RESET_BEST_KEY -> gameState = GameState.RESET;
+
             case Constants.ItemKey.BACK_KEY,
                  Constants.ItemKey.EXIT_TO_MENU_KEY -> gameState = GameState.MENU;
+
             case Constants.ItemKey.PLAY_AGAIN_KEY -> {
                 gameState = GameState.IDLE;
                 setStartGame();
+            }
+            case Constants.ItemKey.YES_KEY -> {
+                if (GameState.RESET.equals(gameState)) {
+                    bestLevel = 1;
+                    StorageService.storeValue(Constants.Prefs.BEST_LEVEL, bestLevel);
+                }
+                gameState = GameState.SETTINGS;
             }
             case Constants.ItemKey.EXIT_KEY -> gameState = GameState.EXIT;
         }
@@ -93,7 +105,8 @@ public class GameParameters {
     }
 
     public void checkWin() {
-        if (scoreOne >= Constants.Score.WIN_SCORE || scoreTwo >= Constants.Score.WIN_SCORE) {
+        int winScore = Integer.parseInt(pointsToWin.getValue());
+        if (scoreOne >= winScore || scoreTwo >= winScore) {
             gameState = GameState.WIN;
             cooldown = 0;
         }
@@ -149,12 +162,27 @@ public class GameParameters {
         return pointsToWin;
     }
 
-    public BallSpeed getBallSpeed() {
-        return ballSpeed;
+    public void setPointsToWin(int index) {
+        pointsToWin = PointsToWin.fromIndex(index);
+        StorageService.storeValue(Constants.Prefs.POINTS_TO_WIN, pointsToWin);
     }
 
-    public Toggle getSounds() {
+    public BallSpeed getMultiplayerBallSpeed() {
+        return multiplayerBallSpeed;
+    }
+
+    public void setMultiplayerBallSpeed(int index) {
+        multiplayerBallSpeed = BallSpeed.fromIndex(index);
+        StorageService.storeValue(Constants.Prefs.BALL_SPEED, multiplayerBallSpeed);
+    }
+
+    public Toggle getSoundsState() {
         return soundsState;
+    }
+
+    public void setSoundsState(int index) {
+        soundsState = Toggle.fromIndex(index);
+        StorageService.storeValue(Constants.Prefs.SOUNDS, soundsState);
     }
 
     public int getSelectedItemIndex() {

@@ -12,4 +12,8 @@ public enum Toggle {
     public static Toggle fromIndex(int index) {
         return values()[index];
     }
+
+    public static int size() {
+        return values().length;
+    }
 }
