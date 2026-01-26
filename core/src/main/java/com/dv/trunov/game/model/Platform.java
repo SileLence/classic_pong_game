@@ -14,7 +14,7 @@ public class Platform extends WorldObject {
     public Platform(float x, float y, boolean playerOne, String texturePath) {
         super(texturePath);
         this.playerOne = playerOne;
-        bounds = new Rectangle(x, y, Constants.Object.PLATFORM_WIDTH, Constants.Object.PLATFORM_HEIGHT);
+        bounds = new Rectangle(x, y, Constants.World.PLATFORM_WIDTH, Constants.World.PLATFORM_HEIGHT);
     }
 
     public float getX() {

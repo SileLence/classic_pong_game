@@ -1,7 +1,9 @@
 package com.dv.trunov.game.lwjgl3;
 
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.badlogic.gdx.graphics.glutils.HdpiMode;
 import com.dv.trunov.game.Main;
 
 /** Launches the desktop (LWJGL3) application. */
@@ -19,20 +21,25 @@ public class Lwjgl3Launcher {
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
+        Graphics.DisplayMode displayMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
         configuration.setTitle("Ping Pong");
         //// Vsync limits the frames per second to what your hardware can display, and helps eliminate
         //// screen tearing. This setting doesn't always work on Linux, so the line after is a safeguard.
         configuration.useVsync(true);
         //// Limits FPS to the refresh rate of the currently active monitor, plus 1 to try to match fractional
         //// refresh rates. The Vsync setting above should limit the actual FPS to match the monitor.
-        configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
-        //configuration.setForegroundFPS(60);
+        configuration.setForegroundFPS(displayMode.refreshRate + 1);
         //// If you remove the above line and set Vsync to false, you can get unlimited FPS, which can be
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
 
-        configuration.setWindowedMode(1500, 1000);
-        configuration.setResizable(false);
+        String osName = System.getProperty("os.name").toLowerCase();
+        if (osName.contains("win")) {
+            configuration.setFullscreenMode(displayMode);
+        } else {
+            configuration.setWindowedMode(displayMode.width, displayMode.height);
+        }
+        configuration.setHdpiMode(HdpiMode.Logical);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
         configuration.setWindowIcon("icon/icon256", "icon/icon128.png", "icon/icon64.png", "icon/icon32.png");

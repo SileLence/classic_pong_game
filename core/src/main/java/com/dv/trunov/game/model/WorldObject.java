@@ -8,6 +8,10 @@ public abstract class WorldObject {
 
     public WorldObject(String texturePath) {
         this.texture = new Texture(texturePath);
+        texture.setFilter(
+            Texture.TextureFilter.Linear,
+            Texture.TextureFilter.Linear
+        );
     }
 
     public Texture getTexture() {

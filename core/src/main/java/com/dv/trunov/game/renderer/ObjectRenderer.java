@@ -25,7 +25,7 @@ public class ObjectRenderer {
     public void drawBorder(ShapeRenderer shapeRenderer) {
         Color main = new Color(0.28f, 0.15f, 0.32f, 1f);
         Color back = new Color(0.28f, 0.15f, 0.32f, 0.25f);
-        float thickness = 3f;
+        float thickness = 2f;
         shapeRenderer.setColor(main);
         shapeRenderer.rect(
             Constants.Border.LEFT,
@@ -33,12 +33,25 @@ public class ObjectRenderer {
             Constants.Border.RIGHT - Constants.Border.LEFT,
             thickness
         );
+        shapeRenderer.rect(
+            Constants.Border.LEFT,
+            Constants.Border.BOTTOM,
+            Constants.Border.RIGHT - Constants.Border.LEFT,
+            thickness
+        );
+
         shapeRenderer.setColor(back);
         shapeRenderer.rect(
             Constants.Border.LEFT,
-            Constants.Border.GAME_FIELD_TOP - 2f,
+            Constants.Border.GAME_FIELD_TOP,
             Constants.Border.RIGHT - Constants.Border.LEFT,
-            thickness + 4f
+            thickness + 2f
+        );
+        shapeRenderer.rect(
+            Constants.Border.LEFT,
+            Constants.Border.BOTTOM - 1f,
+            Constants.Border.RIGHT - Constants.Border.LEFT,
+            thickness + 2f
         );
     }
 

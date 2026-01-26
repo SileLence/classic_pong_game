@@ -1,14 +1,15 @@
 package com.dv.trunov.game.util;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 
 import java.util.List;
 
 public final class Constants {
 
-    public static final class Object {
+    public static final class World {
 
+        public static final float WIDTH = 1920;
+        public static final float HEIGHT = 1080;
         public static final float PLATFORM_WIDTH = 20f;
         public static final float PLATFORM_HEIGHT = 160f;
         public static final float BALL_RADIUS = 15f;
@@ -23,16 +24,18 @@ public final class Constants {
     public static final class Border {
 
         public static final float BOTTOM = 0;
-        public static final float TOP = Gdx.graphics.getHeight();
-        public static final float GAME_FIELD_TOP = Gdx.graphics.getHeight() * 0.9f;
-        public static final float RIGHT = Gdx.graphics.getWidth();
+        public static final float TOP = World.HEIGHT;
+        public static final float GAME_FIELD_BOTTOM = BOTTOM + 2f;
+        public static final float GAME_FIELD_TOP = World.HEIGHT * 0.9f;
+        public static final float RIGHT = World.WIDTH;
         public static final float LEFT = 0;
-        public static final float BOTTOM_BALL_BOUNDARY = BOTTOM + Object.BALL_RADIUS;
-        public static final float TOP_BALL_BOUNDARY = GAME_FIELD_TOP - Object.BALL_RADIUS;
-        public static final float RIGHT_BALL_BOUNDARY = RIGHT - Object.BALL_RADIUS;
-        public static final float LEFT_BALL_BOUNDARY = LEFT + Object.BALL_RADIUS;
-        public static final float TOP_PLATFORM_BOUNDARY = GAME_FIELD_TOP - Object.PLATFORM_HEIGHT;
-        public static final float RIGHT_PLATFORM_BOUNDARY = RIGHT - Object.PLATFORM_WIDTH - 30f;
+        public static final float BOTTOM_BALL_BOUNDARY = GAME_FIELD_BOTTOM + World.BALL_RADIUS;
+        public static final float TOP_BALL_BOUNDARY = GAME_FIELD_TOP - World.BALL_RADIUS;
+        public static final float RIGHT_BALL_BOUNDARY = RIGHT - World.BALL_RADIUS;
+        public static final float LEFT_BALL_BOUNDARY = LEFT + World.BALL_RADIUS;
+        public static final float BOTTOM_PLATFORM_BOUNDARY = GAME_FIELD_BOTTOM;
+        public static final float TOP_PLATFORM_BOUNDARY = GAME_FIELD_TOP - World.PLATFORM_HEIGHT;
+        public static final float RIGHT_PLATFORM_BOUNDARY = RIGHT - World.PLATFORM_WIDTH - 30f;
         public static final float LEFT_PLATFORM_BOUNDARY = LEFT + 30f;
         public static final float LEFT_SETTINGS_BOUNDARY = RIGHT / 2f - 50f;
         public static final float RIGHT_SETTINGS_BOUNDARY = RIGHT / 2f + 50f;

@@ -34,7 +34,7 @@ public class PhysicsProcessor {
             directionX /= vector;
             directionY /= vector;
             ball.setDirection(directionX, directionY);
-            ball.setY(platform.getY() + Constants.Object.PLATFORM_HEIGHT / 2f);
+            ball.setY(platform.getY() + Constants.World.PLATFORM_HEIGHT / 2f);
         }
         ball.updateParticles(timeStep);
     }
@@ -64,8 +64,8 @@ public class PhysicsProcessor {
             platform.setVelocityY(interpolatedVelocity);
             platform.setY(platform.getY() + interpolatedVelocity * timeStep);
 
-            if (platform.getY() < 0) {
-                platform.setY(0);
+            if (platform.getY() < Constants.Border.BOTTOM_PLATFORM_BOUNDARY) {
+                platform.setY(Constants.Border.BOTTOM_PLATFORM_BOUNDARY);
             }
             if (platform.getY() > Constants.Border.TOP_PLATFORM_BOUNDARY) {
                 platform.setY(Constants.Border.TOP_PLATFORM_BOUNDARY);

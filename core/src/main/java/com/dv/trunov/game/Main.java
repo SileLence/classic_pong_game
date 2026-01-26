@@ -3,9 +3,12 @@ package com.dv.trunov.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dv.trunov.game.controller.InputController;
 import com.dv.trunov.game.controller.ObjectController;
 import com.dv.trunov.game.controller.UIController;
@@ -16,6 +19,7 @@ import com.dv.trunov.game.physics.PhysicsProcessor;
 import com.dv.trunov.game.renderer.ObjectRenderer;
 import com.dv.trunov.game.renderer.UIRenderer;
 import com.dv.trunov.game.ui.TextLabel;
+import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 
@@ -32,6 +36,8 @@ public class Main extends ApplicationAdapter {
     private UIRenderer uiRenderer;
     private GameParameters gameParameters;
     private boolean worldObjectsCreated;
+    private OrthographicCamera camera;
+    private Viewport viewport;
 
     @Override
     public void create() {
@@ -47,11 +53,13 @@ public class Main extends ApplicationAdapter {
         physicsEngine = PhysicsEngine.getInstance();
         objectRenderer = ObjectRenderer.getInstance();
         uiRenderer = UIRenderer.getInstance();
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(Constants.World.WIDTH, Constants.World.HEIGHT, camera);
+        viewport.apply(true);
     }
 
     @Override
     public void render() {
-        // TODO implement resize and fullscreen
         // TODO add sounds
         // TODO implement app icon
         // TODO add language selection
@@ -60,6 +68,9 @@ public class Main extends ApplicationAdapter {
         GameState gameState = gameParameters.getGameState();
         boolean isSingleplayer = GameMode.SINGLEPLAYER == gameParameters.getGameMode();
         clearScreen();
+        camera.update();
+        spriteBatch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
         switch (gameState) {
             case TITLE -> {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getTitleMenu());
@@ -103,7 +114,9 @@ public class Main extends ApplicationAdapter {
                 drawBackground();
                 drawWorldObjects();
                 drawUI(uiController.getPlayingScreen(isSingleplayer));
-                drawUI(uiController.getCounterBestLevel());
+                if (isSingleplayer) {
+                    drawUI(uiController.getCounterBestLevel());
+                }
                 drawUI(uiController.getPressEnter());
             }
             case PLAYING ->  {
@@ -131,11 +144,11 @@ public class Main extends ApplicationAdapter {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPauseMenu());
                 boolean isGameStateChanged = GameState.PAUSE != gameParameters.getGameState();
                 if (isGameStateChanged) {
+                    physicsEngine.resume();
                     if (GameState.MENU == gameParameters.getGameState()) {
                         worldObjectsCreated = objectController.destroyWorldObjects();
                         return;
                     }
-                    physicsEngine.resume();
                 }
                 physicsEngine.updateAlpha(deltaTime);
                 drawBackground();
@@ -257,5 +270,10 @@ public class Main extends ApplicationAdapter {
 
     private void clearScreen() {
         ScreenUtils.clear(0f, 0f, 0f, 1f);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
     }
 }

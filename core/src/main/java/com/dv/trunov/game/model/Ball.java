@@ -14,8 +14,8 @@ public class Ball extends WorldObject {
     private static final float MIN_X_VALUE = 0.5f;
     private static final float HIT_COOLDOWN = 0.03f;
     private final Circle circle;
-    private final List<Vector2> trailPoints = new ArrayList<>(Constants.Object.BALL_TRAIL_NUMBER);
-    private final List<BallParticle> particles = new ArrayList<>(Constants.Object.BALL_PARTICLES_NUMBER);
+    private final List<Vector2> trailPoints = new ArrayList<>(Constants.World.BALL_TRAIL_NUMBER);
+    private final List<BallParticle> particles = new ArrayList<>(Constants.World.BALL_PARTICLES_NUMBER);
     private float directionX;
     private float directionY;
     private float hitCooldown;
@@ -24,7 +24,7 @@ public class Ball extends WorldObject {
     public Ball(String texturePath) {
         super(texturePath);
         circle = new Circle();
-        circle.radius = Constants.Object.BALL_RADIUS;
+        circle.radius = Constants.World.BALL_RADIUS;
         speed = Constants.Physics.BALL_SPEED;
         setStartPositionAndDirection(ServeSide.PLAYER_TWO);
     }
@@ -37,13 +37,13 @@ public class Ball extends WorldObject {
             if (Math.abs(directionX) < MIN_X_VALUE) {
                 directionX = Math.copySign(MIN_X_VALUE, directionX);
             }
-            x = Constants.Object.BALL_START_X;
+            x = Constants.World.BALL_START_X;
         } else {
             float serveDirectionX = serveSide.getDirectionX();
-            x = serveDirectionX > 0 ? Constants.Object.BALL_PLAYER_ONE_SERVE : Constants.Object.BALL_PLAYER_TWO_SERVE;
+            x = serveDirectionX > 0 ? Constants.World.BALL_PLAYER_ONE_SERVE : Constants.World.BALL_PLAYER_TWO_SERVE;
             directionX = serveDirectionX;
         }
-        circle.setPosition(x, Constants.Object.BALL_START_Y);
+        circle.setPosition(x, Constants.World.BALL_START_Y);
         directionY = MathUtils.random(-1f, 1f);
         // normalize vector
         float vectorLength = (float) Math.sqrt(directionX * directionX + directionY * directionY);
@@ -53,13 +53,13 @@ public class Ball extends WorldObject {
 
     public void addTrailPoint() {
         trailPoints.add(new Vector2(circle.x, circle.y));
-        if (trailPoints.size() == Constants.Object.BALL_TRAIL_NUMBER) {
+        if (trailPoints.size() == Constants.World.BALL_TRAIL_NUMBER) {
             trailPoints.remove(0);
         }
     }
 
     public void spawnExplosion() {
-        for (int index = 0; index < Constants.Object.BALL_PARTICLES_NUMBER; index++) {
+        for (int index = 0; index < Constants.World.BALL_PARTICLES_NUMBER; index++) {
             float angle = MathUtils.random(0f, MathUtils.PI2);
             float speed = MathUtils.random(100f, 500f);
             particles.add(new BallParticle(

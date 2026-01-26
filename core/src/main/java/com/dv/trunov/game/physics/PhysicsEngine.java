@@ -31,7 +31,6 @@ public class PhysicsEngine {
                               Ball ball,
                               GameParameters gameParameters,
                               float deltaTime) {
-
         if (paused) {
             return;
         }
