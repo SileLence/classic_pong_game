@@ -30,6 +30,7 @@ public class UIController {
     private TextLabel playerTwoWins;
     private TextLabel counterLevel;
     private TextLabel counterBestLevel;
+    private TextLabel counterBestLevelIdle;
     private TextLabel counterResult;
     private TextLabel counterOne;
     private TextLabel counterTwo;
@@ -57,6 +58,8 @@ public class UIController {
     private TextLabel resetBestLevelQuestion;
     private TextLabel yes;
     private TextLabel no;
+    private TextLabel startingServe;
+    private TextLabel startingServeValue;
 
     private UIController() {
     }
@@ -126,6 +129,11 @@ public class UIController {
             Constants.Text.SOUNDS,
             Constants.Baseline.SETTINGS_THIRD_ROW,
             true);
+        startingServe = createSettingsText(
+            Constants.ItemKey.STARTING_SERVE_KEY,
+            Constants.Text.STARTING_SERVE,
+            Constants.Baseline.SETTINGS_FOURTH_ROW,
+            true);
         updateSettingsValues(gameParameters);
 
         titleFontGenerator.dispose();
@@ -140,6 +148,8 @@ public class UIController {
             counterBestLevel = createLevelCounter(String.valueOf(bestLevel), true);
             if (GameState.GAME_OVER == gameParameters.getGameState()) {
                 counterResult = createSubtitleText(String.valueOf(level), Constants.Baseline.SUBTITLE);
+            } else if (GameState.IDLE == gameParameters.getGameState()) {
+                counterBestLevelIdle = createSubtitleText(Constants.Text.BEST_LEVEL + gameParameters.getBestLevel(), Constants.Baseline.SUBTITLE);
             }
         } else {
             int scoreOne = gameParameters.getScoreOne();
@@ -157,6 +167,8 @@ public class UIController {
             ? Constants.Text.ON
             : Constants.Text.OFF;
         String pointsToWinText = gameParameters.getPointsToWin().getValue();
+        int serveIndex = gameParameters.getStartingServe().getIndex();
+        String serveText = Constants.Text.STARTING_SERVE_VALUES[serveIndex];
 
         pointsToWinValue = createSettingsText(
             Constants.ItemKey.POINTS_TO_WIN_VALUE_KEY,
@@ -172,6 +184,11 @@ public class UIController {
             Constants.ItemKey.SOUNDS_VALUE_KEY,
             soundsValueText,
             Constants.Baseline.SETTINGS_THIRD_ROW,
+            false);
+        startingServeValue = createSettingsText(
+            Constants.ItemKey.STARTING_SERVE_VALUE_KEY,
+            serveText,
+            Constants.Baseline.SETTINGS_FOURTH_ROW,
             false);
     }
 
@@ -355,11 +372,11 @@ public class UIController {
     }
 
     public TextLabel[] getSettingsScreen() {
-        return new TextLabel[]{pointsToWin, ballSpeed, sounds};
+        return new TextLabel[]{pointsToWin, ballSpeed, sounds, startingServe};
     }
 
     public TextLabel[] getSettingsMenu() {
-        return new TextLabel[]{pointsToWinValue, ballSpeedValue, soundsValue, resetBestLevel, back};
+        return new TextLabel[]{pointsToWinValue, ballSpeedValue, soundsValue, startingServeValue, resetBestLevel, back};
     }
 
     public TextLabel getResetScreen() {
@@ -406,6 +423,10 @@ public class UIController {
 
     public TextLabel getPressEnter() {
         return pressEnter;
+    }
+
+    public TextLabel getCounterBestLevel() {
+        return counterBestLevelIdle;
     }
 
     public void dispose() {

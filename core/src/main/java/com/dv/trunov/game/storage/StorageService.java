@@ -7,6 +7,7 @@ import com.dv.trunov.game.util.Constants;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.List;
+import java.util.Objects;
 
 public class StorageService {
 
@@ -14,31 +15,30 @@ public class StorageService {
     private static final String SALT = "pong_salt1";
 
     public static void storeValue(String key, Object value) {
-        if (value instanceof Integer) {
-            PREFERENCES.putInteger(key, (Integer) value);
-        } else if (value instanceof String) {
-            PREFERENCES.putString(key, (String) value);
-        }
+        PREFERENCES.putString(key, String.valueOf(value));
         updateHash();
         PREFERENCES.flush();
     }
 
     public static int getValue(String key, int defaultValue) {
         String value = getValue(key, String.valueOf(defaultValue));
-        return value != null ? Integer.parseInt(value) : defaultValue;
+        return Integer.parseInt(value);
     }
 
     public static String getValue(String key, String defaultValue) {
-        String storedHash = PREFERENCES.getString(Constants.Prefs.HASH, "");
-        String freshHash = calcHash();
-        String value = PREFERENCES.getString(key, null);
-        if (value != null && freshHash.equals(storedHash)) {
-            return value;
-        } else {
-            // TODO resolve bug with default values
+        boolean isChangedManually = checkHash();
+        if (isChangedManually) {
             System.out.printf("The value [%s] was changed manually! Return default value: %s\n",  key, defaultValue);
             return defaultValue;
         }
+        String value = PREFERENCES.getString(key, null);
+        return value == null ? defaultValue : value;
+    }
+
+    private static boolean checkHash() {
+        String storedHash = PREFERENCES.getString(Constants.Prefs.HASH, "");
+        String recalculatedHash = calcHash();
+        return !Objects.equals(storedHash, recalculatedHash);
     }
 
     private static void updateHash() {
@@ -53,10 +53,10 @@ public class StorageService {
         for (String key : keys) {
             builder.append(PREFERENCES.getString(key));
         }
-        return hash(builder + SALT);
+        return getHash(builder + SALT);
     }
 
-    private static String hash(String input) {
+    private static String getHash(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] bytes = md.digest(input.getBytes(StandardCharsets.UTF_8));

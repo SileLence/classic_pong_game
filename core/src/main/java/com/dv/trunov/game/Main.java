@@ -54,6 +54,8 @@ public class Main extends ApplicationAdapter {
         // TODO implement resize and fullscreen
         // TODO add sounds
         // TODO implement app icon
+        // TODO add language selection
+        // TODO refactor settings inputs
         float deltaTime = Gdx.graphics.getDeltaTime();
         GameState gameState = gameParameters.getGameState();
         boolean isSingleplayer = GameMode.SINGLEPLAYER == gameParameters.getGameMode();
@@ -101,6 +103,7 @@ public class Main extends ApplicationAdapter {
                 drawBackground();
                 drawWorldObjects();
                 drawUI(uiController.getPlayingScreen(isSingleplayer));
+                drawUI(uiController.getCounterBestLevel());
                 drawUI(uiController.getPressEnter());
             }
             case PLAYING ->  {
@@ -126,13 +129,13 @@ public class Main extends ApplicationAdapter {
             case PAUSE -> {
                 physicsEngine.pause();
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPauseMenu());
-                gameState = gameParameters.getGameState();
-                if (GameState.PAUSE != gameState) {
-                    if (GameState.MENU == gameState) {
+                boolean isGameStateChanged = GameState.PAUSE != gameParameters.getGameState();
+                if (isGameStateChanged) {
+                    if (GameState.MENU == gameParameters.getGameState()) {
                         worldObjectsCreated = objectController.destroyWorldObjects();
+                        return;
                     }
                     physicsEngine.resume();
-                    return;
                 }
                 physicsEngine.updateAlpha(deltaTime);
                 drawBackground();
@@ -148,23 +151,21 @@ public class Main extends ApplicationAdapter {
             }
             case GOAL -> {
                 inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
-                updatePhysics(deltaTime);
+                boolean isGameStateChanged = GameState.GOAL != gameParameters.getGameState();
+                if (!isGameStateChanged) {
+                    updatePhysics(deltaTime);
+                }
                 physicsEngine.updateAlpha(deltaTime);
                 uiController.updateCounters(gameParameters, false);
                 gameParameters.checkWin();
-                boolean isGameStateChanged = GameState.GOAL != gameParameters.getGameState();
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                if (!isGameStateChanged) {
-                    objectRenderer.drawBall(objectController.getBall(), spriteBatch);
-                }
+                objectRenderer.drawBall(objectController.getBall(), spriteBatch);
                 objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
                 spriteBatch.end();
                 drawUI(uiController.getPlayingScreen(false));
-                if (!isGameStateChanged) {
                     drawUI(uiController.getServeText(gameParameters.getServeState()));
-                }
             }
             case WIN -> {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());

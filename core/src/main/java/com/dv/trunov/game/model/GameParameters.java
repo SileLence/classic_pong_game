@@ -8,6 +8,7 @@ import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.util.Language;
 import com.dv.trunov.game.util.PointsToWin;
 import com.dv.trunov.game.util.ServeState;
+import com.dv.trunov.game.util.ServeSide;
 import com.dv.trunov.game.util.Toggle;
 
 public class GameParameters {
@@ -20,6 +21,7 @@ public class GameParameters {
     private PointsToWin pointsToWin;
     private BallSpeed multiplayerBallSpeed;
     private Toggle soundsState;
+    private ServeSide serveSide;
     private float cooldown;
     private int selectedItemIndex;
     private int scoreOne;
@@ -38,13 +40,12 @@ public class GameParameters {
         selectedItemIndex = 0;
         cooldown = 0;
         level = 1;
+        isNewRecord = false;
         bestLevel = StorageService.getValue(Constants.Prefs.BEST_LEVEL, 1);
         pointsToWin = PointsToWin.fromIndex(StorageService.getValue(Constants.Prefs.POINTS_TO_WIN, 1));
-        multiplayerBallSpeed = BallSpeed.fromIndex(StorageService.getValue(Constants.Prefs.BALL_SPEED, 1));
+        multiplayerBallSpeed = BallSpeed.fromIndex(StorageService.getValue(Constants.Prefs.BALL_SPEED, 2));
         soundsState = Toggle.fromIndex(StorageService.getValue(Constants.Prefs.SOUNDS, 1));
-        isNewRecord = false;
-
-        StorageService.storeValue(Constants.Prefs.SOUNDS, soundsState.getIndex());
+        serveSide = ServeSide.fromIndex(StorageService.getValue(Constants.Prefs.SERVE, 0));
     }
 
     public void updateParametersBySelectedItemKey(String key) {
@@ -164,7 +165,7 @@ public class GameParameters {
 
     public void setPointsToWin(int index) {
         pointsToWin = PointsToWin.fromIndex(index);
-        StorageService.storeValue(Constants.Prefs.POINTS_TO_WIN, pointsToWin);
+        StorageService.storeValue(Constants.Prefs.POINTS_TO_WIN, pointsToWin.getIndex());
     }
 
     public BallSpeed getMultiplayerBallSpeed() {
@@ -173,7 +174,7 @@ public class GameParameters {
 
     public void setMultiplayerBallSpeed(int index) {
         multiplayerBallSpeed = BallSpeed.fromIndex(index);
-        StorageService.storeValue(Constants.Prefs.BALL_SPEED, multiplayerBallSpeed);
+        StorageService.storeValue(Constants.Prefs.BALL_SPEED, multiplayerBallSpeed.getIndex());
     }
 
     public Toggle getSoundsState() {
@@ -182,7 +183,16 @@ public class GameParameters {
 
     public void setSoundsState(int index) {
         soundsState = Toggle.fromIndex(index);
-        StorageService.storeValue(Constants.Prefs.SOUNDS, soundsState);
+        StorageService.storeValue(Constants.Prefs.SOUNDS, soundsState.getIndex());
+    }
+
+    public ServeSide getStartingServe() {
+        return serveSide;
+    }
+
+    public void setStartingServe(int index) {
+        serveSide = ServeSide.fromIndex(index);
+        StorageService.storeValue(Constants.Prefs.SERVE, serveSide.getIndex());
     }
 
     public int getSelectedItemIndex() {

@@ -2,11 +2,12 @@ package com.dv.trunov.game.util;
 
 public enum BallSpeed {
 
-    SLOW(800f),
-    NORMAL(1000f),
-    FAST(1200f),
-    VERY_FAST(1400f),
-    EXTREME(1600f);
+    VERY_SLOW(800f),
+    SLOW(1000f),
+    NORMAL(1200f),
+    FAST(1400f),
+    VERY_FAST(1600f),
+    EXTREME(2000f);
 
     final float value;
 

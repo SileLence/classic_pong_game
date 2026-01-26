@@ -7,6 +7,7 @@ import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
+import com.dv.trunov.game.util.ServeSide;
 import com.dv.trunov.game.util.ServeState;
 
 public class PhysicsProcessor {
@@ -100,7 +101,7 @@ public class PhysicsProcessor {
                 gameParameters.addSingleplayerPoint();
             } else if (ballX < Constants.Border.LEFT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
-                ball.setStartPositionAndDirection(0);
+                ball.setStartPositionAndDirection(ServeSide.PLAYER_TWO);
                 gameParameters.setGameState(GameState.GAME_OVER);
             }
         } else {
@@ -110,7 +111,7 @@ public class PhysicsProcessor {
                 boolean isPlayerOneScoredGoal = ballX > Constants.Border.RIGHT_BALL_BOUNDARY;
                 gameParameters.addMultiplayerPoint(isPlayerOneScoredGoal);
                 gameParameters.setServeState(isPlayerOneScoredGoal);
-                ball.setStartPositionAndDirection(isPlayerOneScoredGoal ? -1 : 1);
+                ball.setStartPositionAndDirection(isPlayerOneScoredGoal ? ServeSide.PLAYER_TWO : ServeSide.PLAYER_ONE);
             }
         }
         if (GameState.PLAYING == gameParameters.getGameState()) {

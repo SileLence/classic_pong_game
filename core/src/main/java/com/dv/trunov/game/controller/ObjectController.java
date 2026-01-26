@@ -43,6 +43,7 @@ public class ObjectController {
                 Constants.Asset.PLATFORM_RIGHT_TEXTURE_PATH
             );
             ball.setSpeed(gameParameters.getMultiplayerBallSpeed().getValue());
+            ball.setStartPositionAndDirection(gameParameters.getStartingServe());
         }
         for (Platform platform : platforms) {
             platform.setSpeed(ball.getSpeed() * Constants.Physics.PLATFORM_SPEED_MODIFICATOR);

@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.dv.trunov.game.util.Constants;
+import com.dv.trunov.game.util.ServeSide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,21 +26,22 @@ public class Ball extends WorldObject {
         circle = new Circle();
         circle.radius = Constants.Object.BALL_RADIUS;
         speed = Constants.Physics.BALL_SPEED;
-        setStartPositionAndDirection(0f);
+        setStartPositionAndDirection(ServeSide.PLAYER_TWO);
     }
 
-    public void setStartPositionAndDirection(float serveX) {
+    public void setStartPositionAndDirection(ServeSide serveSide) {
         trailPoints.clear();
         float x;
-        if (serveX == 0) {
+        if (ServeSide.CENTER == serveSide) {
             directionX = MathUtils.random(-1f, 1f);
             if (Math.abs(directionX) < MIN_X_VALUE) {
                 directionX = Math.copySign(MIN_X_VALUE, directionX);
             }
             x = Constants.Object.BALL_START_X;
         } else {
-            x = serveX > 0 ? Constants.Object.BALL_PLAYER_ONE_SERVE : Constants.Object.BALL_PLAYER_TWO_SERVE;
-            directionX = serveX;
+            float serveDirectionX = serveSide.getDirectionX();
+            x = serveDirectionX > 0 ? Constants.Object.BALL_PLAYER_ONE_SERVE : Constants.Object.BALL_PLAYER_TWO_SERVE;
+            directionX = serveDirectionX;
         }
         circle.setPosition(x, Constants.Object.BALL_START_Y);
         directionY = MathUtils.random(-1f, 1f);

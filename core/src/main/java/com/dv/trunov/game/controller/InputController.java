@@ -11,6 +11,7 @@ import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.util.PointsToWin;
 import com.dv.trunov.game.util.ServeState;
+import com.dv.trunov.game.util.ServeSide;
 import com.dv.trunov.game.util.Toggle;
 
 public class InputController {
@@ -56,6 +57,7 @@ public class InputController {
         int pointsIndex = gameParameters.getPointsToWin().getIndex();
         int speedIndex = gameParameters.getMultiplayerBallSpeed().getIndex();
         int soundsIndex = gameParameters.getSoundsState().getIndex();
+        int serveIndex = gameParameters.getStartingServe().getIndex();
         String selectedItemKey = menuItems[oldSelectedItemIndex].key();
         switch (selectedItemKey) {
             case Constants.ItemKey.BACK_KEY,
@@ -107,9 +109,23 @@ public class InputController {
                 }
                 gameParameters.setSoundsState(soundsIndex);
             }
+            case Constants.ItemKey.STARTING_SERVE_VALUE_KEY -> {
+                if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                    serveIndex++;
+                    if (serveIndex > ServeSide.size() - 1) {
+                        serveIndex = ServeSide.size() - 1;
+                    }
+                } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                    serveIndex--;
+                    if (serveIndex < 0) {
+                        serveIndex = 0;
+                    }
+                }
+                gameParameters.setStartingServe(serveIndex);
+            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            gameParameters.setGameState(GameState.MENU);
+            gameParameters.updateParametersBySelectedItemKey(Constants.ItemKey.BACK_KEY);
             return;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {

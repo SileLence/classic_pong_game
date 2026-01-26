@@ -2,6 +2,7 @@ package com.dv.trunov.game.util;
 
 public enum PointsToWin {
 
+    THREE("3"),
     FIVE("5"),
     SEVEN("7"),
     TEN("10"),
