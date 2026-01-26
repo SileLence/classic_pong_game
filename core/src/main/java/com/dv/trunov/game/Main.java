@@ -170,15 +170,19 @@ public class Main extends ApplicationAdapter {
                 }
                 physicsEngine.updateAlpha(deltaTime);
                 uiController.updateCounters(gameParameters, false);
-                gameParameters.checkWin();
+                boolean isWin = gameParameters.checkWin();
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                objectRenderer.drawBall(objectController.getBall(), spriteBatch);
+                if (!isWin) {
+                    objectRenderer.drawBall(objectController.getBall(), spriteBatch);
+                }
                 objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
                 spriteBatch.end();
                 drawUI(uiController.getPlayingScreen(false));
+                if (!isGameStateChanged) {
                     drawUI(uiController.getServeText(gameParameters.getServeState()));
+                }
             }
             case WIN -> {
                 inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());

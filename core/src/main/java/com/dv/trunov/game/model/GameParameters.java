@@ -105,12 +105,14 @@ public class GameParameters {
         }
     }
 
-    public void checkWin() {
+    public boolean checkWin() {
         int winScore = Integer.parseInt(pointsToWin.getValue());
         if (scoreOne >= winScore || scoreTwo >= winScore) {
             gameState = GameState.WIN;
             cooldown = 0;
+            return true;
         }
+        return false;
     }
 
     public void addMultiplayerPoint(boolean isPlayerOneScoredGoal) {
