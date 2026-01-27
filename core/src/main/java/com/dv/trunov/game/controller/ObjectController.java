@@ -51,14 +51,16 @@ public class ObjectController {
         return true;
     }
 
-    public void increaseSpeed(int level) {
+    public boolean increaseSpeed(int level) {
         float ballSpeed = ball.getSpeed();
         float newBallSpeed = Constants.Physics.BALL_SPEED + (level - 1) * Constants.Physics.BALL_SPEED_STEP;
         ball.setSpeed(newBallSpeed);
         platforms[0].setSpeed(newBallSpeed * Constants.Physics.PLATFORM_SPEED_MODIFICATOR);
         if (newBallSpeed > ballSpeed) {
             gameParameters.updateCooldown(Constants.Physics.LEVEL_UP_COOLDOWN);
+            return true;
         }
+        return false;
     }
 
     public Ball getBall() {

@@ -1,6 +1,7 @@
 package com.dv.trunov.game.physics;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.dv.trunov.game.controller.SoundController;
 import com.dv.trunov.game.model.Ball;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.model.Platform;
@@ -14,6 +15,7 @@ public class PhysicsProcessor {
 
     private static final PhysicsProcessor INSTANCE = new PhysicsProcessor();
     private static final float MIN_X_VALUE = 0.2f;
+    private SoundController soundController;
 
     private PhysicsProcessor() {
     }
@@ -88,10 +90,12 @@ public class PhysicsProcessor {
         if (ballY < Constants.Border.BOTTOM_BALL_BOUNDARY) {
             ball.setY(Constants.Border.BOTTOM_BALL_BOUNDARY);
             directionY = -directionY;
+            soundController.playWallHit();
         }
         if (ballY > Constants.Border.TOP_BALL_BOUNDARY) {
             ball.setY(Constants.Border.TOP_BALL_BOUNDARY);
             directionY = -directionY;
+            soundController.playWallHit();
         }
 
         if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
@@ -99,10 +103,12 @@ public class PhysicsProcessor {
                 ball.setX(Constants.Border.RIGHT_BALL_BOUNDARY);
                 directionX = -directionX;
                 gameParameters.addSingleplayerPoint();
+                soundController.playActiveWallHit();
             } else if (ballX < Constants.Border.LEFT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
                 ball.setStartPositionAndDirection(ServeSide.PLAYER_TWO);
                 gameParameters.setGameState(GameState.GAME_OVER);
+                soundController.playBallExplosion();
             }
         } else {
             if (ballX < Constants.Border.LEFT_BALL_BOUNDARY || ballX > Constants.Border.RIGHT_BALL_BOUNDARY) {
@@ -112,6 +118,7 @@ public class PhysicsProcessor {
                 gameParameters.addMultiplayerPoint(isPlayerOneScoredGoal);
                 gameParameters.setServeState(isPlayerOneScoredGoal);
                 ball.setStartPositionAndDirection(isPlayerOneScoredGoal ? ServeSide.PLAYER_TWO : ServeSide.PLAYER_ONE);
+                soundController.playBallExplosion();
             }
         }
         if (GameState.PLAYING == gameParameters.getGameState()) {
@@ -215,6 +222,7 @@ public class PhysicsProcessor {
             }
             ball.setDirection(newDirectionX, newDirectionY);
             ball.setHitCooldown();
+            soundController.playPlatformHit();
             break;
         }
     }
@@ -247,5 +255,9 @@ public class PhysicsProcessor {
         float distY = ballY - closestY;
 
         return distX * distX + distY * distY < radius * radius;
+    }
+
+    public void setSoundController(SoundController soundController) {
+        this.soundController = soundController;
     }
 }
