@@ -162,7 +162,7 @@ public class UIController {
     public void updateSettingsValues(GameParameters gameParameters) {
         int ballSpeedValueIndex = gameParameters.getMultiplayerBallSpeed().getIndex();
         String ballSpeedText = Constants.Text.BALL_SPEED_VALUES[ballSpeedValueIndex];
-        int soundsIndex = gameParameters.getSoundsState().getIndex();
+        int soundsIndex = gameParameters.getSoundState().getIndex();
         String soundsValueText = soundsIndex == 1
             ? Constants.Text.ON
             : Constants.Text.OFF;

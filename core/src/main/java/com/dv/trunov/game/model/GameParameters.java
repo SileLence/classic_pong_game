@@ -7,8 +7,9 @@ import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.util.Language;
 import com.dv.trunov.game.util.PointsToWin;
-import com.dv.trunov.game.util.ServeState;
 import com.dv.trunov.game.util.ServeSide;
+import com.dv.trunov.game.util.ServeState;
+import com.dv.trunov.game.util.SoundToPlay;
 import com.dv.trunov.game.util.Toggle;
 
 public class GameParameters {
@@ -20,8 +21,9 @@ public class GameParameters {
     private Language language;
     private PointsToWin pointsToWin;
     private BallSpeed multiplayerBallSpeed;
-    private Toggle soundsState;
+    private Toggle soundState;
     private ServeSide serveSide;
+    private SoundToPlay soundToPlay;
     private float cooldown;
     private int selectedItemIndex;
     private int scoreOne;
@@ -37,6 +39,7 @@ public class GameParameters {
     private GameParameters() {
         gameState = GameState.TITLE;
         serveState = ServeState.NONE;
+        soundToPlay = SoundToPlay.NONE;
         selectedItemIndex = 0;
         cooldown = 0;
         level = 1;
@@ -44,7 +47,7 @@ public class GameParameters {
         bestLevel = StorageService.getValue(Constants.Prefs.BEST_LEVEL, 1);
         pointsToWin = PointsToWin.fromIndex(StorageService.getValue(Constants.Prefs.POINTS_TO_WIN, 1));
         multiplayerBallSpeed = BallSpeed.fromIndex(StorageService.getValue(Constants.Prefs.BALL_SPEED, 2));
-        soundsState = Toggle.fromIndex(StorageService.getValue(Constants.Prefs.SOUNDS, 1));
+        soundState = Toggle.fromIndex(StorageService.getValue(Constants.Prefs.SOUNDS, 1));
         serveSide = ServeSide.fromIndex(StorageService.getValue(Constants.Prefs.SERVE, 0));
     }
 
@@ -179,17 +182,29 @@ public class GameParameters {
         StorageService.storeValue(Constants.Prefs.BALL_SPEED, multiplayerBallSpeed.getIndex());
     }
 
-    public Toggle getSoundsState() {
-        return soundsState;
+    public Toggle getSoundState() {
+        return soundState;
     }
 
-    public void setSoundsState(int index) {
-        soundsState = Toggle.fromIndex(index);
-        StorageService.storeValue(Constants.Prefs.SOUNDS, soundsState.getIndex());
+    public void setSoundState(int index) {
+        soundState = Toggle.fromIndex(index);
+        StorageService.storeValue(Constants.Prefs.SOUNDS, soundState.getIndex());
     }
 
     public ServeSide getStartingServe() {
         return serveSide;
+    }
+
+    public void setSoundToPlay(SoundToPlay soundToPlay) {
+        this.soundToPlay = soundToPlay;
+    }
+
+    public SoundToPlay getSoundToPlay() {
+        return soundToPlay;
+    }
+
+    public void clearSoundToPlay() {
+        soundToPlay = SoundToPlay.NONE;
     }
 
     public void setStartingServe(int index) {

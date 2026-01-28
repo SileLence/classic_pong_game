@@ -63,8 +63,8 @@ public final class Constants {
         public static final float SERVE_ANGLE_FACTOR = 0.5f;
         public static final float FIXED_TIMESTEP = 1f / 240f;
         public static final float LEVEL_UP_COOLDOWN = 0.3f;
-        public static final float BALL_SPEED = 1000f;
-        public static final float BALL_SPEED_STEP = 75f;
+        public static final float BALL_SPEED = 1200f;
+        public static final float BALL_SPEED_STEP = 100f;
         public static final float PLATFORM_SPEED_MODIFICATOR = 0.7f;
     }
 

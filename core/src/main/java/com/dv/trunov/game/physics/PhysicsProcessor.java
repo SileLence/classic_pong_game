@@ -1,7 +1,6 @@
 package com.dv.trunov.game.physics;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.dv.trunov.game.controller.SoundController;
 import com.dv.trunov.game.model.Ball;
 import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.model.Platform;
@@ -10,12 +9,12 @@ import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.util.ServeSide;
 import com.dv.trunov.game.util.ServeState;
+import com.dv.trunov.game.util.SoundToPlay;
 
 public class PhysicsProcessor {
 
     private static final PhysicsProcessor INSTANCE = new PhysicsProcessor();
     private static final float MIN_X_VALUE = 0.2f;
-    private SoundController soundController;
 
     private PhysicsProcessor() {
     }
@@ -44,7 +43,7 @@ public class PhysicsProcessor {
     void processPhysics(Platform[] platforms, Ball ball, GameParameters gameParameters, float timeStep) {
         calcPlatformPhysics(platforms, timeStep);
         calcBallPhysics(ball, gameParameters, timeStep);
-        calcPlatformCollision(platforms, ball);
+        calcPlatformCollision(platforms, ball, gameParameters);
     }
 
     private void calcPlatformPhysics(Platform[] platforms, float timeStep) {
@@ -90,12 +89,12 @@ public class PhysicsProcessor {
         if (ballY < Constants.Border.BOTTOM_BALL_BOUNDARY) {
             ball.setY(Constants.Border.BOTTOM_BALL_BOUNDARY);
             directionY = -directionY;
-            soundController.playWallHit();
+            gameParameters.setSoundToPlay(SoundToPlay.WALL_HIT);
         }
         if (ballY > Constants.Border.TOP_BALL_BOUNDARY) {
             ball.setY(Constants.Border.TOP_BALL_BOUNDARY);
             directionY = -directionY;
-            soundController.playWallHit();
+            gameParameters.setSoundToPlay(SoundToPlay.WALL_HIT);
         }
 
         if (GameMode.SINGLEPLAYER == gameParameters.getGameMode()) {
@@ -103,12 +102,12 @@ public class PhysicsProcessor {
                 ball.setX(Constants.Border.RIGHT_BALL_BOUNDARY);
                 directionX = -directionX;
                 gameParameters.addSingleplayerPoint();
-                soundController.playActiveWallHit();
+                gameParameters.setSoundToPlay(SoundToPlay.ACTIVE_WALL_HIT);
             } else if (ballX < Constants.Border.LEFT_BALL_BOUNDARY) {
                 ball.spawnExplosion();
                 ball.setStartPositionAndDirection(ServeSide.PLAYER_TWO);
                 gameParameters.setGameState(GameState.GAME_OVER);
-                soundController.playBallExplosion();
+                gameParameters.setSoundToPlay(SoundToPlay.BALL_EXPLOSION);
             }
         } else {
             if (ballX < Constants.Border.LEFT_BALL_BOUNDARY || ballX > Constants.Border.RIGHT_BALL_BOUNDARY) {
@@ -118,7 +117,12 @@ public class PhysicsProcessor {
                 gameParameters.addMultiplayerPoint(isPlayerOneScoredGoal);
                 gameParameters.setServeState(isPlayerOneScoredGoal);
                 ball.setStartPositionAndDirection(isPlayerOneScoredGoal ? ServeSide.PLAYER_TWO : ServeSide.PLAYER_ONE);
-                soundController.playBallExplosion();
+                boolean isWin = gameParameters.checkWin();
+                if (isWin) {
+                    gameParameters.setSoundToPlay(SoundToPlay.WIN);
+                } else {
+                    gameParameters.setSoundToPlay(SoundToPlay.BALL_EXPLOSION);
+                }
             }
         }
         if (GameState.PLAYING == gameParameters.getGameState()) {
@@ -128,11 +132,12 @@ public class PhysicsProcessor {
         ball.updateHitCooldown(timeStep);
     }
 
-    private void calcPlatformCollision(Platform[] platforms, Ball ball) {
+    private void calcPlatformCollision(Platform[] platforms, Ball ball, GameParameters gameParameters) {
         for (Platform platform : platforms) {
             if (!calculationNeeded(platform, ball)) {
                 continue;
             }
+            boolean isPlayerOne = platform.isPlayerOne();
             float ballX = ball.getX();
             float ballY = ball.getY();
             float radius = ball.getRadius();
@@ -144,9 +149,10 @@ public class PhysicsProcessor {
             float newDirectionX;
             float newDirectionY;
 
+
             if (isSideHit) {
                 // correct ball position to prevent sticking
-                if (platform.isPlayerOne()) {
+                if (isPlayerOne) {
                     ball.setX(platform.getX() + platform.getWidth() + radius);
                 } else {
                     ball.setX(platform.getX() - radius);
@@ -167,7 +173,7 @@ public class PhysicsProcessor {
                 newDirectionX /= vectorLength;
                 newDirectionY /= vectorLength;
 
-                if (!platform.isPlayerOne()) {
+                if (!isPlayerOne) {
                     newDirectionX = -newDirectionX;
                 }
             } else {
@@ -222,7 +228,11 @@ public class PhysicsProcessor {
             }
             ball.setDirection(newDirectionX, newDirectionY);
             ball.setHitCooldown();
-            soundController.playPlatformHit();
+            if (isPlayerOne) {
+                gameParameters.setSoundToPlay(SoundToPlay.PLATFORM_HIT_LEFT);
+            } else {
+                gameParameters.setSoundToPlay(SoundToPlay.PLATFORM_HIT_RIGHT);
+            }
             break;
         }
     }
@@ -255,9 +265,5 @@ public class PhysicsProcessor {
         float distY = ballY - closestY;
 
         return distX * distX + distY * distY < radius * radius;
-    }
-
-    public void setSoundController(SoundController soundController) {
-        this.soundController = soundController;
     }
 }

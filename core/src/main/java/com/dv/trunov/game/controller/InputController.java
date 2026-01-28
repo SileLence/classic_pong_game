@@ -12,6 +12,7 @@ import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.util.PointsToWin;
 import com.dv.trunov.game.util.ServeState;
 import com.dv.trunov.game.util.ServeSide;
+import com.dv.trunov.game.util.SoundToPlay;
 import com.dv.trunov.game.util.Toggle;
 
 public class InputController {
@@ -25,31 +26,26 @@ public class InputController {
         return INSTANCE;
     }
 
-    public void processMenuInputs(GameParameters gameParameters,
-                                  PhysicsEngine physicsEngine,
-                                  SoundController soundController,
-                                  TextLabel... menuItems) {
+    public void processMenuInputs(GameParameters gameParameters, PhysicsEngine physicsEngine, TextLabel... menuItems) {
         int oldSelectedItemIndex = gameParameters.getSelectedItemIndex();
         int newSelectedItemIndex = gameParameters.getSelectedItemIndex();
         String selectedItemKey = menuItems[oldSelectedItemIndex].key();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             gameParameters.updateParametersBySelectedItemKey(selectedItemKey);
-            soundController.playMenuSelect();
+            gameParameters.setSoundToPlay(SoundToPlay.MENU_SELECT);
             return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             newSelectedItemIndex++;
             if (newSelectedItemIndex > menuItems.length - 1) {
                 newSelectedItemIndex = 0;
             }
-            soundController.playMenuMove();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             newSelectedItemIndex--;
             if (newSelectedItemIndex < 0) {
                 newSelectedItemIndex = menuItems.length - 1;
             }
-            soundController.playMenuMove();
+            gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
         }
         if (oldSelectedItemIndex != newSelectedItemIndex) {
             physicsEngine.resetAlpha();
@@ -57,15 +53,12 @@ public class InputController {
         gameParameters.setSelectedItemIndex(newSelectedItemIndex);
     }
 
-    public void processSettingsInputs(GameParameters gameParameters,
-                                      PhysicsEngine physicsEngine,
-                                      SoundController soundController,
-                                      TextLabel... menuItems) {
+    public void processSettingsInputs(GameParameters gameParameters, PhysicsEngine physicsEngine, TextLabel... menuItems) {
         int oldSelectedItemIndex = gameParameters.getSelectedItemIndex();
         int newSelectedItemIndex = gameParameters.getSelectedItemIndex();
         int pointsIndex = gameParameters.getPointsToWin().getIndex();
         int speedIndex = gameParameters.getMultiplayerBallSpeed().getIndex();
-        int soundsIndex = gameParameters.getSoundsState().getIndex();
+        int soundsIndex = gameParameters.getSoundState().getIndex();
         int serveIndex = gameParameters.getStartingServe().getIndex();
         String selectedItemKey = menuItems[oldSelectedItemIndex].key();
         switch (selectedItemKey) {
@@ -73,7 +66,7 @@ public class InputController {
                  Constants.ItemKey.RESET_BEST_KEY -> {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                     gameParameters.updateParametersBySelectedItemKey(selectedItemKey);
-                    soundController.playMenuSelect();
+                    gameParameters.setSoundToPlay(SoundToPlay.MENU_SELECT);
                     return;
                 }
             }
@@ -83,13 +76,13 @@ public class InputController {
                     if (pointsIndex > PointsToWin.size() - 1) {
                         pointsIndex = PointsToWin.size() - 1;
                     }
-                    soundController.playMenuMove();
+                    gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
                     pointsIndex--;
                     if (pointsIndex < 0) {
                         pointsIndex = 0;
                     }
-                    soundController.playMenuMove();
+                    gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 }
                 gameParameters.setPointsToWin(pointsIndex);
             }
@@ -99,13 +92,13 @@ public class InputController {
                     if (speedIndex > BallSpeed.size() - 1) {
                         speedIndex = BallSpeed.size() - 1;
                     }
-                    soundController.playMenuMove();
+                    gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
                     speedIndex--;
                     if (speedIndex < 0) {
                         speedIndex = 0;
                     }
-                    soundController.playMenuMove();
+                    gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 }
                 gameParameters.setMultiplayerBallSpeed(speedIndex);
             }
@@ -115,15 +108,15 @@ public class InputController {
                     if (soundsIndex > Toggle.size() - 1) {
                         soundsIndex = 0;
                     }
-                    soundController.playMenuMove();
+                    gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
                     soundsIndex--;
                     if (soundsIndex < 0) {
                         soundsIndex = Toggle.size() - 1;
                     }
-                    soundController.playMenuMove();
+                    gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 }
-                gameParameters.setSoundsState(soundsIndex);
+                gameParameters.setSoundState(soundsIndex);
             }
             case Constants.ItemKey.STARTING_SERVE_VALUE_KEY -> {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
@@ -131,35 +124,33 @@ public class InputController {
                     if (serveIndex > ServeSide.size() - 1) {
                         serveIndex = ServeSide.size() - 1;
                     }
-                    soundController.playMenuMove();
+                    gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
                     serveIndex--;
                     if (serveIndex < 0) {
                         serveIndex = 0;
                     }
-                    soundController.playMenuMove();
+                    gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 }
                 gameParameters.setStartingServe(serveIndex);
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             gameParameters.updateParametersBySelectedItemKey(Constants.ItemKey.BACK_KEY);
-            soundController.playMenuSelect();
+            gameParameters.setSoundToPlay(SoundToPlay.MENU_SELECT);
             return;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             newSelectedItemIndex++;
             if (newSelectedItemIndex > menuItems.length - 1) {
                 newSelectedItemIndex = 0;
             }
-            soundController.playMenuMove();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             newSelectedItemIndex--;
             if (newSelectedItemIndex < 0) {
                 newSelectedItemIndex = menuItems.length - 1;
             }
-            soundController.playMenuMove();
+            gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
         }
         if (oldSelectedItemIndex != newSelectedItemIndex) {
             physicsEngine.resetAlpha();
@@ -167,15 +158,18 @@ public class InputController {
         gameParameters.setSelectedItemIndex(newSelectedItemIndex);
     }
 
-    public void processPlayingInputs(Platform[] platforms,
-                                     GameParameters gameParameters,
-                                     SoundController soundController) {
+    public void processPlayingInputs(Platform[] platforms, GameParameters gameParameters) {
         ServeState serveState = gameParameters.getServeState();
-        if ((serveState == ServeState.PLAYER_ONE && Gdx.input.isKeyJustPressed(Input.Keys.TAB))
-                || (serveState == ServeState.PLAYER_TWO && Gdx.input.isKeyJustPressed(Input.Keys.ENTER))) {
-            gameParameters.setGameState(GameState.PLAYING);
-            gameParameters.setServeState(ServeState.NONE);
-            soundController.playPlatformHit();
+        if (serveState != ServeState.NONE) {
+            if (serveState == ServeState.PLAYER_ONE && Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+                gameParameters.setSoundToPlay(SoundToPlay.SERVE);
+                gameParameters.setGameState(GameState.PLAYING);
+                gameParameters.setServeState(ServeState.NONE);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                gameParameters.setGameState(GameState.PLAYING);
+                gameParameters.setServeState(ServeState.NONE);
+                gameParameters.setSoundToPlay(SoundToPlay.SERVE);
+            }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             gameParameters.setGameState(GameState.PAUSE);

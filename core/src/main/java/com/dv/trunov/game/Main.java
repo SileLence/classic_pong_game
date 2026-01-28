@@ -23,6 +23,7 @@ import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
+import com.dv.trunov.game.util.SoundToPlay;
 
 public class Main extends ApplicationAdapter {
 
@@ -39,7 +40,6 @@ public class Main extends ApplicationAdapter {
     private boolean worldObjectsCreated;
     private OrthographicCamera camera;
     private Viewport viewport;
-    private SoundController soundController;
 
     @Override
     public void create() {
@@ -51,10 +51,8 @@ public class Main extends ApplicationAdapter {
         uiController = UIController.getInstance();
         uiController.createLanguageSelectionUI();
         inputController = InputController.getInstance();
-        soundController = SoundController.getInstance();
-        soundController.init();
+        SoundController.init();
         physicsProcessor = PhysicsProcessor.getInstance();
-        physicsProcessor.setSoundController(soundController);
         physicsEngine = PhysicsEngine.getInstance();
         objectRenderer = ObjectRenderer.getInstance();
         uiRenderer = UIRenderer.getInstance();
@@ -65,9 +63,9 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        // TODO add sounds
         // TODO implement app icon
         // TODO add language selection
+        // TODO add GameState.SERVE and implement it for multiplayer instead of IDLE
         float deltaTime = Gdx.graphics.getDeltaTime();
         GameState gameState = gameParameters.getGameState();
         boolean isSingleplayer = GameMode.SINGLEPLAYER == gameParameters.getGameMode();
@@ -77,41 +75,45 @@ public class Main extends ApplicationAdapter {
         shapeRenderer.setProjectionMatrix(camera.combined);
         switch (gameState) {
             case TITLE -> {
-                inputController.processMenuInputs(gameParameters, physicsEngine, soundController, uiController.getTitleMenu());
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getTitleMenu());
                 if (GameState.MENU == gameParameters.getGameState()) {
                     uiController.createLocalizedUI(gameParameters);
                 }
                 physicsEngine.updateAlpha(deltaTime);
                 drawUI(uiController.getTitle());
                 drawUI(uiController.getTitleMenu());
+                processSound();
             }
             case MENU -> {
                 if (worldObjectsCreated) {
                     worldObjectsCreated = objectController.destroyWorldObjects();
                 }
-                inputController.processMenuInputs(gameParameters, physicsEngine, soundController, uiController.getMainMenu());
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getMainMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 drawUI(uiController.getTitle());
                 drawUI(uiController.getMainMenu());
+                processSound();
             }
             case SETTINGS -> {
-                inputController.processSettingsInputs(gameParameters, physicsEngine, soundController, uiController.getSettingsMenu());
+                inputController.processSettingsInputs(gameParameters, physicsEngine, uiController.getSettingsMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 uiController.updateSettingsValues(gameParameters);
                 drawUI(uiController.getSettingsScreen());
                 drawUI(uiController.getSettingsMenu());
+                processSound();
             }
             case RESET -> {
-                inputController.processMenuInputs(gameParameters, physicsEngine, soundController, uiController.getResetMenu());
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getResetMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 drawUI(uiController.getResetScreen());
                 drawUI(uiController.getResetMenu());
+                processSound();
             }
             case IDLE -> {
                 if (!worldObjectsCreated) {
                     worldObjectsCreated = objectController.createWorldObjects(gameParameters);
                 }
-                inputController.processMenuInputs(gameParameters, physicsEngine, soundController, uiController.getPressEnter());
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPressEnter());
                 physicsEngine.updateAlpha(deltaTime);
                 updatePhysics(deltaTime);
                 uiController.updateCounters(gameParameters, isSingleplayer);
@@ -122,38 +124,45 @@ public class Main extends ApplicationAdapter {
                     drawUI(uiController.getCounterBestLevel());
                 }
                 drawUI(uiController.getPressEnter());
+                processSound();
             }
             case PLAYING ->  {
-                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters, soundController);
+                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 updatePhysics(deltaTime);
                 if (isSingleplayer) {
-                    boolean isSpeedIncreased = objectController.increaseSpeed(gameParameters.getLevel());
+                    objectController.increaseSpeed(gameParameters.getLevel());
                     uiController.updateCounters(gameParameters, true);
                     gameParameters.updateCooldown();
-                    if (isSpeedIncreased) {
-                        soundController.playLevelUp();
-                    }
                 }
+                boolean isGameStateChanged = GameState.PLAYING != gameParameters.getGameState();
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                if (GameState.PLAYING == gameParameters.getGameState()) {
-                    // since game state could change don't need to draw ball in that case
+                if (!isGameStateChanged) {
                     objectRenderer.drawBall(objectController.getBall(), spriteBatch);
                 }
                 objectRenderer.drawBallTail(objectController.getBall(), spriteBatch);
                 objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
                 spriteBatch.end();
                 drawUI(uiController.getPlayingScreen(isSingleplayer));
+                if (isGameStateChanged) {
+                    boolean isGameOver = GameState.GAME_OVER == gameParameters.getGameState();
+                    boolean isNewRecord = gameParameters.isNewRecord();
+                    if (isGameOver && isNewRecord) {
+                        gameParameters.setSoundToPlay(SoundToPlay.WIN);
+                    }
+                }
+                processSound();
             }
             case PAUSE -> {
                 physicsEngine.pause();
-                inputController.processMenuInputs(gameParameters, physicsEngine, soundController, uiController.getPauseMenu());
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getPauseMenu());
                 boolean isGameStateChanged = GameState.PAUSE != gameParameters.getGameState();
                 if (isGameStateChanged) {
                     physicsEngine.resume();
                     if (GameState.MENU == gameParameters.getGameState()) {
                         worldObjectsCreated = objectController.destroyWorldObjects();
+                        processSound();
                         return;
                     }
                 }
@@ -168,9 +177,10 @@ public class Main extends ApplicationAdapter {
                 spriteBatch.end();
                 drawUI(uiController.getPauseScreen(isSingleplayer));
                 drawUI(uiController.getPauseMenu());
+                processSound();
             }
             case GOAL -> {
-                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters, soundController);
+                inputController.processPlayingInputs(objectController.getPlatforms(), gameParameters);
                 boolean isGameStateChanged = GameState.GOAL != gameParameters.getGameState();
                 if (!isGameStateChanged) {
                     updatePhysics(deltaTime);
@@ -190,9 +200,10 @@ public class Main extends ApplicationAdapter {
                 if (!isGameStateChanged) {
                     drawUI(uiController.getServeText(gameParameters.getServeState()));
                 }
+                processSound();
             }
             case WIN -> {
-                inputController.processMenuInputs(gameParameters, physicsEngine, soundController, uiController.getEndGameMenu());
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 updatePhysics(deltaTime);
                 uiController.updateCounters(gameParameters, false);
@@ -206,9 +217,10 @@ public class Main extends ApplicationAdapter {
                 drawUI(uiController.getWinScreen(scoreOne > scoreTwo));
                 drawUI(uiController.getEndGameMenu());
                 worldObjectsCreated = false;
+                processSound();
             }
             case GAME_OVER -> {
-                inputController.processMenuInputs(gameParameters, physicsEngine, soundController, uiController.getEndGameMenu());
+                inputController.processMenuInputs(gameParameters, physicsEngine, uiController.getEndGameMenu());
                 physicsEngine.updateAlpha(deltaTime);
                 updatePhysics(deltaTime);
                 uiController.updateCounters(gameParameters, true);
@@ -220,6 +232,7 @@ public class Main extends ApplicationAdapter {
                 drawUI(uiController.getEndGameScreen(gameParameters.isNewRecord()));
                 drawUI(uiController.getEndGameMenu());
                 worldObjectsCreated = false;
+                processSound();
             }
             case EXIT -> Gdx.app.exit();
         }
@@ -264,6 +277,15 @@ public class Main extends ApplicationAdapter {
         spriteBatch.end();
     }
 
+    private void processSound() {
+        SoundToPlay soundToPlay = gameParameters.getSoundToPlay();
+        float volume = gameParameters.getSoundState().getIndex();
+        if (SoundToPlay.NONE != soundToPlay) {
+            SoundController.playSound(soundToPlay, volume);
+            gameParameters.clearSoundToPlay();
+        }
+    }
+
     @Override
     public void pause() {
         gameParameters.setGameState(GameState.PAUSE);
@@ -274,7 +296,7 @@ public class Main extends ApplicationAdapter {
         spriteBatch.dispose();
         shapeRenderer.dispose();
         uiController.dispose();
-        soundController.dispose();
+        SoundController.dispose();
         if (worldObjectsCreated) {
             objectController.dispose();
         }
