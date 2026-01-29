@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dv.trunov.game.model.GameParameters;
+import com.dv.trunov.game.ui.TextKey;
 import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.Constants;
 
@@ -28,7 +29,7 @@ public class UIRenderer {
             if (textLabel.isSelectable() && index == selectedItemIndex) {
                 Color blinkingColor = new Color().set(Constants.Colors.SELECTION_FONT_COLOR, alpha);
                 font.getColor().set(blinkingColor);
-            } else if (Constants.ItemKey.LEVEL_COUNTER_KEY.equals(textLabel.key())) {
+            } else if (TextKey.LEVEL.equals(textLabel.key())) {
                 if (cooldown > 0) {
                     font.getColor().set(Constants.Colors.LEVEL_UP_COLOR);
                 } else {

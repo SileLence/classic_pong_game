@@ -1,18 +1,26 @@
 package com.dv.trunov.game.util;
 
+import com.dv.trunov.game.ui.TextKey;
+
 public enum PointsToWin {
 
-    THREE("3"),
-    FIVE("5"),
-    SEVEN("7"),
-    TEN("10"),
-    FIFTEEN("15"),
-    TWENTY_ONE("21");
+    THREE(TextKey.THREE, "3"),
+    FIVE(TextKey.FIVE,  "5"),
+    SEVEN(TextKey.SEVEN, "7"),
+    TEN(TextKey.TEN, "10"),
+    FIFTEEN(TextKey.FIFTEEN, "15"),
+    TWENTY_ONE(TextKey.TWENTY_ONE, "21");
 
-    final String value;
+    private final TextKey key;
+    private final String value;
 
-    PointsToWin(String value) {
+    PointsToWin(TextKey key, String value) {
+        this.key = key;
         this.value = value;
+    }
+
+    public TextKey getKey() {
+        return key;
     }
 
     public int getIndex() {

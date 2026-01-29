@@ -5,7 +5,7 @@ public enum GameMode {
     SINGLEPLAYER(1),
     MULTIPLAYER(2);
 
-    final int value;
+    private final int value;
 
     GameMode(int value) {
         this.value = value;

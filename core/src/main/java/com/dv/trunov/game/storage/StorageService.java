@@ -2,6 +2,8 @@ package com.dv.trunov.game.storage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.dv.trunov.game.model.GameParameters;
+import com.dv.trunov.game.ui.TextKey;
 import com.dv.trunov.game.util.Constants;
 
 import java.nio.charset.StandardCharsets;
@@ -14,44 +16,50 @@ public class StorageService {
     private static final Preferences PREFERENCES = Gdx.app.getPreferences(Constants.Prefs.PREFS_NAME);
     private static final String SALT = "pong_salt1";
 
-    public static void storeValue(String key, Object value) {
-        PREFERENCES.putString(key, String.valueOf(value));
+    public static void persistAll(GameParameters gameParameters) {
+        for (TextKey key : Constants.Prefs.KEY_LIST) {
+            //storeValue(key, );
+        }
+    }
+
+    public static void storeValue(TextKey key, Object value) {
+        PREFERENCES.putString(key.name(), String.valueOf(value));
         updateHash();
         PREFERENCES.flush();
     }
 
-    public static int getValue(String key, int defaultValue) {
+    public static int getValue(TextKey key, int defaultValue) {
         String value = getValue(key, String.valueOf(defaultValue));
         return Integer.parseInt(value);
     }
 
-    public static String getValue(String key, String defaultValue) {
+    public static String getValue(TextKey key, String defaultValue) {
         boolean isChangedManually = checkHash();
         if (isChangedManually) {
             System.out.printf("The value [%s] was changed manually! Return default value: %s\n",  key, defaultValue);
             return defaultValue;
         }
-        String value = PREFERENCES.getString(key, null);
+        String value = PREFERENCES.getString(key.name(), null);
         return value == null ? defaultValue : value;
     }
 
     private static boolean checkHash() {
-        String storedHash = PREFERENCES.getString(Constants.Prefs.HASH, "");
+        String storedHash = PREFERENCES.getString(TextKey.HASH.name(), "");
         String recalculatedHash = calcHash();
         return !Objects.equals(storedHash, recalculatedHash);
     }
 
     private static void updateHash() {
         String hash = calcHash();
-        PREFERENCES.putString(Constants.Prefs.HASH, hash);
+        PREFERENCES.putString(TextKey.HASH.name(), hash);
         PREFERENCES.flush();
     }
 
     private static String calcHash() {
-        List<String> keys = Constants.Prefs.PREFS_KEY_LIST;
+        List<TextKey> keys = Constants.Prefs.KEY_LIST;
         StringBuilder builder = new StringBuilder();
-        for (String key : keys) {
-            builder.append(PREFERENCES.getString(key));
+        for (TextKey key : keys) {
+            builder.append(PREFERENCES.getString(key.name()));
         }
         return getHash(builder + SALT);
     }

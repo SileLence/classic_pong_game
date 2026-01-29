@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
 public record TextLabel(
 
-    String key,
+    TextKey key,
     float x,
     float y,
     BitmapFont font,

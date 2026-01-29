@@ -6,7 +6,7 @@ public enum ServeState {
     PLAYER_ONE(0),
     PLAYER_TWO(1);
 
-    final int value;
+    private final int value;
 
     ServeState(int value) {
         this.value = value;

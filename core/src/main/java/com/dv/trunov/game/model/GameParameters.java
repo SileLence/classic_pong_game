@@ -1,6 +1,7 @@
 package com.dv.trunov.game.model;
 
 import com.dv.trunov.game.storage.StorageService;
+import com.dv.trunov.game.ui.TextKey;
 import com.dv.trunov.game.util.BallSpeed;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
@@ -22,7 +23,7 @@ public class GameParameters {
     private PointsToWin pointsToWin;
     private BallSpeed multiplayerBallSpeed;
     private Toggle soundState;
-    private ServeSide serveSide;
+    private ServeSide startingServe;
     private SoundToPlay soundToPlay;
     private float cooldown;
     private int selectedItemIndex;
@@ -37,63 +38,70 @@ public class GameParameters {
     }
 
     private GameParameters() {
-        gameState = GameState.TITLE;
         serveState = ServeState.NONE;
         soundToPlay = SoundToPlay.NONE;
         selectedItemIndex = 0;
         cooldown = 0;
         level = 1;
         isNewRecord = false;
-        bestLevel = StorageService.getValue(Constants.Prefs.BEST_LEVEL, 1);
-        pointsToWin = PointsToWin.fromIndex(StorageService.getValue(Constants.Prefs.POINTS_TO_WIN, 1));
-        multiplayerBallSpeed = BallSpeed.fromIndex(StorageService.getValue(Constants.Prefs.BALL_SPEED, 2));
-        soundState = Toggle.fromIndex(StorageService.getValue(Constants.Prefs.SOUNDS, 1));
-        serveSide = ServeSide.fromIndex(StorageService.getValue(Constants.Prefs.SERVE, 0));
+        bestLevel = StorageService.getValue(TextKey.BEST_LEVEL, 1);
+        pointsToWin = PointsToWin.fromIndex(StorageService.getValue(TextKey.POINTS_TO_WIN, 1));
+        multiplayerBallSpeed = BallSpeed.fromIndex(StorageService.getValue(TextKey.BALL_SPEED, 2));
+        soundState = Toggle.fromIndex(StorageService.getValue(TextKey.SOUNDS, 1));
+        startingServe = ServeSide.fromIndex(StorageService.getValue(TextKey.STARTING_SERVE, 0));
+        String languageIndex = StorageService.getValue(TextKey.LANGUAGE, "");
+        if ("".equals(languageIndex)) {
+            language = Language.ENGLISH;
+            gameState = GameState.TITLE;
+        } else {
+            language = Language.fromIndex(Integer.parseInt(languageIndex));
+            gameState = GameState.MENU;
+        }
     }
 
-    public void updateParametersBySelectedItemKey(String key) {
+    public void updateParametersBySelectedItemKey(TextKey key) {
         switch (key) {
-            case Constants.ItemKey.RU_KEY -> {
+            case RU -> {
                 language = Language.RUSSIAN;
                 gameState = GameState.MENU;
             }
-            case Constants.ItemKey.EN_KEY -> {
+            case EN -> {
                 language = Language.ENGLISH;
                 gameState = GameState.MENU;
             }
-            case Constants.ItemKey.ONE_PLAYER_KEY -> {
+            case ONE_PLAYER -> {
                 gameMode = GameMode.SINGLEPLAYER;
                 gameState = GameState.IDLE;
                 setStartGame();
             }
-            case Constants.ItemKey.TWO_PLAYERS_KEY -> {
+            case TWO_PLAYERS -> {
                 gameMode = GameMode.MULTIPLAYER;
                 gameState = GameState.IDLE;
                 setStartGame();
             }
-            case Constants.ItemKey.PRESS_ENTER_KEY,
-                 Constants.ItemKey.CONTINUE_KEY -> gameState = serveState == ServeState.NONE ? GameState.PLAYING : GameState.GOAL;
+            case PRESS_ENTER,
+                 CONTINUE -> gameState = serveState == ServeState.NONE ? GameState.PLAYING : GameState.GOAL;
 
-            case Constants.ItemKey.SETTINGS_KEY,
-                 Constants.ItemKey.NO_KEY -> gameState = GameState.SETTINGS;
+            case SETTINGS,
+                 NO -> gameState = GameState.SETTINGS;
 
-            case Constants.ItemKey.RESET_BEST_KEY -> gameState = GameState.RESET;
+            case RESET_BEST -> gameState = GameState.RESET;
 
-            case Constants.ItemKey.BACK_KEY,
-                 Constants.ItemKey.EXIT_TO_MENU_KEY -> gameState = GameState.MENU;
+            case BACK,
+                 EXIT_TO_MENU -> gameState = GameState.MENU;
 
-            case Constants.ItemKey.PLAY_AGAIN_KEY -> {
+            case PLAY_AGAIN -> {
                 gameState = GameState.IDLE;
                 setStartGame();
             }
-            case Constants.ItemKey.YES_KEY -> {
+            case YES -> {
                 if (GameState.RESET.equals(gameState)) {
                     bestLevel = 1;
-                    StorageService.storeValue(Constants.Prefs.BEST_LEVEL, bestLevel);
+                    StorageService.storeValue(TextKey.BEST_LEVEL, bestLevel);
                 }
                 gameState = GameState.SETTINGS;
             }
-            case Constants.ItemKey.EXIT_KEY -> gameState = GameState.EXIT;
+            case EXIT -> gameState = GameState.EXIT;
         }
         selectedItemIndex = 0;
     }
@@ -132,7 +140,7 @@ public class GameParameters {
         if (level > bestLevel) {
             bestLevel = level;
             isNewRecord = true;
-            StorageService.storeValue(Constants.Prefs.BEST_LEVEL, bestLevel);
+            StorageService.storeValue(TextKey.BEST_LEVEL, bestLevel);
         }
     }
 
@@ -170,7 +178,7 @@ public class GameParameters {
 
     public void setPointsToWin(int index) {
         pointsToWin = PointsToWin.fromIndex(index);
-        StorageService.storeValue(Constants.Prefs.POINTS_TO_WIN, pointsToWin.getIndex());
+        StorageService.storeValue(TextKey.POINTS_TO_WIN, pointsToWin.getIndex());
     }
 
     public BallSpeed getMultiplayerBallSpeed() {
@@ -179,7 +187,7 @@ public class GameParameters {
 
     public void setMultiplayerBallSpeed(int index) {
         multiplayerBallSpeed = BallSpeed.fromIndex(index);
-        StorageService.storeValue(Constants.Prefs.BALL_SPEED, multiplayerBallSpeed.getIndex());
+        StorageService.storeValue(TextKey.BALL_SPEED, multiplayerBallSpeed.getIndex());
     }
 
     public Toggle getSoundState() {
@@ -188,11 +196,11 @@ public class GameParameters {
 
     public void setSoundState(int index) {
         soundState = Toggle.fromIndex(index);
-        StorageService.storeValue(Constants.Prefs.SOUNDS, soundState.getIndex());
+        StorageService.storeValue(TextKey.SOUNDS, soundState.getIndex());
     }
 
     public ServeSide getStartingServe() {
-        return serveSide;
+        return startingServe;
     }
 
     public void setSoundToPlay(SoundToPlay soundToPlay) {
@@ -208,8 +216,8 @@ public class GameParameters {
     }
 
     public void setStartingServe(int index) {
-        serveSide = ServeSide.fromIndex(index);
-        StorageService.storeValue(Constants.Prefs.SERVE, serveSide.getIndex());
+        startingServe = ServeSide.fromIndex(index);
+        StorageService.storeValue(TextKey.STARTING_SERVE, startingServe.getIndex());
     }
 
     public int getSelectedItemIndex() {

@@ -2,6 +2,7 @@ package com.dv.trunov.game.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.SoundToPlay;
 
 public class SoundController {
@@ -21,16 +22,16 @@ public class SoundController {
     }
 
     public static void init() {
-        menuMove = Gdx.audio.newSound(Gdx.files.internal("sound/menuMove.wav"));
-        menuSelect = Gdx.audio.newSound(Gdx.files.internal("sound/menuSelect.wav"));
-        wallHit = Gdx.audio.newSound(Gdx.files.internal("sound/wallHit.wav"));
-        activeWallHit = Gdx.audio.newSound(Gdx.files.internal("sound/activeWallHit.wav"));
-        platformHitL = Gdx.audio.newSound(Gdx.files.internal("sound/platformHitL.wav"));
-        platformHitR = Gdx.audio.newSound(Gdx.files.internal("sound/platformHitR.wav"));
-        serve = Gdx.audio.newSound(Gdx.files.internal("sound/serve.wav"));
-        ballExplosion = Gdx.audio.newSound(Gdx.files.internal("sound/ballExplosion.wav"));
-        levelUp = Gdx.audio.newSound(Gdx.files.internal("sound/levelUp.wav"));
-        win = Gdx.audio.newSound(Gdx.files.internal("sound/win.wav"));
+        menuMove = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.MENU_MOVE_SOUND));
+        menuSelect = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.MENU_SELECT_SOUND));
+        wallHit = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.WALL_HIT_SOUND));
+        activeWallHit = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.ACTIVE_WALL_HIT_SOUND));
+        platformHitL = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.PLATFORM_HIT_LEFT_SOUND));
+        platformHitR = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.PLATFORM_HIT_RIGHT_SOUND));
+        serve = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.SERVE_SOUND));
+        ballExplosion = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.BALL_EXPLOSION_SOUND));
+        levelUp = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.LEVEL_UP_SOUND));
+        win = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.WIN_SOUND));
     }
 
     public static void playSound(SoundToPlay soundToPlay, float volume) {

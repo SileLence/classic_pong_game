@@ -1,18 +1,25 @@
 package com.dv.trunov.game.util;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.dv.trunov.game.ui.TextKey;
 
 public enum ServeSide {
 
-    CENTER(0),
-    RANDOM_PLAYER(Float.NaN),
-    PLAYER_ONE(1),
-    PLAYER_TWO(-1);
+    CENTER(TextKey.CENTER_SERVE, 0),
+    RANDOM_PLAYER(TextKey.RANDOM_PLAYER_SERVE, Float.NaN),
+    PLAYER_ONE(TextKey.PLAYER_ONE_SERVE, 1),
+    PLAYER_TWO(TextKey.PLAYER_TWO_SERVE, -1);
 
-    final float direction;
+    private final TextKey key;
+    private final float direction;
 
-    ServeSide(float direction) {
+    ServeSide(TextKey key, float direction) {
+        this.key = key;
         this.direction = direction;
+    }
+
+    public TextKey getKey() {
+        return key;
     }
 
     public int getIndex() {

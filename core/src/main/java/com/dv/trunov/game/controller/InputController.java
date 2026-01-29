@@ -2,16 +2,16 @@ package com.dv.trunov.game.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.dv.trunov.game.model.GameParameters;
+import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.physics.PhysicsEngine;
+import com.dv.trunov.game.ui.TextKey;
 import com.dv.trunov.game.ui.TextLabel;
 import com.dv.trunov.game.util.BallSpeed;
-import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameState;
-import com.dv.trunov.game.model.Platform;
-import com.dv.trunov.game.model.GameParameters;
 import com.dv.trunov.game.util.PointsToWin;
-import com.dv.trunov.game.util.ServeState;
 import com.dv.trunov.game.util.ServeSide;
+import com.dv.trunov.game.util.ServeState;
 import com.dv.trunov.game.util.SoundToPlay;
 import com.dv.trunov.game.util.Toggle;
 
@@ -26,10 +26,10 @@ public class InputController {
         return INSTANCE;
     }
 
-    public void processMenuInputs(GameParameters gameParameters, PhysicsEngine physicsEngine, TextLabel... menuItems) {
+    public void processMenuInput(GameParameters gameParameters, PhysicsEngine physicsEngine, TextLabel... menuItems) {
         int oldSelectedItemIndex = gameParameters.getSelectedItemIndex();
         int newSelectedItemIndex = gameParameters.getSelectedItemIndex();
-        String selectedItemKey = menuItems[oldSelectedItemIndex].key();
+        TextKey selectedItemKey = menuItems[oldSelectedItemIndex].key();
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             gameParameters.updateParametersBySelectedItemKey(selectedItemKey);
             gameParameters.setSoundToPlay(SoundToPlay.MENU_SELECT);
@@ -53,24 +53,24 @@ public class InputController {
         gameParameters.setSelectedItemIndex(newSelectedItemIndex);
     }
 
-    public void processSettingsInputs(GameParameters gameParameters, PhysicsEngine physicsEngine, TextLabel... menuItems) {
+    public void processSettingsInput(GameParameters gameParameters, PhysicsEngine physicsEngine, TextLabel... menuItems) {
         int oldSelectedItemIndex = gameParameters.getSelectedItemIndex();
         int newSelectedItemIndex = gameParameters.getSelectedItemIndex();
         int pointsIndex = gameParameters.getPointsToWin().getIndex();
         int speedIndex = gameParameters.getMultiplayerBallSpeed().getIndex();
-        int soundsIndex = gameParameters.getSoundState().getIndex();
+        int soundIndex = gameParameters.getSoundState().getIndex();
         int serveIndex = gameParameters.getStartingServe().getIndex();
-        String selectedItemKey = menuItems[oldSelectedItemIndex].key();
+        TextKey selectedItemKey = menuItems[oldSelectedItemIndex].key();
         switch (selectedItemKey) {
-            case Constants.ItemKey.BACK_KEY,
-                 Constants.ItemKey.RESET_BEST_KEY -> {
+            case BACK,
+                 RESET_BEST -> {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                     gameParameters.updateParametersBySelectedItemKey(selectedItemKey);
                     gameParameters.setSoundToPlay(SoundToPlay.MENU_SELECT);
                     return;
                 }
             }
-            case Constants.ItemKey.POINTS_TO_WIN_VALUE_KEY -> {
+            case POINTS_TO_WIN -> {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
                     pointsIndex++;
                     if (pointsIndex > PointsToWin.size() - 1) {
@@ -86,7 +86,7 @@ public class InputController {
                 }
                 gameParameters.setPointsToWin(pointsIndex);
             }
-            case Constants.ItemKey.BALL_SPEED_VALUE_KEY -> {
+            case BALL_SPEED -> {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
                     speedIndex++;
                     if (speedIndex > BallSpeed.size() - 1) {
@@ -102,23 +102,23 @@ public class InputController {
                 }
                 gameParameters.setMultiplayerBallSpeed(speedIndex);
             }
-            case Constants.ItemKey.SOUNDS_VALUE_KEY -> {
+            case SOUNDS -> {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-                    soundsIndex++;
-                    if (soundsIndex > Toggle.size() - 1) {
-                        soundsIndex = 0;
+                    soundIndex++;
+                    if (soundIndex > Toggle.size() - 1) {
+                        soundIndex = 0;
                     }
                     gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
-                    soundsIndex--;
-                    if (soundsIndex < 0) {
-                        soundsIndex = Toggle.size() - 1;
+                    soundIndex--;
+                    if (soundIndex < 0) {
+                        soundIndex = Toggle.size() - 1;
                     }
                     gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
                 }
-                gameParameters.setSoundState(soundsIndex);
+                gameParameters.setSoundState(soundIndex);
             }
-            case Constants.ItemKey.STARTING_SERVE_VALUE_KEY -> {
+            case STARTING_SERVE -> {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
                     serveIndex++;
                     if (serveIndex > ServeSide.size() - 1) {
@@ -136,7 +136,7 @@ public class InputController {
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            gameParameters.updateParametersBySelectedItemKey(Constants.ItemKey.BACK_KEY);
+            gameParameters.updateParametersBySelectedItemKey(TextKey.BACK);
             gameParameters.setSoundToPlay(SoundToPlay.MENU_SELECT);
             return;
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
@@ -158,7 +158,7 @@ public class InputController {
         gameParameters.setSelectedItemIndex(newSelectedItemIndex);
     }
 
-    public void processPlayingInputs(Platform[] platforms, GameParameters gameParameters) {
+    public void processPlayingInput(Platform[] platforms, GameParameters gameParameters) {
         ServeState serveState = gameParameters.getServeState();
         if (serveState != ServeState.NONE) {
             if (serveState == ServeState.PLAYER_ONE && Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
