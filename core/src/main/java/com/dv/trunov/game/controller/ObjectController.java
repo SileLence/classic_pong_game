@@ -1,7 +1,7 @@
 package com.dv.trunov.game.controller;
 
 import com.dv.trunov.game.model.Ball;
-import com.dv.trunov.game.model.GameParameters;
+import com.dv.trunov.game.gameparameters.GameParameters;
 import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.SoundToPlay;
@@ -9,7 +9,6 @@ import com.dv.trunov.game.util.SoundToPlay;
 public class ObjectController {
 
     private static final ObjectController INSTANCE = new ObjectController();
-    private GameParameters gameParameters;
     private Platform[] platforms;
     private Ball ball;
 
@@ -20,14 +19,7 @@ public class ObjectController {
         return INSTANCE;
     }
 
-    public void initGameParameters() {
-        gameParameters = GameParameters.getInstance();
-    }
-
     public boolean createWorldObjects(GameParameters gameParameters) {
-        if (gameParameters == null) {
-            throw new IllegalStateException("GameParameters are not initialized.");
-        }
         ball = new Ball(Constants.Asset.BALL_TEXTURE_PATH);
         platforms = new Platform[gameParameters.getGameMode().getValue()];
         platforms[0] = new Platform(
@@ -44,7 +36,7 @@ public class ObjectController {
                 Constants.Asset.PLATFORM_RIGHT_TEXTURE_PATH
             );
             ball.setSpeed(gameParameters.getMultiplayerBallSpeed().getValue());
-            ball.setStartPositionAndDirection(gameParameters.getStartingServe());
+            ball.setStartPositionAndDirection(gameParameters.getServeSide());
         }
         for (Platform platform : platforms) {
             platform.setSpeed(ball.getSpeed() * Constants.Physics.PLATFORM_SPEED_MODIFICATOR);
@@ -52,7 +44,8 @@ public class ObjectController {
         return true;
     }
 
-    public void increaseSpeed(int level) {
+    public void increaseSpeed(GameParameters gameParameters) {
+        int level = gameParameters.getLevel();
         float ballSpeed = ball.getSpeed();
         float newBallSpeed = Constants.Physics.BALL_SPEED + (level - 1) * Constants.Physics.BALL_SPEED_STEP;
         ball.setSpeed(newBallSpeed);
@@ -69,10 +62,6 @@ public class ObjectController {
 
     public Platform[] getPlatforms() {
         return platforms;
-    }
-
-    public GameParameters getGameParameters() {
-        return gameParameters;
     }
 
     public boolean destroyWorldObjects() {

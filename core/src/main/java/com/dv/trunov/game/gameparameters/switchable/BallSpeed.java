@@ -1,15 +1,15 @@
-package com.dv.trunov.game.util;
+package com.dv.trunov.game.gameparameters.switchable;
 
-import com.dv.trunov.game.ui.TextKey;
+import com.dv.trunov.game.ui.text.TextKey;
 
-public enum BallSpeed {
+public enum BallSpeed implements Switchable<BallSpeed> {
 
     VERY_SLOW(TextKey.VERY_SLOW, 1000f),
-    SLOW(TextKey.VERY_SLOW, 1200f),
-    NORMAL(TextKey.VERY_SLOW, 1400f),
-    FAST(TextKey.VERY_SLOW, 1600f),
-    VERY_FAST(TextKey.VERY_SLOW, 1800f),
-    EXTREME(TextKey.VERY_SLOW, 2000f);
+    SLOW(TextKey.SLOW, 1200f),
+    NORMAL(TextKey.NORMAL, 1400f),
+    FAST(TextKey.FAST, 1600f),
+    VERY_FAST(TextKey.VERY_FAST, 1800f),
+    EXTREME(TextKey.EXTREME, 2000f);
 
     private final TextKey key;
     private final float value;
@@ -23,19 +23,11 @@ public enum BallSpeed {
         return key;
     }
 
-    public int getIndex() {
-        return ordinal();
-    }
-
     public float getValue() {
         return value;
     }
 
     public static BallSpeed fromIndex(int index) {
         return BallSpeed.values()[index];
-    }
-
-    public static int size() {
-        return values().length;
     }
 }

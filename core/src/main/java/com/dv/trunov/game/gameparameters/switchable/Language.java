@@ -1,8 +1,8 @@
-package com.dv.trunov.game.util;
+package com.dv.trunov.game.gameparameters.switchable;
 
-import com.dv.trunov.game.ui.TextKey;
+import com.dv.trunov.game.ui.text.TextKey;
 
-public enum Language {
+public enum Language implements Switchable<Language> {
 
     RUSSIAN(TextKey.RU),
     ENGLISH(TextKey.EN);
@@ -17,15 +17,7 @@ public enum Language {
         return key;
     }
 
-    public int getIndex() {
-        return ordinal();
-    }
-
     public static Language fromIndex(int index) {
         return values()[index];
-    }
-
-    public int size() {
-        return values().length;
     }
 }

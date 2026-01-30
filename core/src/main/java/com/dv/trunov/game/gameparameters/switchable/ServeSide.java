@@ -1,9 +1,9 @@
-package com.dv.trunov.game.util;
+package com.dv.trunov.game.gameparameters.switchable;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.dv.trunov.game.ui.TextKey;
+import com.dv.trunov.game.ui.text.TextKey;
 
-public enum ServeSide {
+public enum ServeSide implements Switchable<ServeSide> {
 
     CENTER(TextKey.CENTER_SERVE, 0),
     RANDOM_PLAYER(TextKey.RANDOM_PLAYER_SERVE, Float.NaN),
@@ -22,9 +22,6 @@ public enum ServeSide {
         return key;
     }
 
-    public int getIndex() {
-        return ordinal();
-    }
     public static ServeSide fromIndex(int index) {
         return values()[index];
     }
@@ -35,9 +32,5 @@ public enum ServeSide {
         } else {
             return direction;
         }
-    }
-
-    public static int size() {
-        return values().length;
     }
 }

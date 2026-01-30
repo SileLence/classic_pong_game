@@ -1,6 +1,6 @@
-package com.dv.trunov.game.ui;
+package com.dv.trunov.game.ui.text;
 
-import com.dv.trunov.game.util.Language;
+import com.dv.trunov.game.gameparameters.switchable.Language;
 
 public enum TextKey {
 
@@ -9,33 +9,33 @@ public enum TextKey {
     TWO_PLAYERS("2 игрока", "2 Players"),
     SETTINGS("Настройки", "Settings"),
     EXIT("Выход", "Exit"),
-    POINTS_TO_WIN("Очки до победы (2 игрока):", "Points to Win (2 players):"),
+    POINTS_TO_WIN("Очки до победы (2 игрока):", "Points to Win (2 Players):"),
     THREE("3", "3"),
     FIVE("5", "5"),
     SEVEN("7", "7"),
     TEN("10", "10"),
     FIFTEEN("15", "15"),
     TWENTY_ONE("21", "21"),
-    BALL_SPEED("Скорость мяча (2 игрока):", "Ball Speed (2 players):"),
+    BALL_SPEED("Скорость мяча (2 игрока):", "Ball Speed (2 Players):"),
     VERY_SLOW("Очень медленно", "Very Slow"),
     SLOW("Медленно", "Slow"),
     NORMAL("Нормально", "Normal"),
     FAST("Быстро", "Fast"),
     VERY_FAST("Очень быстро", "Very Fast"),
     EXTREME("Экстремально", "Extreme"),
-    STARTING_SERVE("Первая подача (2 игрока):", "Starting Serve (2 players):"),
+    STARTING_SERVE("Первая подача (2 игрока):", "Starting Serve (2 Players):"),
     CENTER_SERVE("Центр", "Center"),
     RANDOM_PLAYER_SERVE("Случайный игрок", "Random Player"),
     PLAYER_ONE_SERVE("Игрок 1", "Player One"),
     PLAYER_TWO_SERVE("Игрок 2", "Player Two"),
-    SOUNDS("Звуки:", "Sounds:"),
-    ON("Включены", "On"),
-    OFF("Выключены", "Off"),
+    SOUND("Звук:", "Sound:"),
+    ON("Включён", "On"),
+    OFF("Выключен", "Off"),
     LANGUAGE("Язык:", "Language:"),
     RU("Русский", "Русский"),
     EN("English", "English"),
-    RESET_BEST("Сбросить лучший результат (1 игрок)", "Reset Best (1 player)"),
-    RESET_BEST_QUESTION("Хотите сбросить лучший результат?", "Do you want to reset the best result?"),
+    RESET_BEST("Сбросить лучший результат (1 игрок)", "Reset Best (1 Player)"),
+    RESET_BEST_QUESTION("Вы уверены, что хотите сбросить значение рекорда?", "Are you sure you want to reset the best result?"),
     YES("Да", "Yes"),
     NO("Нет", "No"),
     BACK("Назад", "Back"),
@@ -49,11 +49,10 @@ public enum TextKey {
     PLAYER_TWO_WINS("Игрок 2 победил!", "Player 2 Wins!"),
     PAUSE("ПАУЗА", "PAUSE"),
     LEVEL("Уровень: ", "Level: "),
-    BEST_LEVEL("Рекорд: ", "Best Level: "),
+    BEST("Рекорд: ", "Best: "),
     NEW_RECORD("Новый Рекорд!", "New Record!"),
     COLON(":", ":"),
-    COUNTER("", ""),
-    HASH("hash", "hash");
+    COUNTER("", "");
 
     private final String russian;
     private final String english;

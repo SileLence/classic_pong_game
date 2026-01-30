@@ -3,9 +3,9 @@ package com.dv.trunov.game.renderer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.dv.trunov.game.model.GameParameters;
-import com.dv.trunov.game.ui.TextKey;
-import com.dv.trunov.game.ui.TextLabel;
+import com.dv.trunov.game.gameparameters.GameParameters;
+import com.dv.trunov.game.ui.text.TextKey;
+import com.dv.trunov.game.ui.text.TextLabel;
 import com.dv.trunov.game.util.Constants;
 
 public class UIRenderer {
@@ -20,13 +20,12 @@ public class UIRenderer {
     }
 
     public void drawUI(TextLabel[] textLabels, GameParameters gameParameters, float alpha, SpriteBatch spriteBatch) {
-        int selectedItemIndex = gameParameters.getSelectedItemIndex();
+        TextKey selectedKey = gameParameters.getSelectedKey();
         float cooldown = gameParameters.getCooldown();
-        for (int index = 0; index < textLabels.length; index++) {
-            TextLabel textLabel = textLabels[index];
+        for (TextLabel textLabel : textLabels) {
             BitmapFont font = textLabel.font();
             Color originColor = new Color(font.getColor());
-            if (textLabel.isSelectable() && index == selectedItemIndex) {
+            if (textLabel.isSelectable() && textLabel.key().equals(selectedKey)) {
                 Color blinkingColor = new Color().set(Constants.Colors.SELECTION_FONT_COLOR, alpha);
                 font.getColor().set(blinkingColor);
             } else if (TextKey.LEVEL.equals(textLabel.key())) {

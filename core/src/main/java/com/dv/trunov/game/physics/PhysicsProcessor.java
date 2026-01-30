@@ -2,12 +2,12 @@ package com.dv.trunov.game.physics;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.dv.trunov.game.model.Ball;
-import com.dv.trunov.game.model.GameParameters;
+import com.dv.trunov.game.gameparameters.GameParameters;
 import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
 import com.dv.trunov.game.util.GameState;
-import com.dv.trunov.game.util.ServeSide;
+import com.dv.trunov.game.gameparameters.switchable.ServeSide;
 import com.dv.trunov.game.util.ServeState;
 import com.dv.trunov.game.util.SoundToPlay;
 

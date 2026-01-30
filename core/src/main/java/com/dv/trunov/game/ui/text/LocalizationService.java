@@ -1,6 +1,6 @@
-package com.dv.trunov.game.ui;
+package com.dv.trunov.game.ui.text;
 
-import com.dv.trunov.game.util.Language;
+import com.dv.trunov.game.gameparameters.switchable.Language;
 
 public class LocalizationService {
 

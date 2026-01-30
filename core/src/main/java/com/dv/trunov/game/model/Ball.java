@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.dv.trunov.game.util.Constants;
-import com.dv.trunov.game.util.ServeSide;
+import com.dv.trunov.game.gameparameters.switchable.ServeSide;
 
 import java.util.ArrayList;
 import java.util.List;

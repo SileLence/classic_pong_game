@@ -2,8 +2,8 @@ package com.dv.trunov.game.storage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.dv.trunov.game.model.GameParameters;
-import com.dv.trunov.game.ui.TextKey;
+import com.dv.trunov.game.gameparameters.GameParameters;
+import com.dv.trunov.game.ui.text.TextKey;
 import com.dv.trunov.game.util.Constants;
 
 import java.nio.charset.StandardCharsets;
@@ -15,14 +15,21 @@ public class StorageService {
 
     private static final Preferences PREFERENCES = Gdx.app.getPreferences(Constants.Prefs.PREFS_NAME);
     private static final String SALT = "pong_salt1";
+    private static final String HASH = "HASH";
 
     public static void persistAll(GameParameters gameParameters) {
         for (TextKey key : Constants.Prefs.KEY_LIST) {
-            //storeValue(key, );
+            int value;
+            if (TextKey.BEST.equals(key)) {
+                value = gameParameters.getBestLevel();
+            } else {
+                value = gameParameters.getSetting(key).getIndex();
+            }
+            persistValue(key, value);
         }
     }
 
-    public static void storeValue(TextKey key, Object value) {
+    public static void persistValue(TextKey key, Object value) {
         PREFERENCES.putString(key.name(), String.valueOf(value));
         updateHash();
         PREFERENCES.flush();
@@ -34,24 +41,23 @@ public class StorageService {
     }
 
     public static String getValue(TextKey key, String defaultValue) {
-        boolean isChangedManually = checkHash();
-        if (isChangedManually) {
-            System.out.printf("The value [%s] was changed manually! Return default value: %s\n",  key, defaultValue);
+        if (isFileChanged()) {
+            System.out.printf("Value of [%s] wasn't found or changed manually. Return default value: %s\n",  key, defaultValue);
             return defaultValue;
         }
         String value = PREFERENCES.getString(key.name(), null);
         return value == null ? defaultValue : value;
     }
 
-    private static boolean checkHash() {
-        String storedHash = PREFERENCES.getString(TextKey.HASH.name(), "");
+    private static boolean isFileChanged() {
+        String storedHash = PREFERENCES.getString(HASH, "");
         String recalculatedHash = calcHash();
         return !Objects.equals(storedHash, recalculatedHash);
     }
 
     private static void updateHash() {
         String hash = calcHash();
-        PREFERENCES.putString(TextKey.HASH.name(), hash);
+        PREFERENCES.putString(HASH, hash);
         PREFERENCES.flush();
     }
 

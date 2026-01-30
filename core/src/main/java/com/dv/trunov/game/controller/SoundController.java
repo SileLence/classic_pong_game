@@ -2,6 +2,7 @@ package com.dv.trunov.game.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.dv.trunov.game.gameparameters.switchable.Toggle;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.SoundToPlay;
 
@@ -34,7 +35,8 @@ public class SoundController {
         win = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.WIN_SOUND));
     }
 
-    public static void playSound(SoundToPlay soundToPlay, float volume) {
+    public static void playSound(SoundToPlay soundToPlay, Toggle soundState) {
+        float volume = soundState == Toggle.ON ? 1.0f : 0.0f;
         switch (soundToPlay) {
             case MENU_MOVE -> menuMove.play(volume);
             case MENU_SELECT -> menuSelect.play(volume);

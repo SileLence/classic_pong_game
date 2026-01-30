@@ -1,8 +1,8 @@
-package com.dv.trunov.game.util;
+package com.dv.trunov.game.gameparameters.switchable;
 
-import com.dv.trunov.game.ui.TextKey;
+import com.dv.trunov.game.ui.text.TextKey;
 
-public enum PointsToWin {
+public enum PointsToWin implements Switchable<PointsToWin> {
 
     THREE(TextKey.THREE, "3"),
     FIVE(TextKey.FIVE,  "5"),
@@ -23,19 +23,11 @@ public enum PointsToWin {
         return key;
     }
 
-    public int getIndex() {
-        return ordinal();
-    }
-
     public String getValue() {
         return value;
     }
 
     public static PointsToWin fromIndex(int index) {
         return PointsToWin.values()[index];
-    }
-
-    public static int size() {
-        return values().length;
     }
 }

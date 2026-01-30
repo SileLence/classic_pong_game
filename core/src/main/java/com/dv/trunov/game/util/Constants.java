@@ -1,7 +1,7 @@
 package com.dv.trunov.game.util;
 
 import com.badlogic.gdx.graphics.Color;
-import com.dv.trunov.game.ui.TextKey;
+import com.dv.trunov.game.ui.text.TextKey;
 
 import java.util.List;
 
@@ -68,6 +68,7 @@ public final class Constants {
         public static final float BALL_SPEED = 1200f;
         public static final float BALL_SPEED_STEP = 100f;
         public static final float PLATFORM_SPEED_MODIFICATOR = 0.7f;
+        public static final float EXIT_COOLDOWN = 0.1f;
     }
 
     public static final class Colors {
@@ -115,10 +116,10 @@ public final class Constants {
 
         public static final String PREFS_NAME = "classic_pong";
         public static final List<TextKey> KEY_LIST = List.of(
-            TextKey.BEST_LEVEL,
+            TextKey.BEST,
             TextKey.BALL_SPEED,
             TextKey.POINTS_TO_WIN,
-            TextKey.SOUNDS,
+            TextKey.SOUND,
             TextKey.STARTING_SERVE,
             TextKey.LANGUAGE
         );

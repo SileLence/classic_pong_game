@@ -6,17 +6,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.dv.trunov.game.model.GameParameters;
-import com.dv.trunov.game.ui.LocalizationService;
-import com.dv.trunov.game.ui.TextKey;
-import com.dv.trunov.game.ui.TextLabel;
+import com.dv.trunov.game.gameparameters.GameParameters;
+import com.dv.trunov.game.ui.text.LocalizationService;
+import com.dv.trunov.game.ui.text.TextKey;
+import com.dv.trunov.game.ui.text.TextLabel;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameState;
 import com.dv.trunov.game.util.ServeState;
 
-public class UIController {
+public class TextController {
 
-    private static final UIController INSTANCE = new UIController();
+    private static final TextController INSTANCE = new TextController();
     private static final int FONT_SIZE_160 = 160;
     private static final int FONT_SIZE_92 = 92;
     private static final int FONT_SIZE_72 = 72;
@@ -66,18 +66,19 @@ public class UIController {
     private TextLabel back;
     private TextLabel pointsToWinValue;
     private TextLabel ballSpeedValue;
-    private TextLabel soundsValue;
+    private TextLabel soundValue;
     private TextLabel resetBestLevelQuestion;
     private TextLabel yes;
     private TextLabel no;
     private TextLabel startingServe;
     private TextLabel startingServeValue;
     private TextLabel language;
+    private TextLabel languageValue;
 
-    private UIController() {
+    private TextController() {
     }
 
-    public static UIController getInstance() {
+    public static TextController getInstance() {
         return INSTANCE;
     }
 
@@ -121,7 +122,7 @@ public class UIController {
         pointsToWin = createSettingsText(TextKey.POINTS_TO_WIN, Constants.Baseline.SETTINGS_FIRST_ROW, true);
         ballSpeed = createSettingsText(TextKey.BALL_SPEED, Constants.Baseline.SETTINGS_SECOND_ROW, true);
         startingServe = createSettingsText(TextKey.STARTING_SERVE, Constants.Baseline.SETTINGS_THIRD_ROW, true);
-        sounds = createSettingsText(TextKey.SOUNDS, Constants.Baseline.SETTINGS_FOURTH_ROW, true);
+        sounds = createSettingsText(TextKey.SOUND, Constants.Baseline.SETTINGS_FOURTH_ROW, true);
         language = createSettingsText(TextKey.LANGUAGE, Constants.Baseline.SETTINGS_FIFTH_ROW, true);
     }
 
@@ -130,11 +131,11 @@ public class UIController {
             String level = String.valueOf(gameParameters.getLevel());
             String bestLevel = String.valueOf(gameParameters.getBestLevel());
             counterLevel = createSingleplayerCounterText(TextKey.LEVEL, level);
-            counterBestLevel = createSingleplayerCounterText(TextKey.BEST_LEVEL, bestLevel);
+            counterBestLevel = createSingleplayerCounterText(TextKey.BEST, bestLevel);
             GameState gameState = gameParameters.getGameState();
             switch (gameState) {
                 case GAME_OVER -> counterResult = createTitleCounterText(TextKey.COUNTER, level, titleFont92, false);
-                case IDLE -> counterBestLevelIdle = createTitleCounterText(TextKey.BEST_LEVEL, bestLevel, titleFont72, false);
+                case IDLE -> counterBestLevelIdle = createTitleCounterText(TextKey.BEST, bestLevel, titleFont72, false);
             }
         } else {
             String scoreOne = String.valueOf(gameParameters.getScoreOne());
@@ -147,13 +148,15 @@ public class UIController {
     public void updateSettingsValues(GameParameters gameParameters) {
         TextKey pointsToWinKey = gameParameters.getPointsToWin().getKey();
         TextKey ballSpeedKey = gameParameters.getMultiplayerBallSpeed().getKey();
-        TextKey startingServeKey = gameParameters.getStartingServe().getKey();
+        TextKey startingServeKey = gameParameters.getServeSide().getKey();
         TextKey soundStateKey = gameParameters.getSoundState().getKey();
+        TextKey languageKey = gameParameters.getLanguage().getKey();
 
         pointsToWinValue = createSettingsText(pointsToWinKey, Constants.Baseline.SETTINGS_FIRST_ROW, false);
         ballSpeedValue = createSettingsText(ballSpeedKey, Constants.Baseline.SETTINGS_SECOND_ROW, false);
         startingServeValue = createSettingsText(startingServeKey, Constants.Baseline.SETTINGS_THIRD_ROW, false);
-        soundsValue = createSettingsText(soundStateKey, Constants.Baseline.SETTINGS_FOURTH_ROW, false);
+        soundValue = createSettingsText(soundStateKey, Constants.Baseline.SETTINGS_FOURTH_ROW, false);
+        languageValue = createSettingsText(languageKey, Constants.Baseline.SETTINGS_FIFTH_ROW, false);
     }
 
     private TextLabel createTitleCounterText(TextKey key, String value, BitmapFont font, boolean isColon) {
@@ -190,7 +193,7 @@ public class UIController {
     }
 
     private TextLabel createSingleplayerCounterText(TextKey key, String counterValue) {
-        boolean isBest = TextKey.BEST_LEVEL.equals(key);
+        boolean isBest = TextKey.BEST.equals(key);
         String text = localizationService.getText(key) + counterValue;
         GlyphLayout layout = new GlyphLayout(titleFont42, text);
         float x = isBest ? (Constants.Border.RIGHT - layout.width) / 2f : Constants.Border.LEFT + 30f;
@@ -253,16 +256,12 @@ public class UIController {
         return params;
     }
 
-    public TextLabel getTitle() {
-        return title;
+    public TextLabel[] getTitleScreen() {
+        return new TextLabel[]{title, russian, english};
     }
 
-    public TextLabel[] getTitleMenu() {
-        return new TextLabel[]{russian, english};
-    }
-
-    public TextLabel[] getMainMenu() {
-        return new TextLabel[]{onePlayer, twoPlayers, settings, exit};
+    public TextLabel[] getMainMenuScreen() {
+        return new TextLabel[]{title, onePlayer, twoPlayers, settings, exit};
     }
 
     public TextLabel[] getSettingsScreen() {
@@ -270,7 +269,7 @@ public class UIController {
     }
 
     public TextLabel[] getSettingsMenu() {
-        return new TextLabel[]{pointsToWinValue, ballSpeedValue, startingServeValue, soundsValue, resetBestLevel, back};
+        return new TextLabel[]{pointsToWinValue, ballSpeedValue, startingServeValue, soundValue, languageValue, resetBestLevel, back};
     }
 
     public TextLabel getResetScreen() {

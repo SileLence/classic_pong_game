@@ -1,7 +1,7 @@
 package com.dv.trunov.game.physics;
 
 import com.dv.trunov.game.model.Ball;
-import com.dv.trunov.game.model.GameParameters;
+import com.dv.trunov.game.gameparameters.GameParameters;
 import com.dv.trunov.game.model.Platform;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameState;
@@ -40,6 +40,7 @@ public class PhysicsEngine {
             switch (gameState) {
                 case IDLE, WIN, GAME_OVER -> ball.updateParticles(TIMESTEP);
                 case GOAL -> physicsProcessor.processGoalPhysics(platforms, ball, gameParameters, TIMESTEP);
+                case EXIT -> {} // do nothing
                 default -> physicsProcessor.processPhysics(platforms, ball, gameParameters, TIMESTEP);
             }
             accumulator -= TIMESTEP;
