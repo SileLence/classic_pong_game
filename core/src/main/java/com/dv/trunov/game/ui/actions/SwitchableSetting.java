@@ -26,7 +26,7 @@ public abstract class SwitchableSetting implements ActionItem {
     }
 
     @Override
-    public TextKey getValueKey(GameParameters gameParameters) {
+    public TextKey getSelectionKey(GameParameters gameParameters) {
         return gameParameters.getSetting(key()).getValueKey();
     }
 

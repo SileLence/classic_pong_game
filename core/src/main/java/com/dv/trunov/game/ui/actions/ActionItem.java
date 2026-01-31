@@ -33,8 +33,8 @@ public interface ActionItem {
         }
     }
 
-    default TextKey getValueKey(GameParameters gameParameters) {
-        return null;
+    default TextKey getSelectionKey(GameParameters gameParameters) {
+        return getKey();
     }
 
     TextKey getKey();

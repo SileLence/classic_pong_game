@@ -25,9 +25,8 @@ public class InputController {
         int oldSelectedItemIndex = gameParameters.getSelectedItemIndex();
         int newSelectedItemIndex = gameParameters.getSelectedItemIndex();
         ActionItem selectedItem = actionItems[oldSelectedItemIndex];
-        boolean isSwitchable = selectedItem.isSwitchable();
         boolean isMenuMove = false;
-        if (isSwitchable) {
+        if (selectedItem.isSwitchable()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.D)) {
                 selectedItem.onRight(gameParameters);
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.A)) {
@@ -58,11 +57,7 @@ public class InputController {
         if (isMenuMove) {
             gameParameters.setSoundToPlay(SoundToPlay.MENU_MOVE);
         }
-        if (isSwitchable) {
-            gameParameters.setSelectedKey(actionItems[newSelectedItemIndex].getValueKey(gameParameters));
-        } else {
-            gameParameters.setSelectedKey(actionItems[newSelectedItemIndex].getKey());
-        }
+        gameParameters.setSelectedKey(selectedItem.getSelectionKey(gameParameters));
         gameParameters.setSelectedItemIndex(newSelectedItemIndex);
     }
 

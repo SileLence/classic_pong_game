@@ -79,6 +79,7 @@ public class TextController {
     private TextLabel onePLayerTitle;
     private TextLabel twoPlayersTitle;
     private TextLabel generalTitle;
+    private TextLabel currentBestScore;
 
     private TextController() {
     }
@@ -118,9 +119,9 @@ public class TextController {
         playAgain = createRegularText(TextKey.PLAY_AGAIN, regularFont42, Constants.Baseline.THIRD_ROW);
         tabToServe = createRegularText(TextKey.TAB_TO_SERVE, regularFont42, Constants.Baseline.FIFTH_ROW);
         enterToServe = createRegularText(TextKey.ENTER_TO_SERVE, regularFont42, Constants.Baseline.FIFTH_ROW);
-        resetBestScoreQuestion = createRegularText(TextKey.RESET_BEST_QUESTION, regularFont42, Constants.Baseline.SETTINGS_THIRD_ROW);
-        yes = createRegularText(TextKey.YES, regularFont42, Constants.Baseline.SETTINGS_FOURTH_ROW);
-        no = createRegularText(TextKey.NO, regularFont42, Constants.Baseline.SETTINGS_FIFTH_ROW);
+        resetBestScoreQuestion = createRegularText(TextKey.RESET_BEST_QUESTION, regularFont34, Constants.Baseline.SETTINGS_SIXTH_ROW);
+        yes = createRegularText(TextKey.YES, regularFont34, Constants.Baseline.SETTINGS_SEVENTH_ROW);
+        no = createRegularText(TextKey.NO, regularFont34, Constants.Baseline.SETTINGS_EIGHTH_ROW);
 
         // settings layout
         generalTitle = createSettingsTitle(TextKey.GENERAL_TITLE, Constants.Baseline.SETTINGS_FIRST_ROW);
@@ -141,12 +142,14 @@ public class TextController {
         TextKey startingServeKey = gameParameters.getServeSide().getKey();
         TextKey soundStateKey = gameParameters.getSoundState().getKey();
         TextKey languageKey = gameParameters.getLanguage().getKey();
+        String currentBestValue = String.valueOf(gameParameters.getBestScore());
 
         languageValue = createSettingsText(languageKey, Constants.Baseline.SETTINGS_SECOND_ROW, false);
         soundValue = createSettingsText(soundStateKey, Constants.Baseline.SETTINGS_THIRD_ROW, false);
         pointsToWinValue = createSettingsText(pointsToWinKey, Constants.Baseline.SETTINGS_SEVENTH_ROW, false);
         ballSpeedValue = createSettingsText(ballSpeedKey, Constants.Baseline.SETTINGS_EIGHTH_ROW, false);
         startingServeValue = createSettingsText(startingServeKey, Constants.Baseline.SETTINGS_NINTH_ROW, false);
+        currentBestScore = createTitleCounterText(TextKey.CURRENT_BEST, currentBestValue, titleFont42, false);
     }
 
     public void updateCounters(GameParameters gameParameters, boolean isSingleplayer) {
@@ -308,8 +311,8 @@ public class TextController {
         };
     }
 
-    public TextLabel getResetScreen() {
-        return resetBestScoreQuestion;
+    public TextLabel[] getResetScreen() {
+        return new TextLabel[]{currentBestScore, resetBestScoreQuestion};
     }
 
     public TextLabel[] getResetMenu() {

@@ -115,7 +115,7 @@ public class GameParameters {
 
     public void resetBestScore() {
         if (GameState.RESET.equals(gameState)) {
-            bestScore = 1;
+            bestScore = 0;
         }
     }
 

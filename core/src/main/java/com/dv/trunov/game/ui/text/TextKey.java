@@ -55,7 +55,8 @@ public enum TextKey {
     COUNTER("", ""),
     ONE_PLAYER_TITLE("Один игрок", "One Player"),
     TWO_PLAYERS_TITLE("Два игрока",  "Two Players"),
-    GENERAL_TITLE("Общие", "General");
+    GENERAL_TITLE("Общие", "General"),
+    CURRENT_BEST("Текущий рекорд: ", "Current Best: ");
 
     private final String russian;
     private final String english;

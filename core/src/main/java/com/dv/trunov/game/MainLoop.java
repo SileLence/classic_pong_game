@@ -137,8 +137,8 @@ public class MainLoop extends ApplicationAdapter {
                 drawBackground();
                 drawWorldObjects();
                 drawUI(textController.getPlayingScreen(isSingleplayer));
-                boolean isBestMoreThanOne = gameParameters.getBestScore() != 1;
-                if (isSingleplayer && isBestMoreThanOne) {
+                boolean isBestMoreThanZero = gameParameters.getBestScore() > 0;
+                if (isSingleplayer && isBestMoreThanZero) {
                     drawUI(textController.getCounterBestScore());
                 }
                 drawUI(textController.getPressEnter());
