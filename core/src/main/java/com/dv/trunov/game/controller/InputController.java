@@ -49,6 +49,8 @@ public class InputController {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             selectedItem.onSelect(gameParameters);
             return;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            selectedItem.onReturn(gameParameters);
         }
         if (oldSelectedItemIndex != newSelectedItemIndex) {
             physicsEngine.resetAlpha();
