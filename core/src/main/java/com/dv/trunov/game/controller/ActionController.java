@@ -82,7 +82,7 @@ public class ActionController {
     }
 
     public ActionItem[] getSettingsActions() {
-        return new ActionItem[]{pointsToWin, ballSpeed, serveSide, sound, language, resetBest, back};
+        return new ActionItem[]{language, sound, resetBest, pointsToWin, ballSpeed, serveSide, back};
     }
 
     public ActionItem[] getResetBestActions() {

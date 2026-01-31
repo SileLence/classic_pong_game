@@ -22,6 +22,7 @@ public class TextController {
     private static final int FONT_SIZE_72 = 72;
     private static final int FONT_SIZE_54 = 54;
     private static final int FONT_SIZE_42 = 42;
+    private static final int FONT_SIZE_34 = 34;
     private static final int OFFSET_0 = 0;
     private static final int OFFSET_1 = 1;
     private static final int OFFSET_3 = 3;
@@ -34,7 +35,8 @@ public class TextController {
     private BitmapFont titleFont72;
     private BitmapFont titleFont42;
     private BitmapFont titleFont54;
-    private BitmapFont regularFont;
+    private BitmapFont regularFont42;
+    private BitmapFont regularFont34;
     private TextLabel title;
     private TextLabel pause;
     private TextLabel newRecord;
@@ -61,7 +63,7 @@ public class TextController {
     private TextLabel enterToServe;
     private TextLabel pointsToWin;
     private TextLabel ballSpeed;
-    private TextLabel sounds;
+    private TextLabel sound;
     private TextLabel resetBestScore;
     private TextLabel back;
     private TextLabel pointsToWinValue;
@@ -74,6 +76,9 @@ public class TextController {
     private TextLabel startingServeValue;
     private TextLabel language;
     private TextLabel languageValue;
+    private TextLabel onePLayerTitle;
+    private TextLabel twoPlayersTitle;
+    private TextLabel generalTitle;
 
     private TextController() {
     }
@@ -101,29 +106,47 @@ public class TextController {
 
         scoreSeparator = createTitleCounterText(TextKey.COLON, "", titleFont72, true);
 
-        russian = createRegularText(TextKey.RU, Constants.Baseline.SECOND_ROW);
-        english = createRegularText(TextKey.EN, Constants.Baseline.THIRD_ROW);
-        onePlayer = createRegularText(TextKey.ONE_PLAYER, Constants.Baseline.FIRST_ROW);
-        twoPlayers = createRegularText(TextKey.TWO_PLAYERS, Constants.Baseline.SECOND_ROW);
-        settings = createRegularText(TextKey.SETTINGS, Constants.Baseline.THIRD_ROW);
-        exit = createRegularText(TextKey.EXIT, Constants.Baseline.FOURTH_ROW);
-        continueGame = createRegularText(TextKey.CONTINUE, Constants.Baseline.THIRD_ROW);
-        exitToMenu = createRegularText(TextKey.EXIT_TO_MENU, Constants.Baseline.FOURTH_ROW);
-        pressEnter = createRegularText(TextKey.PRESS_ENTER, Constants.Baseline.FOURTH_ROW);
-        playAgain = createRegularText(TextKey.PLAY_AGAIN, Constants.Baseline.THIRD_ROW);
-        tabToServe = createRegularText(TextKey.TAB_TO_SERVE, Constants.Baseline.FIFTH_ROW);
-        enterToServe = createRegularText(TextKey.ENTER_TO_SERVE, Constants.Baseline.FIFTH_ROW);
-        back = createRegularText(TextKey.BACK, Constants.Baseline.FOURTH_ROW);
-        resetBestScore = createRegularText(TextKey.RESET_BEST, Constants.Baseline.THIRD_ROW);
-        resetBestScoreQuestion = createRegularText(TextKey.RESET_BEST_QUESTION, Constants.Baseline.SETTINGS_SECOND_ROW);
-        yes = createRegularText(TextKey.YES, Constants.Baseline.SETTINGS_THIRD_ROW);
-        no = createRegularText(TextKey.NO, Constants.Baseline.SETTINGS_FOURTH_ROW);
+        russian = createRegularText(TextKey.RU, regularFont42, Constants.Baseline.SECOND_ROW);
+        english = createRegularText(TextKey.EN, regularFont42, Constants.Baseline.THIRD_ROW);
+        onePlayer = createRegularText(TextKey.ONE_PLAYER, regularFont42, Constants.Baseline.FIRST_ROW);
+        twoPlayers = createRegularText(TextKey.TWO_PLAYERS, regularFont42, Constants.Baseline.SECOND_ROW);
+        settings = createRegularText(TextKey.SETTINGS, regularFont42, Constants.Baseline.THIRD_ROW);
+        exit = createRegularText(TextKey.EXIT, regularFont42, Constants.Baseline.FOURTH_ROW);
+        continueGame = createRegularText(TextKey.CONTINUE, regularFont42, Constants.Baseline.THIRD_ROW);
+        exitToMenu = createRegularText(TextKey.EXIT_TO_MENU, regularFont42, Constants.Baseline.FOURTH_ROW);
+        pressEnter = createRegularText(TextKey.PRESS_ENTER, regularFont42, Constants.Baseline.FOURTH_ROW);
+        playAgain = createRegularText(TextKey.PLAY_AGAIN, regularFont42, Constants.Baseline.THIRD_ROW);
+        tabToServe = createRegularText(TextKey.TAB_TO_SERVE, regularFont42, Constants.Baseline.FIFTH_ROW);
+        enterToServe = createRegularText(TextKey.ENTER_TO_SERVE, regularFont42, Constants.Baseline.FIFTH_ROW);
+        resetBestScoreQuestion = createRegularText(TextKey.RESET_BEST_QUESTION, regularFont42, Constants.Baseline.SETTINGS_THIRD_ROW);
+        yes = createRegularText(TextKey.YES, regularFont42, Constants.Baseline.SETTINGS_FOURTH_ROW);
+        no = createRegularText(TextKey.NO, regularFont42, Constants.Baseline.SETTINGS_FIFTH_ROW);
 
-        pointsToWin = createSettingsText(TextKey.POINTS_TO_WIN, Constants.Baseline.SETTINGS_FIRST_ROW, true);
-        ballSpeed = createSettingsText(TextKey.BALL_SPEED, Constants.Baseline.SETTINGS_SECOND_ROW, true);
-        startingServe = createSettingsText(TextKey.STARTING_SERVE, Constants.Baseline.SETTINGS_THIRD_ROW, true);
-        sounds = createSettingsText(TextKey.SOUND, Constants.Baseline.SETTINGS_FOURTH_ROW, true);
-        language = createSettingsText(TextKey.LANGUAGE, Constants.Baseline.SETTINGS_FIFTH_ROW, true);
+        // settings layout
+        generalTitle = createSettingsTitle(TextKey.GENERAL_TITLE, Constants.Baseline.SETTINGS_FIRST_ROW);
+        language = createSettingsText(TextKey.LANGUAGE, Constants.Baseline.SETTINGS_SECOND_ROW, true);
+        sound = createSettingsText(TextKey.SOUND, Constants.Baseline.SETTINGS_THIRD_ROW, true);
+        onePLayerTitle = createSettingsTitle(TextKey.ONE_PLAYER_TITLE, Constants.Baseline.SETTINGS_FOURTH_ROW);
+        resetBestScore = createRegularText(TextKey.RESET_BEST, regularFont34, Constants.Baseline.SETTINGS_FIFTH_ROW);
+        twoPlayersTitle = createSettingsTitle(TextKey.TWO_PLAYERS_TITLE, Constants.Baseline.SETTINGS_SIXTH_ROW);
+        pointsToWin = createSettingsText(TextKey.POINTS_TO_WIN, Constants.Baseline.SETTINGS_SEVENTH_ROW, true);
+        ballSpeed = createSettingsText(TextKey.BALL_SPEED, Constants.Baseline.SETTINGS_EIGHTH_ROW, true);
+        startingServe = createSettingsText(TextKey.STARTING_SERVE, Constants.Baseline.SETTINGS_NINTH_ROW, true);
+        back = createRegularText(TextKey.BACK, regularFont34, Constants.Baseline.SETTINGS_TENTH_ROW);
+    }
+
+    public void updateSettingsValues(GameParameters gameParameters) {
+        TextKey pointsToWinKey = gameParameters.getPointsToWin().getKey();
+        TextKey ballSpeedKey = gameParameters.getMultiplayerBallSpeed().getKey();
+        TextKey startingServeKey = gameParameters.getServeSide().getKey();
+        TextKey soundStateKey = gameParameters.getSoundState().getKey();
+        TextKey languageKey = gameParameters.getLanguage().getKey();
+
+        languageValue = createSettingsText(languageKey, Constants.Baseline.SETTINGS_SECOND_ROW, false);
+        soundValue = createSettingsText(soundStateKey, Constants.Baseline.SETTINGS_THIRD_ROW, false);
+        pointsToWinValue = createSettingsText(pointsToWinKey, Constants.Baseline.SETTINGS_SEVENTH_ROW, false);
+        ballSpeedValue = createSettingsText(ballSpeedKey, Constants.Baseline.SETTINGS_EIGHTH_ROW, false);
+        startingServeValue = createSettingsText(startingServeKey, Constants.Baseline.SETTINGS_NINTH_ROW, false);
     }
 
     public void updateCounters(GameParameters gameParameters, boolean isSingleplayer) {
@@ -145,20 +168,6 @@ public class TextController {
         }
     }
 
-    public void updateSettingsValues(GameParameters gameParameters) {
-        TextKey pointsToWinKey = gameParameters.getPointsToWin().getKey();
-        TextKey ballSpeedKey = gameParameters.getMultiplayerBallSpeed().getKey();
-        TextKey startingServeKey = gameParameters.getServeSide().getKey();
-        TextKey soundStateKey = gameParameters.getSoundState().getKey();
-        TextKey languageKey = gameParameters.getLanguage().getKey();
-
-        pointsToWinValue = createSettingsText(pointsToWinKey, Constants.Baseline.SETTINGS_FIRST_ROW, false);
-        ballSpeedValue = createSettingsText(ballSpeedKey, Constants.Baseline.SETTINGS_SECOND_ROW, false);
-        startingServeValue = createSettingsText(startingServeKey, Constants.Baseline.SETTINGS_THIRD_ROW, false);
-        soundValue = createSettingsText(soundStateKey, Constants.Baseline.SETTINGS_FOURTH_ROW, false);
-        languageValue = createSettingsText(languageKey, Constants.Baseline.SETTINGS_FIFTH_ROW, false);
-    }
-
     private TextLabel createTitleCounterText(TextKey key, String value, BitmapFont font, boolean isColon) {
         String text = localizationService.getText(key) + value;
         GlyphLayout layout = new GlyphLayout(font, text);
@@ -174,22 +183,29 @@ public class TextController {
         return new TextLabel(key, x, Constants.Baseline.TITLE, font, text, layout, fontColor, false);
     }
 
-    private TextLabel createRegularText(TextKey key, float baseline) {
+    private TextLabel createRegularText(TextKey key, BitmapFont font, float baseline) {
         String text = localizationService.getText(key);
-        GlyphLayout layout = new GlyphLayout(regularFont, text);
+        GlyphLayout layout = new GlyphLayout(font, text);
         float x = (Constants.Border.RIGHT - layout.width) / 2f;
         boolean isSelectable = !TextKey.RESET_BEST_QUESTION.equals(key);
-        return new TextLabel(key, x, baseline, regularFont, text, layout, Constants.Colors.REGULAR_FONT_COLOR, isSelectable);
+        return new TextLabel(key, x, baseline, font, text, layout, Constants.Colors.REGULAR_FONT_COLOR, isSelectable);
+    }
+
+    private TextLabel createSettingsTitle(TextKey key, float baseline) {
+        String text = localizationService.getText(key);
+        GlyphLayout layout = new GlyphLayout(titleFont42, text);
+        float x = (Constants.Border.RIGHT - layout.width) / 2f;
+        return new TextLabel(key, x, baseline, titleFont42, text, layout, Constants.Colors.TITLE_FONT_COLOR, false);
     }
 
     private TextLabel createSettingsText(TextKey key, float baseline, boolean isSettingName) {
         String text = localizationService.getText(key);
-        GlyphLayout layout = new GlyphLayout(regularFont, text);
+        GlyphLayout layout = new GlyphLayout(regularFont34, text);
         float x = isSettingName
             ? Constants.Border.LEFT_SETTINGS_BOUNDARY - layout.width
             : Constants.Border.RIGHT_SETTINGS_BOUNDARY;
         boolean isSelectable = !isSettingName;
-        return new TextLabel(key, x, baseline, regularFont, text, layout, Constants.Colors.REGULAR_FONT_COLOR, isSelectable);
+        return new TextLabel(key, x, baseline, regularFont34, text, layout, Constants.Colors.REGULAR_FONT_COLOR, isSelectable);
     }
 
     private TextLabel createSingleplayerCounterText(TextKey key, String counterValue) {
@@ -227,13 +243,16 @@ public class TextController {
         FreeTypeFontGenerator.FreeTypeFontParameter params42 = createTitleFontParameters(FONT_SIZE_42, OFFSET_0);
         titleFont42 = titleFontGenerator.generateFont(params42);
 
-        FreeTypeFontGenerator.FreeTypeFontParameter regularParams = createRegularFontParameters();
-        regularFont = regularFontGenerator.generateFont(regularParams);
+        FreeTypeFontGenerator.FreeTypeFontParameter regularParams42 = createRegularFontParameters(FONT_SIZE_42);
+        regularFont42 = regularFontGenerator.generateFont(regularParams42);
+
+        FreeTypeFontGenerator.FreeTypeFontParameter regularParams34 = createRegularFontParameters(FONT_SIZE_34);
+        regularFont34 = regularFontGenerator.generateFont(regularParams34);
     }
 
-    private FreeTypeFontGenerator.FreeTypeFontParameter createRegularFontParameters() {
+    private FreeTypeFontGenerator.FreeTypeFontParameter createRegularFontParameters(int size) {
         FreeTypeFontGenerator.FreeTypeFontParameter regularParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        regularParams.size = 42;
+        regularParams.size = size;
         regularParams.characters = Constants.Font.CHARACTERS;
         regularParams.color = Color.WHITE;
         regularParams.minFilter = Texture.TextureFilter.Linear;
@@ -265,11 +284,28 @@ public class TextController {
     }
 
     public TextLabel[] getSettingsScreen() {
-        return new TextLabel[]{pointsToWin, ballSpeed, startingServe, sounds, language};
+        return new TextLabel[]{
+            generalTitle,
+            language,
+            sound,
+            onePLayerTitle,
+            twoPlayersTitle,
+            pointsToWin,
+            ballSpeed,
+            startingServe
+        };
     }
 
     public TextLabel[] getSettingsMenu() {
-        return new TextLabel[]{pointsToWinValue, ballSpeedValue, startingServeValue, soundValue, languageValue, resetBestScore, back};
+        return new TextLabel[]{
+            languageValue,
+            soundValue,
+            pointsToWinValue,
+            ballSpeedValue,
+            startingServeValue,
+            resetBestScore,
+            back
+        };
     }
 
     public TextLabel getResetScreen() {
@@ -334,6 +370,7 @@ public class TextController {
         titleFont72.dispose();
         titleFont54.dispose();
         titleFont42.dispose();
-        regularFont.dispose();
+        regularFont42.dispose();
+        regularFont34.dispose();
     }
 }

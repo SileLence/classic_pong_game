@@ -77,8 +77,6 @@ public class MainLoop extends ApplicationAdapter {
     @Override
     public void render() {
         // TODO implement app icon
-        // TODO Separate settings for 1 player and 2 players
-        // TODO implement exit from settings and from pause by pressing Escape
         float deltaTime = Gdx.graphics.getDeltaTime();
         GameState gameState = gameParameters.getGameState();
         boolean isSingleplayer = GameMode.SINGLEPLAYER == gameParameters.getGameMode();

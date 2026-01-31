@@ -52,11 +52,16 @@ public final class Constants {
         public static final float FOURTH_ROW = Border.TOP * 0.2f;
         public static final float FIFTH_ROW = Border.TOP * 0.1f;
         public static final float MIDDLE_OF_COUNTER_FILED = (Border.TOP - Border.GAME_FIELD_TOP) / 2f + Constants.Border.GAME_FIELD_TOP;
-        public static final float SETTINGS_FIRST_ROW = Border.TOP * 0.8f;
-        public static final float SETTINGS_SECOND_ROW = Border.TOP * 0.7f;
-        public static final float SETTINGS_THIRD_ROW = Border.TOP * 0.6f;
-        public static final float SETTINGS_FOURTH_ROW = Border.TOP * 0.5f;
-        public static final float SETTINGS_FIFTH_ROW = Border.TOP * 0.4f;
+        public static final float SETTINGS_FIRST_ROW = Border.TOP * 0.9f;
+        public static final float SETTINGS_SECOND_ROW = Border.TOP * 0.8f;
+        public static final float SETTINGS_THIRD_ROW = Border.TOP * 0.74f;
+        public static final float SETTINGS_FOURTH_ROW = Border.TOP * 0.64f;
+        public static final float SETTINGS_FIFTH_ROW = Border.TOP * 0.54f;
+        public static final float SETTINGS_SIXTH_ROW = Border.TOP * 0.44f;
+        public static final float SETTINGS_SEVENTH_ROW = Border.TOP * 0.34f;
+        public static final float SETTINGS_EIGHTH_ROW = Border.TOP * 0.28f;
+        public static final float SETTINGS_NINTH_ROW = Border.TOP * 0.22f;
+        public static final float SETTINGS_TENTH_ROW = Border.TOP * 0.12f;
     }
 
     public static final class Physics {
