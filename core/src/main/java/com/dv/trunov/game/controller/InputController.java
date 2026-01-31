@@ -34,10 +34,7 @@ public class InputController {
                 selectedItem.onLeft(gameParameters);
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            selectedItem.onSelect(gameParameters);
-            return;
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             newSelectedItemIndex++;
             if (newSelectedItemIndex > actionItems.length - 1) {
                 newSelectedItemIndex = 0;
@@ -49,6 +46,9 @@ public class InputController {
                 newSelectedItemIndex = actionItems.length - 1;
             }
             isMenuMove = true;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            selectedItem.onSelect(gameParameters);
+            return;
         }
         if (oldSelectedItemIndex != newSelectedItemIndex) {
             physicsEngine.resetAlpha();

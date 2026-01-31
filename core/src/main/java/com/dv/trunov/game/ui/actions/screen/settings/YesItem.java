@@ -13,7 +13,7 @@ public class YesItem implements ActionItem {
     @Override
     public void onSelect(GameParameters gameParameters) {
         gameParameters.resetSelectionIndex();
-        gameParameters.resetBestLevel();
+        gameParameters.resetBestScore();
         gameParameters.setGameState(GameState.SETTINGS);
         gameParameters.setSoundToPlay(SoundToPlay.MENU_SELECT);
     }

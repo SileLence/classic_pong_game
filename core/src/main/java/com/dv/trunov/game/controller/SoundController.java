@@ -16,7 +16,7 @@ public class SoundController {
     private static Sound platformHitR;
     private static Sound serve;
     private static Sound ballExplosion;
-    private static Sound levelUp;
+    private static Sound scoreUp;
     private static Sound win;
 
     private SoundController() {
@@ -31,7 +31,7 @@ public class SoundController {
         platformHitR = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.PLATFORM_HIT_RIGHT_SOUND));
         serve = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.SERVE_SOUND));
         ballExplosion = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.BALL_EXPLOSION_SOUND));
-        levelUp = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.LEVEL_UP_SOUND));
+        scoreUp = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.SCORE_UP_SOUND));
         win = Gdx.audio.newSound(Gdx.files.internal(Constants.Asset.WIN_SOUND));
     }
 
@@ -45,7 +45,8 @@ public class SoundController {
             case PLATFORM_HIT_LEFT -> platformHitL.play(volume);
             case PLATFORM_HIT_RIGHT -> platformHitR.play(volume);
             case SERVE -> serve.play(volume);
-            case LEVEL_UP -> levelUp.play(volume);
+            case
+                SCORE_UP -> scoreUp.play(volume);
             case BALL_EXPLOSION -> ballExplosion.play(volume);
             case WIN  -> win.play(volume);
         }
@@ -59,6 +60,6 @@ public class SoundController {
         platformHitL.dispose();
         platformHitR.dispose();
         ballExplosion.dispose();
-        levelUp.dispose();
+        scoreUp.dispose();
     }
 }

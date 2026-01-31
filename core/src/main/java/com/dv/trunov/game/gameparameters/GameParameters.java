@@ -34,8 +34,7 @@ public class GameParameters {
     private int selectedItemIndex;
     private int scoreOne;
     private int scoreTwo;
-    private int level;
-    private int bestLevel;
+    private int bestScore;
     private boolean isNewRecord;
 
     public static GameParameters getInstance() {
@@ -46,13 +45,10 @@ public class GameParameters {
     }
 
     public void init() {
-        serveState = ServeState.NONE;
         soundToPlay = SoundToPlay.NONE;
         selectedItemIndex = 0;
         cooldown = 0;
-        level = 1;
-        isNewRecord = false;
-        bestLevel = StorageService.getValue(TextKey.BEST, 1);
+        bestScore = StorageService.getValue(TextKey.BEST, 0);
         pointsToWin = PointsToWin.fromIndex(StorageService.getValue(TextKey.POINTS_TO_WIN, 1));
         multiplayerBallSpeed = BallSpeed.fromIndex(StorageService.getValue(TextKey.BALL_SPEED, 2));
         soundState = Toggle.fromIndex(StorageService.getValue(TextKey.SOUND, 0));
@@ -67,6 +63,7 @@ public class GameParameters {
         }
         setSettings();
         StorageService.persistAll(this);
+        setStartGame();
     }
 
     public void resetSelectionIndex() {
@@ -103,9 +100,8 @@ public class GameParameters {
 
     public void addSingleplayerPoint() {
         scoreOne++;
-        level = scoreOne / 5 + 1;
-        if (level > bestLevel) {
-            bestLevel = level;
+        if (scoreOne > bestScore) {
+            bestScore = scoreOne;
             isNewRecord = true;
         }
     }
@@ -113,14 +109,13 @@ public class GameParameters {
     public void setStartGame() {
         scoreOne = 0;
         scoreTwo = 0;
-        level = 1;
         isNewRecord = false;
         serveState = ServeState.NONE;
     }
 
-    public void resetBestLevel() {
+    public void resetBestScore() {
         if (GameState.RESET.equals(gameState)) {
-            bestLevel = 1;
+            bestScore = 1;
         }
     }
 
@@ -200,12 +195,8 @@ public class GameParameters {
         return scoreTwo;
     }
 
-    public int getLevel() {
-        return level;
-    }
-
-    public int getBestLevel() {
-        return bestLevel;
+    public int getBestScore() {
+        return bestScore;
     }
 
     public ServeState getServeState() {

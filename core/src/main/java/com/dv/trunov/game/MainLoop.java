@@ -24,6 +24,7 @@ import com.dv.trunov.game.renderer.ObjectRenderer;
 import com.dv.trunov.game.renderer.UIRenderer;
 import com.dv.trunov.game.storage.StorageService;
 import com.dv.trunov.game.ui.text.LocalizationService;
+import com.dv.trunov.game.ui.text.TextKey;
 import com.dv.trunov.game.ui.text.TextLabel;
 import com.dv.trunov.game.util.Constants;
 import com.dv.trunov.game.util.GameMode;
@@ -77,7 +78,7 @@ public class MainLoop extends ApplicationAdapter {
     public void render() {
         // TODO implement app icon
         // TODO Separate settings for 1 player and 2 players
-        // TODO add isChanged to StorageService
+        // TODO implement exit from settings and from pause by pressing Escape
         float deltaTime = Gdx.graphics.getDeltaTime();
         GameState gameState = gameParameters.getGameState();
         boolean isSingleplayer = GameMode.SINGLEPLAYER == gameParameters.getGameMode();
@@ -138,9 +139,9 @@ public class MainLoop extends ApplicationAdapter {
                 drawBackground();
                 drawWorldObjects();
                 drawUI(textController.getPlayingScreen(isSingleplayer));
-                boolean isBestMoreThanOne = gameParameters.getBestLevel() != 1;
+                boolean isBestMoreThanOne = gameParameters.getBestScore() != 1;
                 if (isSingleplayer && isBestMoreThanOne) {
-                    drawUI(textController.getCounterBestLevel());
+                    drawUI(textController.getCounterBestScore());
                 }
                 drawUI(textController.getPressEnter());
                 boolean isGameStateChanged = GameState.IDLE != gameParameters.getGameState();
@@ -173,6 +174,7 @@ public class MainLoop extends ApplicationAdapter {
                     boolean isNewRecord = gameParameters.isNewRecord();
                     if (isGameOver && isNewRecord) {
                         gameParameters.setSoundToPlay(SoundToPlay.WIN);
+                        StorageService.persistValue(TextKey.BEST, gameParameters.getBestScore());
                     }
                 }
                 processSound();

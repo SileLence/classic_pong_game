@@ -28,9 +28,9 @@ public class UIRenderer {
             if (textLabel.isSelectable() && textLabel.key().equals(selectedKey)) {
                 Color blinkingColor = new Color().set(Constants.Colors.SELECTION_FONT_COLOR, alpha);
                 font.getColor().set(blinkingColor);
-            } else if (TextKey.LEVEL.equals(textLabel.key())) {
+            } else if (TextKey.SCORE.equals(textLabel.key())) {
                 if (cooldown > 0) {
-                    font.getColor().set(Constants.Colors.LEVEL_UP_COLOR);
+                    font.getColor().set(Constants.Colors.SCORE_UP_COLOR);
                 } else {
                     font.getColor().set(textLabel.color());
                 }

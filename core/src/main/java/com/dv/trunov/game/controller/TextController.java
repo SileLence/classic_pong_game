@@ -40,10 +40,10 @@ public class TextController {
     private TextLabel newRecord;
     private TextLabel playerOneWins;
     private TextLabel playerTwoWins;
-    private TextLabel counterLevel;
-    private TextLabel counterBestLevel;
-    private TextLabel counterBestLevelIdle;
-    private TextLabel counterResult;
+    private TextLabel counterScore;
+    private TextLabel counterBestScore;
+    private TextLabel counterBestScoreIdle;
+    private TextLabel counterGameResult;
     private TextLabel counterOne;
     private TextLabel counterTwo;
     private TextLabel scoreSeparator;
@@ -62,12 +62,12 @@ public class TextController {
     private TextLabel pointsToWin;
     private TextLabel ballSpeed;
     private TextLabel sounds;
-    private TextLabel resetBestLevel;
+    private TextLabel resetBestScore;
     private TextLabel back;
     private TextLabel pointsToWinValue;
     private TextLabel ballSpeedValue;
     private TextLabel soundValue;
-    private TextLabel resetBestLevelQuestion;
+    private TextLabel resetBestScoreQuestion;
     private TextLabel yes;
     private TextLabel no;
     private TextLabel startingServe;
@@ -111,11 +111,11 @@ public class TextController {
         exitToMenu = createRegularText(TextKey.EXIT_TO_MENU, Constants.Baseline.FOURTH_ROW);
         pressEnter = createRegularText(TextKey.PRESS_ENTER, Constants.Baseline.FOURTH_ROW);
         playAgain = createRegularText(TextKey.PLAY_AGAIN, Constants.Baseline.THIRD_ROW);
-        tabToServe = createRegularText(TextKey.TAB_TO_SERVE, Constants.Baseline.FOURTH_ROW);
-        enterToServe = createRegularText(TextKey.ENTER_TO_SERVE, Constants.Baseline.FOURTH_ROW);
+        tabToServe = createRegularText(TextKey.TAB_TO_SERVE, Constants.Baseline.FIFTH_ROW);
+        enterToServe = createRegularText(TextKey.ENTER_TO_SERVE, Constants.Baseline.FIFTH_ROW);
         back = createRegularText(TextKey.BACK, Constants.Baseline.FOURTH_ROW);
-        resetBestLevel = createRegularText(TextKey.RESET_BEST, Constants.Baseline.THIRD_ROW);
-        resetBestLevelQuestion = createRegularText(TextKey.RESET_BEST_QUESTION, Constants.Baseline.SETTINGS_SECOND_ROW);
+        resetBestScore = createRegularText(TextKey.RESET_BEST, Constants.Baseline.THIRD_ROW);
+        resetBestScoreQuestion = createRegularText(TextKey.RESET_BEST_QUESTION, Constants.Baseline.SETTINGS_SECOND_ROW);
         yes = createRegularText(TextKey.YES, Constants.Baseline.SETTINGS_THIRD_ROW);
         no = createRegularText(TextKey.NO, Constants.Baseline.SETTINGS_FOURTH_ROW);
 
@@ -128,14 +128,14 @@ public class TextController {
 
     public void updateCounters(GameParameters gameParameters, boolean isSingleplayer) {
         if (isSingleplayer) {
-            String level = String.valueOf(gameParameters.getLevel());
-            String bestLevel = String.valueOf(gameParameters.getBestLevel());
-            counterLevel = createSingleplayerCounterText(TextKey.LEVEL, level);
-            counterBestLevel = createSingleplayerCounterText(TextKey.BEST, bestLevel);
+            String scoreOne = String.valueOf(gameParameters.getScoreOne());
+            String bestScore = String.valueOf(gameParameters.getBestScore());
+            counterScore = createSingleplayerCounterText(TextKey.SCORE, scoreOne);
+            counterBestScore = createSingleplayerCounterText(TextKey.BEST, bestScore);
             GameState gameState = gameParameters.getGameState();
             switch (gameState) {
-                case GAME_OVER -> counterResult = createTitleCounterText(TextKey.COUNTER, level, titleFont92, false);
-                case IDLE -> counterBestLevelIdle = createTitleCounterText(TextKey.BEST, bestLevel, titleFont72, false);
+                case GAME_OVER -> counterGameResult = createTitleCounterText(TextKey.COUNTER, scoreOne, titleFont92, false);
+                case IDLE -> counterBestScoreIdle = createTitleCounterText(TextKey.BEST, bestScore, titleFont72, false);
             }
         } else {
             String scoreOne = String.valueOf(gameParameters.getScoreOne());
@@ -269,11 +269,11 @@ public class TextController {
     }
 
     public TextLabel[] getSettingsMenu() {
-        return new TextLabel[]{pointsToWinValue, ballSpeedValue, startingServeValue, soundValue, languageValue, resetBestLevel, back};
+        return new TextLabel[]{pointsToWinValue, ballSpeedValue, startingServeValue, soundValue, languageValue, resetBestScore, back};
     }
 
     public TextLabel getResetScreen() {
-        return resetBestLevelQuestion;
+        return resetBestScoreQuestion;
     }
 
     public TextLabel[] getResetMenu() {
@@ -282,13 +282,13 @@ public class TextController {
 
     public TextLabel[] getPlayingScreen(boolean isSingleplayer) {
         return isSingleplayer
-            ? new TextLabel[]{counterLevel}
+            ? new TextLabel[]{counterScore}
             : new TextLabel[]{counterOne, counterTwo, scoreSeparator};
     }
 
     public TextLabel[] getPauseScreen(boolean isSingleplayer) {
         return isSingleplayer
-            ? new TextLabel[]{pause, counterLevel, counterBestLevel}
+            ? new TextLabel[]{pause, counterScore, counterBestScore}
             : new TextLabel[]{pause, counterOne, counterTwo, scoreSeparator};
     }
 
@@ -306,8 +306,8 @@ public class TextController {
 
     public TextLabel[] getEndGameScreen(boolean isNewRecord) {
         return isNewRecord
-            ? new TextLabel[]{newRecord, counterResult}
-            : new TextLabel[]{counterResult};
+            ? new TextLabel[]{newRecord, counterGameResult}
+            : new TextLabel[]{counterGameResult};
     }
 
     public TextLabel[] getEndGameMenu() {
@@ -318,8 +318,8 @@ public class TextController {
         return pressEnter;
     }
 
-    public TextLabel getCounterBestLevel() {
-        return counterBestLevelIdle;
+    public TextLabel getCounterBestScore() {
+        return counterBestScoreIdle;
     }
 
     public void setLocalizationService(LocalizationService localizationService) {

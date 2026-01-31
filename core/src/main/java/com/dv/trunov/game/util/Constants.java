@@ -50,6 +50,7 @@ public final class Constants {
         public static final float SECOND_ROW = Border.TOP * 0.4f;
         public static final float THIRD_ROW = Border.TOP * 0.3f;
         public static final float FOURTH_ROW = Border.TOP * 0.2f;
+        public static final float FIFTH_ROW = Border.TOP * 0.1f;
         public static final float MIDDLE_OF_COUNTER_FILED = (Border.TOP - Border.GAME_FIELD_TOP) / 2f + Constants.Border.GAME_FIELD_TOP;
         public static final float SETTINGS_FIRST_ROW = Border.TOP * 0.8f;
         public static final float SETTINGS_SECOND_ROW = Border.TOP * 0.7f;
@@ -64,9 +65,9 @@ public final class Constants {
         public static final float SPIN_FACTOR = 0.3f;
         public static final float SERVE_ANGLE_FACTOR = 0.5f;
         public static final float FIXED_TIMESTEP = 1f / 240f;
-        public static final float LEVEL_UP_COOLDOWN = 0.3f;
+        public static final float SCORE_UP_COOLDOWN = 0.1f;
         public static final float BALL_SPEED = 1200f;
-        public static final float BALL_SPEED_STEP = 100f;
+        public static final float BALL_SPEED_STEP = 20f;
         public static final float PLATFORM_SPEED_MODIFICATOR = 0.7f;
         public static final float EXIT_COOLDOWN = 0.1f;
     }
@@ -79,7 +80,7 @@ public final class Constants {
         public static final Color SELECTION_FONT_COLOR = new Color(0.85f, 0.30f, 0.60f, 1f);
         public static final Color PLAYER_ONE_WINNER_COLOR = new Color(0.28f, 0.51f, 0.88f, 1f);
         public static final Color PLAYER_TWO_WINNER_COLOR = new Color(0.87f, 0.48f, 0.28f, 1f);
-        public static final Color LEVEL_UP_COLOR = new Color(0.60f, 0.85f, 0.43f, 1f);
+        public static final Color SCORE_UP_COLOR = new Color(0.60f, 0.85f, 0.43f, 1f);
     }
 
     public static final class Asset {
@@ -95,7 +96,7 @@ public final class Constants {
         public static final String PLATFORM_HIT_RIGHT_SOUND = "sound/platformHitR.wav";
         public static final String SERVE_SOUND = "sound/serve.wav";
         public static final String BALL_EXPLOSION_SOUND = "sound/ballExplosion.wav";
-        public static final String LEVEL_UP_SOUND = "sound/levelUp.wav";
+        public static final String SCORE_UP_SOUND = "sound/scoreUp.wav";
         public static final String WIN_SOUND = "sound/win.wav";
     }
 

@@ -19,13 +19,16 @@ public class StorageService {
 
     public static void persistAll(GameParameters gameParameters) {
         for (TextKey key : Constants.Prefs.KEY_LIST) {
-            int value;
+            String newValue;
             if (TextKey.BEST.equals(key)) {
-                value = gameParameters.getBestLevel();
+                newValue = String.valueOf(gameParameters.getBestScore());
             } else {
-                value = gameParameters.getSetting(key).getIndex();
+                newValue = String.valueOf(gameParameters.getSetting(key).getIndex());
             }
-            persistValue(key, value);
+            String oldValue = getValue(key, "");
+            if (!Objects.equals(oldValue, newValue)) {
+                persistValue(key, newValue);
+            }
         }
     }
 

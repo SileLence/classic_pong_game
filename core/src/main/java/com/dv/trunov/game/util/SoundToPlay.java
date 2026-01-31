@@ -10,7 +10,7 @@ public enum SoundToPlay {
     SERVE,
     WALL_HIT,
     ACTIVE_WALL_HIT,
-    LEVEL_UP,
+    SCORE_UP,
     BALL_EXPLOSION,
     WIN
 }
