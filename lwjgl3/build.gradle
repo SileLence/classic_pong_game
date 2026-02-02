@@ -126,9 +126,9 @@ tasks.register("jarWin") {
 }
 
 tasks.register('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
-    archiveBaseName.set("firstGame-all")
+    archiveBaseName.set("classic_pong-all")
     archiveClassifier.set("")
-    archiveVersion.set("0.0.0")
+    archiveVersion.set("1.0.0")
     configurations = [project.configurations.runtimeClasspath]
     mergeServiceFiles()
     manifest {
