@@ -42,7 +42,12 @@ public class Lwjgl3Launcher {
         configuration.setHdpiMode(HdpiMode.Logical);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
-        configuration.setWindowIcon("icon/icon256", "icon/icon128.png", "icon/icon64.png", "icon/icon32.png");
+        configuration.setWindowIcon(
+            "/icon/icon.iconset/icon_16x16.png",
+            "/icon/icon.iconset/icon_32x32.png",
+            "/icon/icon.iconset/icon_48x48.png",
+            "/icon/icon.iconset/icon_256x256.png"
+        );
 
         //// This should improve compatibility with Windows machines with buggy OpenGL drivers, Macs
         //// with Apple Silicon that have to emulate compatibility with OpenGL anyway, and more.

@@ -75,7 +75,8 @@ public class InputController {
             }
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            gameParameters.setGameState(GameState.PAUSE);
+            gameParameters.pauseGame();
+            gameParameters.setSoundToPlay(SoundToPlay.MENU_SELECT);
         } else {
             for (Platform platform : platforms) {
                 if (platform.isPlayerOne()) {

@@ -36,6 +36,8 @@ public class GameParameters {
     private int scoreTwo;
     private int bestScore;
     private boolean isNewRecord;
+    private boolean appPaused;
+    private boolean gamePaused;
 
     public static GameParameters getInstance() {
         return INSTANCE;
@@ -217,6 +219,34 @@ public class GameParameters {
 
     public TextKey getSelectedKey() {
         return selectedKey;
+    }
+
+    public void pauseGame() {
+        gameState = GameState.PAUSE;
+        gamePaused = true;
+    }
+
+    public boolean isGamePaused() {
+        return gamePaused;
+    }
+
+    public void resumeGame() {
+        if (gameState == GameState.PAUSE) {
+            gameState = serveState == ServeState.NONE ? GameState.PLAYING : GameState.GOAL;
+        }
+        gamePaused = false;
+    }
+
+    public void pauseApplication() {
+        appPaused = true;
+    }
+
+    public boolean isApplicationPaused() {
+        return appPaused;
+    }
+
+    public void resumeApplication() {
+        appPaused = false;
     }
 
     public SettingOption getSetting(TextKey key) {

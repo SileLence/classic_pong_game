@@ -31,6 +31,7 @@ public class PhysicsEngine {
                               Ball ball,
                               GameParameters gameParameters,
                               float deltaTime) {
+        paused = gameParameters.isGamePaused() || gameParameters.isApplicationPaused();
         if (paused) {
             return;
         }
@@ -45,14 +46,6 @@ public class PhysicsEngine {
             }
             accumulator -= TIMESTEP;
         }
-    }
-
-    public void pause() {
-        paused = true;
-    }
-
-    public void resume() {
-        paused = false;
     }
 
     public float getAlpha() {

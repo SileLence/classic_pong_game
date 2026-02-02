@@ -107,8 +107,8 @@ public final class Constants {
 
     public static final class Font {
 
-        public static final String TITLE = "font/title/RussoOne-Regular.ttf";
-        public static final String REGULAR = "font/text/Montserrat-Bold.ttf";
+        public static final String TITLE = "font/RussoOne-Regular.ttf";
+        public static final String REGULAR = "font/Montserrat-Bold.ttf";
         public static final String CHARACTERS =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 + "abcdefghijklmnopqrstuvwxyz"

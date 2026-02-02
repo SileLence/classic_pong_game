@@ -76,7 +76,6 @@ public class MainLoop extends ApplicationAdapter {
 
     @Override
     public void render() {
-        // TODO implement app icon
         float deltaTime = Gdx.graphics.getDeltaTime();
         GameState gameState = gameParameters.getGameState();
         boolean isSingleplayer = GameMode.SINGLEPLAYER == gameParameters.getGameMode();
@@ -149,6 +148,9 @@ public class MainLoop extends ApplicationAdapter {
                 processSound();
             }
             case PLAYING ->  {
+                if (gameParameters.isApplicationPaused()) {
+                    gameParameters.pauseGame();
+                }
                 inputController.processPlayingInput(objectController.getPlatforms(), gameParameters);
                 updatePhysics(deltaTime);
                 if (isSingleplayer) {
@@ -178,11 +180,10 @@ public class MainLoop extends ApplicationAdapter {
                 processSound();
             }
             case PAUSE -> {
-                physicsEngine.pause();
                 inputController.processInput(gameParameters, physicsEngine, actionController.getPauseActions());
                 boolean isGameStateChanged = GameState.PAUSE != gameParameters.getGameState();
                 if (isGameStateChanged) {
-                    physicsEngine.resume();
+                    gameParameters.resumeGame();
                     if (GameState.MENU == gameParameters.getGameState()) {
                         worldObjectsCreated = objectController.destroyWorldObjects();
                         processSound();
@@ -317,7 +318,12 @@ public class MainLoop extends ApplicationAdapter {
 
     @Override
     public void pause() {
-        gameParameters.setGameState(GameState.PAUSE);
+        gameParameters.pauseApplication();
+    }
+
+    @Override
+    public void resume() {
+        gameParameters.resumeApplication();
     }
 
     @Override
