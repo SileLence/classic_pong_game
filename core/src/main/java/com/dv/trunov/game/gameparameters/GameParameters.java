@@ -185,8 +185,8 @@ public class GameParameters {
         this.selectedItemIndex = selectedItemIndex;
     }
 
-    public float getCooldown() {
-        return cooldown;
+    public boolean isCooldown() {
+        return cooldown > 0;
     }
 
     public int getScoreOne() {

@@ -21,7 +21,7 @@ public class UIRenderer {
 
     public void drawUI(TextLabel[] textLabels, GameParameters gameParameters, float alpha, SpriteBatch spriteBatch) {
         TextKey selectedKey = gameParameters.getSelectedKey();
-        float cooldown = gameParameters.getCooldown();
+        boolean isGoalCooldown = gameParameters.isCooldown();
         for (TextLabel textLabel : textLabels) {
             BitmapFont font = textLabel.font();
             Color originColor = new Color(font.getColor());
@@ -29,7 +29,7 @@ public class UIRenderer {
                 Color blinkingColor = new Color().set(Constants.Colors.SELECTION_FONT_COLOR, alpha);
                 font.getColor().set(blinkingColor);
             } else if (TextKey.SCORE.equals(textLabel.key())) {
-                if (cooldown > 0) {
+                if (isGoalCooldown) {
                     font.getColor().set(Constants.Colors.SCORE_UP_COLOR);
                 } else {
                     font.getColor().set(textLabel.color());

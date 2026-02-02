@@ -121,6 +121,7 @@ public class PhysicsProcessor {
                 if (isWin) {
                     gameParameters.setSoundToPlay(SoundToPlay.WIN);
                 } else {
+                    gameParameters.updateCooldown(Constants.Physics.GOAL_COOLDOWN);
                     gameParameters.setSoundToPlay(SoundToPlay.BALL_EXPLOSION);
                 }
             }

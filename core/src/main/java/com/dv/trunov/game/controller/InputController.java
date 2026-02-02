@@ -63,7 +63,8 @@ public class InputController {
 
     public void processPlayingInput(Platform[] platforms, GameParameters gameParameters) {
         ServeState serveState = gameParameters.getServeState();
-        if (serveState != ServeState.NONE) {
+        boolean isGoalCooldown = gameParameters.isCooldown();
+        if (serveState != ServeState.NONE && !isGoalCooldown) {
             if (serveState == ServeState.PLAYER_ONE && Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
                 gameParameters.setSoundToPlay(SoundToPlay.SERVE);
                 gameParameters.setGameState(GameState.PLAYING);

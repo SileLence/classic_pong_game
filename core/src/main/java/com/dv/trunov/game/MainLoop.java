@@ -195,7 +195,10 @@ public class MainLoop extends ApplicationAdapter {
                 spriteBatch.begin();
                 Ball ball = objectController.getBall();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                objectRenderer.drawBall(ball, spriteBatch);
+                boolean isGoalCooldown = gameParameters.isCooldown();
+                if (!isGoalCooldown) {
+                    objectRenderer.drawBall(ball, spriteBatch);
+                }
                 objectRenderer.drawBallTail(ball, spriteBatch);
                 objectRenderer.drawBallExplosion(ball, spriteBatch);
                 spriteBatch.end();
@@ -211,17 +214,19 @@ public class MainLoop extends ApplicationAdapter {
                 }
                 physicsEngine.updateAlpha(deltaTime);
                 textController.updateCounters(gameParameters, false);
-                boolean isWin = gameParameters.checkWin();
+                gameParameters.updateCooldown();
                 drawBackground();
                 spriteBatch.begin();
                 objectRenderer.drawPlatforms(objectController.getPlatforms(), spriteBatch);
-                if (!isWin) {
+                boolean isWin = gameParameters.checkWin();
+                boolean isGoalCooldown = gameParameters.isCooldown();
+                if (!isWin && !isGoalCooldown) {
                     objectRenderer.drawBall(objectController.getBall(), spriteBatch);
                 }
                 objectRenderer.drawBallExplosion(objectController.getBall(), spriteBatch);
                 spriteBatch.end();
                 drawUI(textController.getPlayingScreen(false));
-                if (!isGameStateChanged) {
+                if (!isGameStateChanged && !isGoalCooldown) {
                     drawUI(textController.getServeText(gameParameters.getServeState()));
                 }
                 processSound();
@@ -261,7 +266,7 @@ public class MainLoop extends ApplicationAdapter {
             case EXIT -> {
                 updatePhysics(deltaTime);
                 gameParameters.updateCooldown();
-                if (gameParameters.getCooldown() == 0) {
+                if (!gameParameters.isCooldown()) {
                     Gdx.app.exit();
                 }
             }

@@ -70,10 +70,11 @@ public final class Constants {
         public static final float SPIN_FACTOR = 0.3f;
         public static final float SERVE_ANGLE_FACTOR = 0.5f;
         public static final float FIXED_TIMESTEP = 1f / 240f;
-        public static final float SCORE_UP_COOLDOWN = 0.1f;
         public static final float BALL_SPEED = 1200f;
         public static final float BALL_SPEED_STEP = 20f;
         public static final float PLATFORM_SPEED_MODIFICATOR = 0.7f;
+        public static final float SCORE_UP_COOLDOWN = 0.1f;
+        public static final float GOAL_COOLDOWN = 0.5f;
         public static final float EXIT_COOLDOWN = 0.1f;
     }
 
