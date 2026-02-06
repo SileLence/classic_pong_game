@@ -11,5 +11,4 @@ jpackage \
   --java-options "-XstartOnFirstThread" \
   --type app-image \
   --dest build/jpackage \
-  --app-version 1.0.1 \
-  --vendor "Denis Trunov"
+  --app-version 1.0.1

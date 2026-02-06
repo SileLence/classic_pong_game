@@ -1,0 +1,14 @@
+1. Build fat jar:
+./gradlew clean :lwjgl3:shadowJar
+
+2. Pack fat jar to .exe:
+(use ^ instead of ` in cmd)
+jpackage `
+  --input lwjgl3\build\libs `
+  --name "Classic Pong" `
+  --main-jar classic_pong-1.0.1.jar `
+  --main-class com.dv.trunov.game.lwjgl3.Lwjgl3Launcher `
+  --icon assets\icon\icon.ico `
+  --type app-image `
+  --dest build/jpackage `
+  --app-version 1.0.1
