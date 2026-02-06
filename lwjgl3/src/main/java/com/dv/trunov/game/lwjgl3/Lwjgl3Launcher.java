@@ -34,7 +34,8 @@ public class Lwjgl3Launcher {
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
 
         String osName = System.getProperty("os.name").toLowerCase();
-        if (osName.contains("win")) {
+        boolean isWindows = osName.contains("win");
+        if (isWindows) {
             configuration.setFullscreenMode(displayMode);
         } else {
             configuration.setWindowedMode(displayMode.width, displayMode.height);
@@ -42,12 +43,14 @@ public class Lwjgl3Launcher {
         configuration.setHdpiMode(HdpiMode.Logical);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
-        configuration.setWindowIcon(
-            "/icon/icon.iconset/icon_16x16.png",
-            "/icon/icon.iconset/icon_32x32.png",
-            "/icon/icon.iconset/icon_48x48.png",
-            "/icon/icon.iconset/icon_256x256.png"
-        );
+        if (isWindows) {
+            configuration.setWindowIcon(
+                "icon/icon_16x16.png",
+                "icon/icon_32x32.png",
+                "icon/icon_48x48.png",
+                "icon/icon_256x256.png"
+            );
+        }
 
         //// This should improve compatibility with Windows machines with buggy OpenGL drivers, Macs
         //// with Apple Silicon that have to emulate compatibility with OpenGL anyway, and more.
