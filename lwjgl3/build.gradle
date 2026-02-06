@@ -131,6 +131,8 @@ tasks.register('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.Sha
     archiveVersion.set(projectVersion)
     configurations = [project.configurations.runtimeClasspath]
     mergeServiceFiles()
+    from sourceSets.main.output
+    dependsOn classes
     manifest {
         attributes 'Main-Class': 'com.dv.trunov.game.lwjgl3.Lwjgl3Launcher'
     }
