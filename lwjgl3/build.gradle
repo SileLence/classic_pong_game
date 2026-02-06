@@ -126,7 +126,7 @@ tasks.register("jarWin") {
 }
 
 tasks.register('shadowJar', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
-    archiveBaseName.set("classic_pong-all")
+    archiveBaseName.set("classic_pong")
     archiveClassifier.set("")
     archiveVersion.set(projectVersion)
     configurations = [project.configurations.runtimeClasspath]
